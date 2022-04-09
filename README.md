@@ -1,5 +1,5 @@
 # Welcome to the Ship of Harkinian 
-## Linux/MacOS Twisted build !
+## Linux Twisted build !
 This a PC port of OOT bla bla you know it if you are there.
 Here some usefull information : 
 ```
@@ -20,20 +20,6 @@ cd Shipwright-linux
 ```
 
 Add your rom in soh folder baserom_non_mq.z64 sha1:cee6bc3c2a634b41728f2af8da54d9bf8cc14099
-
-## For MacOS only, else skip to Docker Procedure
-
-install the Application from Docker website it should be okay.
-
-now will need to add an Environment variable.
-
-Do it like that :
-
-```export XDG_RUNTIME_DIR=/Users/baoulettes```
-
-## ATTENTION : Change baoulettes to your username 
-(in terminal do command env only to check it in line HOME= )
-Once you have done that you can continue to Docker procedure
 
 ## Docker Procedure
 Now do the docker build (be sure to have docker :P)
