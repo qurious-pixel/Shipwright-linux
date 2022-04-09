@@ -1,4 +1,4 @@
-# Welcome to the Ship of Harkinian - Linux Twisted build !
+# Welcome to the Ship of Harkinian - Linux/MacOS Twisted build !
 This a PC port of OOT bla bla you know it if you are there.
 Here some usefull information : 
 ```
@@ -19,7 +19,7 @@ cd Shipwright-linux
 ```
 
 Add your rom in soh folder baserom_non_mq.z64 sha1:cee6bc3c2a634b41728f2af8da54d9bf8cc14099
-
+(For MacOS install the Application from Docker website it should be okay to continue)
 Now do the docker build (be sure to have docker :P)
 ```
 sudo docker build . -t soh
