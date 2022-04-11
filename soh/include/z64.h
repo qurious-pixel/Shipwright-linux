@@ -83,6 +83,7 @@ typedef struct {
     /* 0x00000 */ u16 headMagic; // GFXPOOL_HEAD_MAGIC
     /* 0x00008 */ Gfx polyOpaBuffer[0x2FC0];
     /* 0x0BF08 */ Gfx polyXluBuffer[0x1000];
+    /* 0x0BF08 */ Gfx titlecardBuffer[0x1000];
     /* 0x0BF08 */ Gfx polyKalBuffer[0x1000];
     /* 0x0FF08 */ Gfx overlayBuffer[0x800];
     /* 0x11F08 */ Gfx workBuffer[0x100];
@@ -130,6 +131,7 @@ typedef struct OSScTask {
 typedef struct GraphicsContext {
     /* 0x0000 */ Gfx* polyOpaBuffer; // Pointer to "Zelda 0"
     /* 0x0004 */ Gfx* polyXluBuffer; // Pointer to "Zelda 1"
+    /* 0xXXX */  Gfx* titlecardBuffer; // Pointer to "Paris"
     /* 0xXXX */  Gfx* polyKalBuffer; // Pointer to "Rome"
     /* 0x0008 */ char unk_008[0x08]; // Unused, could this be pointers to "Zelda 2" / "Zelda 3"
     /* 0x0010 */ Gfx* overlayBuffer; // Pointer to "Zelda 4"
@@ -149,6 +151,7 @@ typedef struct GraphicsContext {
     /* 0x02A8 */ TwoHeadGfxArena overlay; // "Zelda 4"
     /* 0x02B8 */ TwoHeadGfxArena polyOpa; // "Zelda 0"
     /* 0x02C8 */ TwoHeadGfxArena polyXlu; // "Zelda 1"
+    /* 0x0XXX */ TwoHeadGfxArena titlecard; // When in Paris...
     /* 0x0XXX */ TwoHeadGfxArena polyKal; // When in Rome...
     /* 0x02D8 */ u32 gfxPoolIdx;
     /* 0x02DC */ u16* curFrameBuffer;
@@ -526,9 +529,9 @@ typedef enum {
     /*  4 */ TEXT_STATE_CHOICE,
     /*  5 */ TEXT_STATE_EVENT,
     /*  6 */ TEXT_STATE_DONE,
-    /*  7 */ TEXT_STATE_SONG_DEMO_DONE, 
-    /*  8 */ TEXT_STATE_8, 
-    /*  9 */ TEXT_STATE_9, 
+    /*  7 */ TEXT_STATE_SONG_DEMO_DONE,
+    /*  8 */ TEXT_STATE_8,
+    /*  9 */ TEXT_STATE_9,
     /* 10 */ TEXT_STATE_AWAITING_NEXT
 } TextState;
 
@@ -700,6 +703,7 @@ typedef struct {
     /* 0x025E */ s16    mapPaletteIndex; // "map_palete_no"
     /* 0x0260 */ u8     unk_260;
     /* 0x0261 */ u8     unk_261;
+
     struct {
         /* 0x0262 */ u8    hGauge;     // "h_gage"; unknown?
         /* 0x0263 */ u8    bButton;    // "b_button"

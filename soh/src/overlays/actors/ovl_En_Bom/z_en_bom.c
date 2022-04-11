@@ -99,7 +99,7 @@ void EnBom_Init(Actor* thisx, GlobalContext* globalCtx) {
 
     thisx->gravity = -1.2f;
     this->timer = 70;
-    //this->timer = ;
+    //this->timer = 7000;
     this->flashSpeedScale = 7;
     Collider_InitCylinder(globalCtx, &this->bombCollider);
     Collider_InitJntSph(globalCtx, &this->explosionCollider);

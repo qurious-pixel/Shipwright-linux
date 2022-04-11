@@ -363,7 +363,7 @@ void KaleidoScope_DrawQuestStatus(GlobalContext* globalCtx, GraphicsContext* gfx
             }
 
             gDPSetPrimColor(POLY_KAL_DISP++, 0, 0, D_8082A164[sp218], D_8082A17C[sp218], D_8082A194[sp218], pauseCtx->alpha); //Music notes
-                         
+
             gSPVertex(POLY_KAL_DISP++, &pauseCtx->questVtx[sp21A], 4, 0);
             gSP1Quadrangle(POLY_KAL_DISP++, 0, 2, 3, 1, 0);
         }

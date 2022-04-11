@@ -95,12 +95,14 @@ void Graph_InitTHGA(GraphicsContext* gfxCtx) {
     pool->tailMagic = GFXPOOL_TAIL_MAGIC;
     THGA_Ct(&gfxCtx->polyOpa, pool->polyOpaBuffer, sizeof(pool->polyOpaBuffer));
     THGA_Ct(&gfxCtx->polyXlu, pool->polyXluBuffer, sizeof(pool->polyXluBuffer));
+    THGA_Ct(&gfxCtx->titlecard, pool->titlecardBuffer, sizeof(pool->titlecardBuffer));
     THGA_Ct(&gfxCtx->polyKal, pool->polyKalBuffer, sizeof(pool->polyKalBuffer));
     THGA_Ct(&gfxCtx->overlay, pool->overlayBuffer, sizeof(pool->overlayBuffer));
     THGA_Ct(&gfxCtx->work, pool->workBuffer, sizeof(pool->workBuffer));
 
     gfxCtx->polyOpaBuffer = pool->polyOpaBuffer;
     gfxCtx->polyXluBuffer = pool->polyXluBuffer;
+    gfxCtx->titlecardBuffer = pool->titlecardBuffer;
     gfxCtx->polyKalBuffer = pool->polyKalBuffer;
     gfxCtx->overlayBuffer = pool->overlayBuffer;
     gfxCtx->workBuffer = pool->workBuffer;
@@ -172,7 +174,7 @@ void Graph_TaskSet00(GraphicsContext* gfxCtx) {
     osRecvMesg(&gfxCtx->queue, &msg, OS_MESG_BLOCK);
     osStopTimer(&timer);
     //OTRTODO - Proper GFX crash handler
-    #if 0 
+    #if 0
     if (msg == (OSMesg)666) {
         osSyncPrintf(VT_FGCOL(RED));
         osSyncPrintf("RCPが帰ってきませんでした。"); // "RCP did not return."
@@ -191,7 +193,7 @@ void Graph_TaskSet00(GraphicsContext* gfxCtx) {
         }
         Fault_AddHungupAndCrashImpl("RCP is HUNG UP!!", "Oh! MY GOD!!");
     }
-    #endif 
+    #endif
     osRecvMesg(&gfxCtx->queue, &msg, OS_MESG_NOBLOCK);
 
     D_8012D260 = gfxCtx->workBuffer;
@@ -274,6 +276,7 @@ void Graph_Update(GraphicsContext* gfxCtx, GameState* gameState) {
     gDPNoOpString(WORK_DISP++, "WORK_DISP 開始", 0);
     gDPNoOpString(POLY_OPA_DISP++, "POLY_OPA_DISP 開始", 0);
     gDPNoOpString(POLY_XLU_DISP++, "POLY_XLU_DISP 開始", 0);
+    gDPNoOpString(TITLE_CARD_DISP++, "TITLE_CARD_DISP 開始", 0);
     gDPNoOpString(OVERLAY_DISP++, "OVERLAY_DISP 開始", 0);
 
     CLOSE_DISPS(gfxCtx, "../graph.c", 975);
@@ -286,6 +289,7 @@ void Graph_Update(GraphicsContext* gfxCtx, GameState* gameState) {
     gDPNoOpString(WORK_DISP++, "WORK_DISP 終了", 0);
     gDPNoOpString(POLY_OPA_DISP++, "POLY_OPA_DISP 終了", 0);
     gDPNoOpString(POLY_XLU_DISP++, "POLY_XLU_DISP 終了", 0);
+    gDPNoOpString(TITLE_CARD_DISP++, "TITLE_CARD_DISP 終了", 0);
     gDPNoOpString(OVERLAY_DISP++, "OVERLAY_DISP 終了", 0);
 
     CLOSE_DISPS(gfxCtx, "../graph.c", 996);
@@ -294,7 +298,8 @@ void Graph_Update(GraphicsContext* gfxCtx, GameState* gameState) {
 
     gSPBranchList(WORK_DISP++, gfxCtx->polyOpaBuffer);
     gSPBranchList(POLY_OPA_DISP++, gfxCtx->polyXluBuffer);
-    gSPBranchList(POLY_XLU_DISP++, gfxCtx->polyKalBuffer);
+    gSPBranchList(POLY_XLU_DISP++, gfxCtx->titlecardBuffer);
+    gSPBranchList(TITLE_CARD_DISP++, gfxCtx->polyKalBuffer);
     gSPBranchList(POLY_KAL_DISP++, gfxCtx->overlayBuffer);
     gDPPipeSync(OVERLAY_DISP++);
     gDPFullSync(OVERLAY_DISP++);
@@ -394,7 +399,7 @@ void Graph_Update(GraphicsContext* gfxCtx, GameState* gameState) {
         sGraphUpdateTime = time;
     }
 
-    if (CVar_GetS32("gDebugEnabled", 0)) 
+    if (CVar_GetS32("gDebugEnabled", 0))
     {
         if (CHECK_BTN_ALL(gameState->input[0].press.button, BTN_Z) &&
             CHECK_BTN_ALL(gameState->input[0].cur.button, BTN_L | BTN_R)) {
@@ -472,7 +477,7 @@ static void RunFrame()
             OTRSetFrameDivisor(R_UPDATE_RATE);
             //OTRSetFrameDivisor(0);
 
-            
+
             //AudioMgr_ThreadEntry(&gAudioMgr);
             // 528 and 544 relate to 60 fps at 32 kHz 32000/60 = 533.333..
             // in an ideal world, one third of the calls should use num_samples=544 and two thirds num_samples=528
@@ -497,10 +502,10 @@ static void RunFrame()
             //}
             // printf("Audio samples before submitting: %d\n", audio_api->buffered());
             AudioPlayer_Play((u8*)audio_buffer, num_audio_samples * (sizeof(int16_t) * NUM_AUDIO_CHANNELS * AUDIO_FRAMES_PER_UPDATE));
-            
+
 
             PadMgr_ThreadEntry(&gPadMgr);
-            
+
             Graph_Update(&runFrameContext.gfxCtx, runFrameContext.gameState);
             ticksB = GetPerfCounter();
 

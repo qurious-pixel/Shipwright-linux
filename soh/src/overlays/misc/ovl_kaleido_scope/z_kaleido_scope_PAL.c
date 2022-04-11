@@ -2753,7 +2753,7 @@ void KaleidoScope_GrayOutTextureRGBA32(u32* texture, u16 pixelCount) {
     u16 gray;
     u16 i;
 
-    bind_hook( GRAYOUT_TEXTURE);
+    bind_hook(GRAYOUT_TEXTURE);
     init_hook(2,
         (struct HookParameter){ .name = "texture",    .parameter = &texture },
         (struct HookParameter){ .name = "pixelCount", .parameter = &pixelCount }
@@ -2892,25 +2892,17 @@ void KaleidoScope_UpdateCursorSize(PauseContext* pauseCtx) {
 
 void KaleidoScope_LoadDungeonMap(GlobalContext* globalCtx) {
     InterfaceContext* interfaceCtx = &globalCtx->interfaceCtx;
-    s32 pad;
-	//_map_48x85_staticSegmentRomStart
-    //DmaMgr_SendRequest1(interfaceCtx->mapSegment, (u32)_map_48x85_staticSegmentRomStart + (R_MAP_TEX_INDEX * 2040), 2040, "../z_kaleido_scope_PAL.c", 3467);
-    //DmaMgr_SendRequest1(interfaceCtx->mapSegment + 0x800, (u32)_map_48x85_staticSegmentRomStart + ((R_MAP_TEX_INDEX + 1) * 2040), 2040, "../z_kaleido_scope_PAL.c", 3471);
+    PauseContext* pauseCtx = &globalCtx->pauseCtx;
 
-    memcpy(interfaceCtx->mapSegment + 0x800, ResourceMgr_LoadTexByName(sDungeonMapTexs[R_MAP_TEX_INDEX + 1]), 0x800);
     memcpy(interfaceCtx->mapSegment, ResourceMgr_LoadTexByName(sDungeonMapTexs[R_MAP_TEX_INDEX]), 0x800);
-
+    memcpy(interfaceCtx->mapSegment+0x800, ResourceMgr_LoadTexByName(sDungeonMapTexs[R_MAP_TEX_INDEX + 1]), 0x800);
 }
 
 void KaleidoScope_UpdateDungeonMap(GlobalContext* globalCtx) {
     PauseContext* pauseCtx = &globalCtx->pauseCtx;
     InterfaceContext* interfaceCtx = &globalCtx->interfaceCtx;
-
-    osSyncPrintf("ＭＡＰ ＤＭＡ = %d\n", globalCtx->interfaceCtx.mapPaletteIndex);
-
-    KaleidoScope_LoadDungeonMap(globalCtx);
     Map_SetFloorPalettesData(globalCtx, pauseCtx->dungeonMapSlot - 3);
-
+    KaleidoScope_LoadDungeonMap(globalCtx);
     if ((globalCtx->sceneNum >= SCENE_YDAN) && (globalCtx->sceneNum <= SCENE_TAKARAYA)) {
         if ((VREG(30) + 3) == pauseCtx->cursorPoint[PAUSE_MAP]) {
             KaleidoScope_OverridePalIndexCI4(interfaceCtx->mapSegment, 2040, interfaceCtx->mapPaletteIndex, 14);
@@ -2919,13 +2911,12 @@ void KaleidoScope_UpdateDungeonMap(GlobalContext* globalCtx) {
 
     if ((globalCtx->sceneNum >= SCENE_YDAN) && (globalCtx->sceneNum <= SCENE_TAKARAYA)) {
         if ((VREG(30) + 3) == pauseCtx->cursorPoint[PAUSE_MAP]) {
-            KaleidoScope_OverridePalIndexCI4(interfaceCtx->mapSegment + 0x800, 2040, interfaceCtx->mapPaletteIndex, 14);
+            KaleidoScope_OverridePalIndexCI4(interfaceCtx->mapSegment+0x800, 2040, interfaceCtx->mapPaletteIndex, 14);
         }
     }
 }
 
-void KaleidoScope_Update(GlobalContext* globalCtx)
-{
+void KaleidoScope_Update(GlobalContext* globalCtx){
     static s16 D_8082B258 = 0;
     static s16 D_8082B25C = 10;
     static s16 D_8082B260 = 0;

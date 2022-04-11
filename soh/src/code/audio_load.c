@@ -1199,26 +1199,12 @@ void AudioLoad_Init(void* heap, u32 heapSize) {
     }
 
     switch (osTvType) {
-        /*case OS_TV_PAL: //original value
+        case OS_TV_PAL:
             gAudioContext.unk_2960 = 20.03042f;
             gAudioContext.refreshRate = 50;
             break;
         case OS_TV_MPAL:
             gAudioContext.unk_2960 = 16.546f;
-            gAudioContext.refreshRate = 60;
-            break;
-        case OS_TV_NTSC:
-        default:
-            gAudioContext.unk_2960 = 16.713f;
-            gAudioContext.refreshRate = 60;*///
-    
-    
-        case OS_TV_PAL:
-            gAudioContext.unk_2960 = 16.713f;
-            gAudioContext.refreshRate = 60;
-            break;
-        case OS_TV_MPAL:
-            gAudioContext.unk_2960 = 16.713f;
             gAudioContext.refreshRate = 60;
             break;
         case OS_TV_NTSC:
