@@ -11,6 +11,7 @@
 #include "textures/nintendo_rogo_static/nintendo_rogo_static.h"
 #include <soh/Enhancements/bootcommands.h>
 #include "GameVersions.h"
+#include "SohHooks.h"
 
 const char* GetGameVersionString();
 
@@ -32,23 +33,23 @@ void Title_PrintBuildInfo(Gfx** gfxp) {
     GfxPrint_SetPos(&printer, 12, 20);
 
 #ifdef _MSC_VER
-    GfxPrint_Printf(&printer, "MSVC SHIP");
+    //GfxPrint_Printf(&printer, "MSVC SHIP");
 #else
-    GfxPrint_Printf(&printer, "GCC SHIP");
+    //GfxPrint_Printf(&printer, "GCC SHIP");
 #endif
 
     GfxPrint_SetPos(&printer, 5, 4);
-    GfxPrint_Printf(&printer, "Game Version: %s", gameVersionStr);
+    //GfxPrint_Printf(&printer, "Game Version: %s", gameVersionStr);
 
     GfxPrint_SetColor(&printer, 255, 255, 255, 255);
     GfxPrint_SetPos(&printer, 2, 22);
-    GfxPrint_Printf(&printer, quote);
+    //GfxPrint_Printf(&printer, quote);
     GfxPrint_SetPos(&printer, 1, 25);
-    GfxPrint_Printf(&printer, "Build Date:%s", gBuildDate);
+    //GfxPrint_Printf(&printer, "Build Date:%s", gBuildDate);
     GfxPrint_SetPos(&printer, 3, 26);
-    GfxPrint_Printf(&printer, "%s", gBuildTeam);
+    //GfxPrint_Printf(&printer, "%s", gBuildTeam);
     GfxPrint_SetPos(&printer, 3, 28);
-    GfxPrint_Printf(&printer, "Release Version: %s", gBuildVersion);
+    //GfxPrint_Printf(&printer, "Release Version: %s", gBuildVersion);
     g = GfxPrint_Close(&printer);
     GfxPrint_Destroy(&printer);
     *gfxp = g;
@@ -198,12 +199,12 @@ void Title_Draw(TitleContext* this) {
         COMBINED, ENVIRONMENT, COMBINED, 0, PRIMITIVE, 0);
     gDPSetPrimColor(POLY_OPA_DISP++, 0, 0, 170, 255, 255, 255);
     gDPSetEnvColor(POLY_OPA_DISP++, 0, 0, 255, 128);
-
+    //Hook_LookupTexture();
     //gDPLoadMultiBlock(POLY_OPA_DISP++, ResourceMgr_LoadTexByName(nintendo_rogo_static_Tex_001800), 0x100, 1, G_IM_FMT_I, G_IM_SIZ_8b, 32, 32, 0,
         //G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, 5, 5, 2, 11);
     gDPLoadMultiBlock(POLY_OPA_DISP++, nintendo_rogo_static_Tex_001800, 0x100, 1, G_IM_FMT_I, G_IM_SIZ_8b, 32, 32, 0,
             G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, 5, 5, 2, 11);
-        
+
     for (idx = 0, y = 94; idx < 16; idx++, y += 2)
     {
         gDPLoadTextureBlock(POLY_OPA_DISP++, &n64LogoTex[0x180 * idx], G_IM_FMT_I,

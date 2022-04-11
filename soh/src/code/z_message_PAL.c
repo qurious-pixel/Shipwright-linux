@@ -1687,7 +1687,13 @@ void Message_OpenText(GlobalContext* globalCtx, u16 textId) {
             Message_FindMessage(globalCtx, textId);
             msgCtx->msgLength = font->msgLength;
             char* src = (uintptr_t)font->msgOffset;
-            memcpy(font->msgBuf, src, font->msgLength);
+            memcpy(font->msgBuf, src, font->msgLength); 
+            
+            /*Message_FindMessage(globalCtx, textId);
+            msgCtx->msgLength = font->msgLength;
+            DmaMgr_SendRequest1(font->msgBuf, (u32)(_fra_message_data_staticSegmentRomStart + font->msgOffset),
+                                font->msgLength, "../z_message_PAL.c", 1990);*/
+            
         } else if (gSaveContext.language == LANGUAGE_GER) {
             // OTRTODO
             //Message_FindMessage(globalCtx, textId);

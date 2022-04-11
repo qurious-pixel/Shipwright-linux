@@ -7,7 +7,7 @@
 #include "z_en_bom.h"
 #include "overlays/effects/ovl_Effect_Ss_Dead_Sound/z_eff_ss_dead_sound.h"
 #include "objects/gameplay_keep/gameplay_keep.h"
-
+#include "objects/object_gi_bomb_1/object_gi_bomb_1.h"
 #define FLAGS (ACTOR_FLAG_4 | ACTOR_FLAG_5)
 
 void EnBom_Init(Actor* thisx, GlobalContext* globalCtx);
@@ -17,7 +17,7 @@ void EnBom_Draw(Actor* thisx, GlobalContext* globalCtx);
 
 void EnBom_Move(EnBom* this, GlobalContext* globalCtx);
 void EnBom_WaitForRelease(EnBom* this, GlobalContext* globalCtx);
-
+static Color_RGBA8 flashRed = { 255, 50, 50, 0 };
 const ActorInit En_Bom_InitVars = {
     ACTOR_EN_BOM,
     ACTORCAT_EXPLOSIVE,
@@ -92,11 +92,14 @@ void EnBom_Init(Actor* thisx, GlobalContext* globalCtx) {
     EnBom* this = (EnBom*)thisx;
 
     Actor_ProcessInitChain(thisx, sInitChain);
-    ActorShape_Init(&thisx->shape, 700.0f, ActorShadow_DrawCircle, 16.0f);
+    ActorShape_Init(&thisx->shape, 700.0f, ActorShadow_DrawCircle, 0.5f);
     thisx->colChkInfo.mass = 200;
     thisx->colChkInfo.cylRadius = 5;
     thisx->colChkInfo.cylHeight = 10;
-    this->timer = 70;
+
+    thisx->gravity = -1.2f;
+    //this->timer = 70;
+    this->timer = 7000;
     this->flashSpeedScale = 7;
     Collider_InitCylinder(globalCtx, &this->bombCollider);
     Collider_InitJntSph(globalCtx, &this->explosionCollider);
@@ -235,9 +238,10 @@ void EnBom_Update(Actor* thisx, GlobalContext* globalCtx2) {
         this->timer--;
     }
 
-    if (this->timer == 67) {
+    if (this->timer >= 67) {
         Audio_PlayActorSound2(thisx, NA_SE_PL_TAKE_OUT_SHIELD);
-        Actor_SetScale(thisx, 0.01f);
+        //Actor_SetScale(thisx, 0.01f);
+        Actor_SetScale(thisx, 0.3f);
     }
 
     if ((thisx->xzDistToPlayer >= 20.0f) || (ABS(thisx->yDistToPlayer) >= 80.0f)) {
@@ -249,7 +253,8 @@ void EnBom_Update(Actor* thisx, GlobalContext* globalCtx2) {
     Actor_UpdateBgCheckInfo(globalCtx, thisx, 5.0f, 10.0f, 15.0f, 0x1F);
 
     if (thisx->params == BOMB_BODY) {
-        if (this->timer < 63) {
+        //if (this->timer < 63) {
+        if (this->timer < 60003) {
             dustAccel.y = 0.2f;
 
             // spawn spark effect on even frames
@@ -294,7 +299,7 @@ void EnBom_Update(Actor* thisx, GlobalContext* globalCtx2) {
         }
 
         if (this->timer < 3) {
-            Actor_SetScale(thisx, thisx->scale.x + 0.002f);
+            Actor_SetScale(thisx, thisx->scale.x + 0.2f);
         }
 
         if (this->timer == 0) {
@@ -305,8 +310,7 @@ void EnBom_Update(Actor* thisx, GlobalContext* globalCtx2) {
                 effPos.y += 30.0f;
             }
 
-            EffectSsBomb2_SpawnLayered(globalCtx, &effPos, &effVelocity, &bomb2Accel, 100,
-                                       (thisx->shape.rot.z * 6) + 19);
+            EffectSsBomb2_SpawnLayered(globalCtx, &effPos, &effVelocity, &bomb2Accel, 100, (thisx->shape.rot.z * 6) + 19);
 
             effPos.y = thisx->floorHeight;
             if (thisx->floorHeight > BGCHECK_Y_MIN) {
@@ -315,11 +319,9 @@ void EnBom_Update(Actor* thisx, GlobalContext* globalCtx2) {
 
             Audio_PlayActorSound2(thisx, NA_SE_IT_BOMB_EXPLOSION);
 
-            globalCtx->envCtx.adjLight1Color[0] = globalCtx->envCtx.adjLight1Color[1] =
-                globalCtx->envCtx.adjLight1Color[2] = 250;
+            globalCtx->envCtx.adjLight1Color[0] = globalCtx->envCtx.adjLight1Color[1] = globalCtx->envCtx.adjLight1Color[2] = 250;
 
-            globalCtx->envCtx.adjAmbientColor[0] = globalCtx->envCtx.adjAmbientColor[1] =
-                globalCtx->envCtx.adjAmbientColor[2] = 250;
+            globalCtx->envCtx.adjAmbientColor[0] = globalCtx->envCtx.adjAmbientColor[1] = globalCtx->envCtx.adjAmbientColor[2] = 250;
 
             Camera_AddQuake(&globalCtx->mainCamera, 2, 0xB, 8);
             thisx->params = BOMB_EXPLOSION;
@@ -344,8 +346,7 @@ void EnBom_Update(Actor* thisx, GlobalContext* globalCtx2) {
 
     if ((thisx->scale.x >= 0.01f) && (thisx->params != BOMB_EXPLOSION)) {
         if (thisx->yDistToWater >= 20.0f) {
-            EffectSsDeadSound_SpawnStationary(globalCtx, &thisx->projectedPos, NA_SE_IT_BOMB_UNEXPLOSION, true,
-                                              DEADSOUND_REPEAT_MODE_OFF, 10);
+            EffectSsDeadSound_SpawnStationary(globalCtx, &thisx->projectedPos, NA_SE_IT_BOMB_UNEXPLOSION, true, DEADSOUND_REPEAT_MODE_OFF, 10);
             Actor_Kill(thisx);
             return;
         }
@@ -360,26 +361,40 @@ void EnBom_Draw(Actor* thisx, GlobalContext* globalCtx) {
     s32 pad;
     EnBom* this = (EnBom*)thisx;
 
-    if (1) {}
+    u32 frames;
 
     OPEN_DISPS(globalCtx->state.gfxCtx, "../z_en_bom.c", 913);
-
+    frames = globalCtx->gameplayFrames;
     if (thisx->params == BOMB_BODY) {
-        func_80093D18(globalCtx->state.gfxCtx);
-        Matrix_ReplaceRotation(&globalCtx->billboardMtxF);
-        func_8002EBCC(thisx, globalCtx, 0);
+        //POLY_XLU_DISP = func_800937C0(POLY_XLU_DISP);
+        //func_80093D18(globalCtx->state.gfxCtx);
+        //Matrix_ReplaceRotation(&globalCtx->billboardMtxF);
+        //func_8002EBCC(thisx, globalCtx, 0);
 
-        gSPMatrix(POLY_OPA_DISP++, Matrix_NewMtx(globalCtx->state.gfxCtx, "../z_en_bom.c", 928),
-                  G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(POLY_OPA_DISP++, gBombCapDL);
-        Matrix_RotateZYX(0x4000, 0, 0, MTXMODE_APPLY);
-        gSPMatrix(POLY_OPA_DISP++, Matrix_NewMtx(globalCtx->state.gfxCtx, "../z_en_bom.c", 934),
-                  G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gDPPipeSync(POLY_OPA_DISP++);
-        gDPSetEnvColor(POLY_OPA_DISP++, (s16)this->flashIntensity, 0, 40, 255);
-        gDPSetPrimColor(POLY_OPA_DISP++, 0, 0, (s16)this->flashIntensity, 0, 40, 255);
-        gSPDisplayList(POLY_OPA_DISP++, gBombBodyDL);
+        //gSPMatrix(POLY_OPA_DISP++, Matrix_NewMtx(globalCtx->state.gfxCtx, "../z_en_bom.c", 928), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        //gSPDisplayList(POLY_OPA_DISP++, gBombCapDL);
+        //Matrix_RotateZYX(0x4000, 0, 0, MTXMODE_APPLY);
+
+        Matrix_Translate(0.0f, -670.0f, 0.0f, MTXMODE_APPLY);
+        //gDPSetPrimColor(POLY_XLU_DISP++, 0, 128, 0, 255, 255, 255);
+        gDPPipeSync(POLY_XLU_DISP++);
+        //gSPTexture(POLY_XLU_DISP++, 0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON);
+        //gDPSetEnvColor(POLY_XLU_DISP++, 0, 255, 255, 255);
+        //gDPSetBlendColor(POLY_XLU_DISP++, 0, 255, 255, 255);
+        //gDPSetAlphaDither(POLY_XLU_DISP++, G_AD_DISABLE);
+        //gDPSetColorDither(POLY_XLU_DISP++, G_CD_DISABLE);
+        //gDPSetRenderMode(POLY_XLU_DISP++, G_RM_PASS, G_RM_AA_ZB_XLU_SURF2);
+        gSPMatrix(POLY_XLU_DISP++, Matrix_NewMtx(globalCtx->state.gfxCtx, "../z_en_bom.c", 648), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(POLY_XLU_DISP++, gGiBombDL);
+
+        //gSPDisplayList(POLY_XLU_DISP++, gGiZoraSapphireSettingDL);
+
+
+        //gSPMatrix(POLY_XLU_DISP++, Matrix_NewMtx(globalCtx->state.gfxCtx, "../z_en_bom.c", 934), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        //gSPDisplayList(POLY_XLU_DISP++, gGiBombDL);
+        //Actor_SetColorFilter(&this->actor, 0, 255, 0, 12);
         Collider_UpdateSpheres(0, &this->explosionCollider);
+        //gDPPipeSync(POLY_XLU_DISP++);
     }
 
     CLOSE_DISPS(globalCtx->state.gfxCtx, "../z_en_bom.c", 951);
