@@ -42,8 +42,9 @@ Gfx* VisMono_DrawTexture(VisMono* this, Gfx* gfx)
     s32 y;
     s32 height = 3;
     //u16* tex = D_0F000000;
-    u16* tex = 0xFF000000;
-
+    //u16* tex = 0xFF000000;
+    u16* tex = SEG_ADDR(0xf, 0);
+    
     gDPPipeSync(gfx++);
     gDPSetOtherMode(gfx++,
                     G_AD_DISABLE | G_CD_DISABLE | G_CK_NONE | G_TC_FILT | G_TF_POINT | G_TT_IA16 | G_TL_TILE |
