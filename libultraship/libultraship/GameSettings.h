@@ -26,7 +26,8 @@ struct SoHConfigType {
         bool minimal_ui = false;
         bool newdrops = false;
         bool n64color = false;
-        bool maskability = false;
+        //bool maskability = false;
+        bool visualagony = false;
     } enhancements;
 
     // Controller
@@ -51,6 +52,13 @@ struct SoHConfigType {
         bool moon_jump_on_l = false;
         bool super_tunic = false;
     } cheats;
+
+    // Languages
+    struct {
+        bool set_eng = true;
+        bool set_ger = false;
+        bool set_fra = false;
+    } languages;
 };
 
 enum SeqPlayers {
@@ -66,6 +74,7 @@ enum SeqPlayers {
 #define CONTROLLER_SECTION "CONTROLLER SECTION"
 #define ENHANCEMENTS_SECTION "ENHANCEMENT SETTINGS"
 #define CHEATS_SECTION "CHEATS SETTINGS"
+#define LANGUAGES_SECTION "LANGUAGES SETTINGS"
 
 namespace Game {
     extern SoHConfigType Settings;

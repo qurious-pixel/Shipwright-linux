@@ -15,16 +15,16 @@ void KaleidoScopeCall_LoadPlayer() {
 
     if (gKaleidoMgrCurOvl != playerActorOvl) {
         if (gKaleidoMgrCurOvl != NULL) {
-            osSyncPrintf(VT_FGCOL(RED));
-            osSyncPrintf("カレイド領域 強制排除\n"); // "Kaleido area forced exclusion"
-            osSyncPrintf(VT_RST);
+            //osSyncPrintf(VT_FGCOL(RED));
+            //osSyncPrintf("カレイド領域 強制排除\n"); // "Kaleido area forced exclusion"
+            //osSyncPrintf(VT_RST);  //osSyncPrintf
 
             KaleidoManager_ClearOvl(gKaleidoMgrCurOvl);
         }
 
-        osSyncPrintf(VT_FGCOL(GREEN));
-        osSyncPrintf("プレイヤーアクター搬入\n"); // "Player actor import"
-        osSyncPrintf(VT_RST);
+        //osSyncPrintf(VT_FGCOL(GREEN));
+        //osSyncPrintf("プレイヤーアクター搬入\n"); // "Player actor import"
+        //osSyncPrintf(VT_RST);
 
         KaleidoManager_LoadOvl(playerActorOvl);
     }
@@ -32,7 +32,7 @@ void KaleidoScopeCall_LoadPlayer() {
 
 void KaleidoScopeCall_Init(GlobalContext* globalCtx) {
     // "Kaleidoscope replacement construction"
-    osSyncPrintf("カレイド・スコープ入れ替え コンストラクト \n");
+    //osSyncPrintf("カレイド・スコープ入れ替え コンストラクト \n");
 
     sKaleidoScopeUpdateFunc = KaleidoManager_GetRamAddr(KaleidoScope_Update);
     sKaleidoScopeDrawFunc = KaleidoManager_GetRamAddr(KaleidoScope_Draw);
@@ -47,7 +47,7 @@ void KaleidoScopeCall_Init(GlobalContext* globalCtx) {
 
 void KaleidoScopeCall_Destroy(GlobalContext* globalCtx) {
     // "Kaleidoscope replacement destruction"
-    osSyncPrintf("カレイド・スコープ入れ替え デストラクト \n");
+    //osSyncPrintf("カレイド・スコープ入れ替え デストラクト \n");
 
     KaleidoSetup_Destroy(globalCtx);
 }
@@ -74,40 +74,40 @@ void KaleidoScopeCall_Update(GlobalContext* globalCtx) {
             pauseCtx->unk_1EC = 0;
             pauseCtx->state = (pauseCtx->state & 0xFFFF) + 1;
         } else if ((pauseCtx->state == 2) || (pauseCtx->state == 9)) {
-            osSyncPrintf("PR_KAREIDOSCOPE_MODE=%d\n", R_PAUSE_MENU_MODE);
+            //osSyncPrintf("PR_KAREIDOSCOPE_MODE=%d\n", R_PAUSE_MENU_MODE);
 
             if (R_PAUSE_MENU_MODE >= 3) {
                 pauseCtx->state++;
             }
         } else if (pauseCtx->state != 0) {
-            if (gKaleidoMgrCurOvl != kaleidoScopeOvl) 
+            if (gKaleidoMgrCurOvl != kaleidoScopeOvl)
             {
                 if (gKaleidoMgrCurOvl != NULL) {
-                    osSyncPrintf(VT_FGCOL(GREEN));
+                    //osSyncPrintf(VT_FGCOL(GREEN));
                     // "Kaleido area Player Forced Elimination"
-                    osSyncPrintf("カレイド領域 プレイヤー 強制排除\n");
-                    osSyncPrintf(VT_RST);
+                    //osSyncPrintf("カレイド領域 プレイヤー 強制排除\n");
+                    //osSyncPrintf(VT_RST);
 
                     KaleidoManager_ClearOvl(gKaleidoMgrCurOvl);
                 }
 
-                osSyncPrintf(VT_FGCOL(GREEN));
+                //osSyncPrintf(VT_FGCOL(GREEN));
                 // "Kaleido area Kaleidoscope loading"
-                osSyncPrintf("カレイド領域 カレイドスコープ搬入\n");
-                osSyncPrintf(VT_RST);
+                //osSyncPrintf("カレイド領域 カレイドスコープ搬入\n");
+                //osSyncPrintf(VT_RST);
 
                 KaleidoManager_LoadOvl(kaleidoScopeOvl);
             }
 
-            if (gKaleidoMgrCurOvl == kaleidoScopeOvl) 
+            if (gKaleidoMgrCurOvl == kaleidoScopeOvl)
             {
                 sKaleidoScopeUpdateFunc(globalCtx);
 
                 if ((globalCtx->pauseCtx.state == 0) && (globalCtx->pauseCtx.debugState == 0)) {
-                    osSyncPrintf(VT_FGCOL(GREEN));
+                    //osSyncPrintf(VT_FGCOL(GREEN));
                     // "Kaleido area Kaleidoscope Emission"
-                    osSyncPrintf("カレイド領域 カレイドスコープ排出\n");
-                    osSyncPrintf(VT_RST);
+                    //osSyncPrintf("カレイド領域 カレイドスコープ排出\n");
+                    //osSyncPrintf(VT_RST);
 
                     KaleidoManager_ClearOvl(kaleidoScopeOvl);
                     KaleidoScopeCall_LoadPlayer();
@@ -123,7 +123,7 @@ void KaleidoScopeCall_Draw(GlobalContext* globalCtx) {
     if (R_PAUSE_MENU_MODE >= 3) {
         if (((globalCtx->pauseCtx.state >= 4) && (globalCtx->pauseCtx.state <= 7)) ||
             ((globalCtx->pauseCtx.state >= 11) && (globalCtx->pauseCtx.state <= 18))) {
-            if (gKaleidoMgrCurOvl == kaleidoScopeOvl) 
+            if (gKaleidoMgrCurOvl == kaleidoScopeOvl)
             {
                 sKaleidoScopeDrawFunc(globalCtx);
             }

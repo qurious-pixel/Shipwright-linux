@@ -1824,7 +1824,6 @@ s32 Math3D_CylTriVsIntersect(Cylinder16* cyl, TriNorm* tri, Vec3f* intersect) {
     Vec3f diffMidpointIntersect;
     f32 distFromCylYIntersectTov0v1;
     s32 pad;
-    const float upperBoundDist = 1.e38f;
 
     cylBottom = (f32)cyl->pos.y + cyl->yShift;
     cylTop = cyl->height + cylBottom;
@@ -1835,8 +1834,7 @@ s32 Math3D_CylTriVsIntersect(Cylinder16* cyl, TriNorm* tri, Vec3f* intersect) {
         return false;
     }
 
-    //minDistSq = 1.e38f; Bugged value on unix?
-    minDistSq = upperBoundDist;
+    minDistSq = 1.e38f;
     if (Math3D_CylVsLineSeg(cyl, &tri->vtx[0], &tri->vtx[1], &cylIntersectA, &cylIntersectB)) {
         distFromPointAToIntersectASq = Math3D_Vec3fDistSq(&cylIntersectA, &tri->vtx[0]);
         minDistSq = distFromPointAToIntersectASq;
@@ -1859,8 +1857,7 @@ s32 Math3D_CylTriVsIntersect(Cylinder16* cyl, TriNorm* tri, Vec3f* intersect) {
         }
     }
 
-    //if (minDistSq != 1.e38f) { // Bugged value on unix?
-    if (minDistSq != upperBoundDist) {
+    if (minDistSq != (f32)1.e38f) {
         return true;
     }
 

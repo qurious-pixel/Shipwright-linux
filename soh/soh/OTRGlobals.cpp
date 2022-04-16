@@ -1,4 +1,4 @@
-﻿#include "OTRGlobals.h"
+#include "OTRGlobals.h"
 #include <iostream>
 #include <locale>
 #include <codecvt>

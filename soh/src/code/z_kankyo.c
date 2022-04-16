@@ -734,7 +734,7 @@ void Environment_UpdateSkybox(GlobalContext* globalCtx, u8 skyboxId, Environment
         if (envCtx->skyboxDmaState == SKYBOX_DMA_FILE2_DONE) {
             envCtx->skyboxDmaState = SKYBOX_DMA_PAL2_START;
 
-            if ((newSkybox2Index & 1) ^ ((newSkybox2Index & 4) >> 2)) 
+            if ((newSkybox2Index & 1) ^ ((newSkybox2Index & 4) >> 2))
             {
                 SkyboxTableEntry entryA = sSkyboxTable[newSkybox2Index];
                 LoadSkyboxPalette(globalCtx, skyboxCtx, 0, entryA.palettes[0], 16, 8);
@@ -744,7 +744,7 @@ void Environment_UpdateSkybox(GlobalContext* globalCtx, u8 skyboxId, Environment
                 DmaMgr_SendRequest2(&envCtx->dmaRequest, (uintptr_t)skyboxCtx->palettes,
                                     gSkyboxFiles[newSkybox2Index].palette.vromStart, size, 0, &envCtx->loadQueue, NULL,
                                     "../z_kankyo.c", 1342);*/
-            } else 
+            } else
             {
                 SkyboxTableEntry entryA = sSkyboxTable[newSkybox2Index];
                 LoadSkyboxPalette(globalCtx, skyboxCtx, 1, entryA.palettes[0], 16, 8);
@@ -758,12 +758,12 @@ void Environment_UpdateSkybox(GlobalContext* globalCtx, u8 skyboxId, Environment
         }
 
         if ((envCtx->skyboxDmaState == SKYBOX_DMA_FILE1_START) || (envCtx->skyboxDmaState == SKYBOX_DMA_FILE2_START)) {
-            //if (osRecvMesg(&envCtx->loadQueue, 0, OS_MESG_NOBLOCK) == 0) 
+            //if (osRecvMesg(&envCtx->loadQueue, 0, OS_MESG_NOBLOCK) == 0)
             {
                 envCtx->skyboxDmaState++;
             }
         } else if (envCtx->skyboxDmaState >= SKYBOX_DMA_FILE1_DONE) {
-            //if (osRecvMesg(&envCtx->loadQueue, 0, OS_MESG_NOBLOCK) == 0) 
+            //if (osRecvMesg(&envCtx->loadQueue, 0, OS_MESG_NOBLOCK) == 0)
             {
                 envCtx->skyboxDmaState = SKYBOX_DMA_INACTIVE;
             }

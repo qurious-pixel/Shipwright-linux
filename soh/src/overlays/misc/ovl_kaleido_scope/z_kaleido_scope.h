@@ -3,6 +3,7 @@
 
 #include "ultra64.h"
 #include "global.h"
+#include "luslog.h"
 
 extern u8 gAmmoItems[];
 extern s16 D_8082AAEC[];
@@ -29,7 +30,6 @@ void KaleidoScope_ProcessPlayerPreRender();
 void KaleidoScope_SetupPlayerPreRender(GlobalContext* globalCtx);
 void KaleidoScope_DrawCursor(GlobalContext* globalCtx, u16 pageIndex);
 void KaleidoScope_UpdateDungeonMap(GlobalContext* globalCtx);
-
 void PauseMapMark_Draw(GlobalContext* globalCtx);
 
 void KaleidoScope_UpdateCursorSize(PauseContext* pauseCtx);

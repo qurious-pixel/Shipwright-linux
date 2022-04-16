@@ -383,9 +383,7 @@ namespace SohImGui {
                 ImGui::Text("Graphics");
                 ImGui::Separator();
 
-                if (UseInternalRes()) {
-                    HOOK(ImGui::Checkbox("N64 Mode", &Game::Settings.debug.n64mode));
-                }
+                HOOK(ImGui::Checkbox("N64 Mode", &Game::Settings.debug.n64mode));
 
                 if (ImGui::Checkbox("Animated Link in Pause Menu", &Game::Settings.enhancements.animated_pause_menu)) {
                     CVar_SetS32("gPauseLiveLink", Game::Settings.enhancements.animated_pause_menu);
@@ -407,10 +405,15 @@ namespace SohImGui {
                     needs_save = true;
                 }
 
-                if (ImGui::Checkbox("Enable Masks abilities", &Game::Settings.enhancements.maskability)) {
-                    CVar_SetS32("gMaskAbility", Game::Settings.enhancements.maskability);
+                if (ImGui::Checkbox("Enable Visual/Audio Stone of Agony", &Game::Settings.enhancements.visualagony)) {
+                    CVar_SetS32("gVisualAgony", Game::Settings.enhancements.visualagony);
                     needs_save = true;
                 }
+
+                /*if (ImGui::Checkbox("Enable Masks abilities", &Game::Settings.enhancements.maskability)) {
+                    CVar_SetS32("gMaskAbility", Game::Settings.enhancements.maskability);
+                    needs_save = true;
+                }*/
 
                 ImGui::EndMenu();
             }
@@ -418,10 +421,10 @@ namespace SohImGui {
             if (ImGui::BeginMenu("Developer Tools")) {
                 HOOK(ImGui::MenuItem("Stats", nullptr, &Game::Settings.debug.soh));
                 HOOK(ImGui::MenuItem("Console", nullptr, &console->opened));
-                
+
                 ImGui::Text("Debug");
                 ImGui::Separator();
-                
+
                 if (ImGui::Checkbox("Debug Mode", &Game::Settings.cheats.debug_mode)) {
                     CVar_SetS32("gDebugEnabled", Game::Settings.cheats.debug_mode);
                     needs_save = true;
@@ -429,7 +432,7 @@ namespace SohImGui {
 
                 ImGui::EndMenu();
             }
-            
+
             if (ImGui::BeginMenu("Cheats")) {
                 if (ImGui::Checkbox("Infinite Money", &Game::Settings.cheats.infinite_money)) {
                     CVar_SetS32("gInfiniteMoney", Game::Settings.cheats.infinite_money);
@@ -450,27 +453,49 @@ namespace SohImGui {
                     CVar_SetS32("gInfiniteMagic", Game::Settings.cheats.infinite_magic);
                     needs_save = true;
                 }
-                
+
                 if (ImGui::Checkbox("No Clip", &Game::Settings.cheats.no_clip)) {
                     CVar_SetS32("gNoClip", Game::Settings.cheats.no_clip);
                     needs_save = true;
                 }
-                
+
                 if (ImGui::Checkbox("Climb Everything", &Game::Settings.cheats.climb_everything)) {
                     CVar_SetS32("gClimbEverything", Game::Settings.cheats.climb_everything);
                     needs_save = true;
                 }
-                
+
                 if (ImGui::Checkbox("Moon Jump on L", &Game::Settings.cheats.moon_jump_on_l)) {
                     CVar_SetS32("gMoonJumpOnL", Game::Settings.cheats.moon_jump_on_l);
                     needs_save = true;
                 }
-                
+
                 if (ImGui::Checkbox("Super Tunic", &Game::Settings.cheats.super_tunic)) {
                     CVar_SetS32("gSuperTunic", Game::Settings.cheats.super_tunic);
                     needs_save = true;
                 }
 
+                ImGui::EndMenu();
+            }
+
+            if (ImGui::BeginMenu("Languages")) {
+                if (ImGui::Checkbox("English", &Game::Settings.languages.set_eng)) {
+                    CVar_SetS32("gSetENG", 1);
+                    CVar_SetS32("gSetFRA", 0);
+                    CVar_SetS32("gSetGER", 0);
+                    needs_save = true;
+                }
+                if (ImGui::Checkbox("French", &Game::Settings.languages.set_fra)) {
+                    CVar_SetS32("gSetFRA", 1);
+                    CVar_SetS32("gSetENG", 0);
+                    CVar_SetS32("gSetGER", 0);
+                    needs_save = true;
+                }
+                if (ImGui::Checkbox("German", &Game::Settings.languages.set_ger)) {
+                    CVar_SetS32("gSetGER", 1);
+                    CVar_SetS32("gSetENG", 0);
+                    CVar_SetS32("gSetFRA", 0);
+                    needs_save = true;
+                }
                 ImGui::EndMenu();
             }
 

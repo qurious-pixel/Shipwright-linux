@@ -9,6 +9,22 @@ ViMode sViMode;
 FaultClient sGameFaultClient;
 u16 sLastButtonPressed;
 
+void UpdateLanguages() {
+    if (CVar_GetS32("gSetENG", 0) !=0) {
+        gSaveContext.language = LANGUAGE_ENG;
+        CVar_SetS32("gSetFRA", 0);
+        CVar_SetS32("gSetGER", 0);
+    } else if (CVar_GetS32("gSetFRA", 0) !=0) {
+        gSaveContext.language = LANGUAGE_FRA;
+        CVar_SetS32("gSetENG", 0);
+        CVar_SetS32("gSetGER", 0);
+    } else if (CVar_GetS32("gSetGER", 0) !=0) {
+        gSaveContext.language = LANGUAGE_GER;
+        CVar_SetS32("gSetENG", 0);
+        CVar_SetS32("gSetFRA", 0);
+    }
+}
+
 void GameState_FaultPrint(void) {
     static char sBtnChars[] = "ABZSuldr*+LRudlr";
     s32 i;
@@ -239,8 +255,8 @@ int fbTest = -1;
 
 void GameState_Update(GameState* gameState) {
     GraphicsContext* gfxCtx = gameState->gfxCtx;
-
-    if (fbTest == -1) 
+    UpdateLanguages();
+    if (fbTest == -1)
     {
         fbTest = gfx_create_framebuffer(64, 112);
         //fbTest = gfx_create_framebuffer(256, 512);
@@ -323,18 +339,18 @@ void GameState_Update(GameState* gameState) {
         GameState_Draw(gameState, gfxCtx);
         func_800C49F4(gfxCtx);
     }
-    
+
     // -----------------------
     // Cheats hooks
     // -----------------------
-    
+
     // Inf Money
     if (CVar_GetS32("gInfiniteMoney", 0) != 0) {
         if (gSaveContext.rupees < CUR_CAPACITY(UPG_WALLET)) {
             gSaveContext.rupees = CUR_CAPACITY(UPG_WALLET);
         }
     }
-    
+
     // Inf Health
     if (CVar_GetS32("gInfiniteHealth", 0) != 0) {
         if (gSaveContext.health < gSaveContext.healthCapacity) {
@@ -348,40 +364,40 @@ void GameState_Update(GameState* gameState) {
         if (AMMO(ITEM_STICK) < CUR_CAPACITY(UPG_STICKS)) {
             AMMO(ITEM_STICK) = CUR_CAPACITY(UPG_STICKS);
         }
-        
+
         // Deku Nuts
         if (AMMO(ITEM_NUT) < CUR_CAPACITY(UPG_NUTS)) {
             AMMO(ITEM_NUT) = CUR_CAPACITY(UPG_NUTS);
         }
-        
+
         // Bombs
         if (AMMO(ITEM_BOMB) < CUR_CAPACITY(UPG_BOMB_BAG)) {
             AMMO(ITEM_BOMB) = CUR_CAPACITY(UPG_BOMB_BAG);
         }
-        
+
         // Fairy Bow (Ammo)
         if (AMMO(ITEM_BOW) < CUR_CAPACITY(UPG_QUIVER)) {
             AMMO(ITEM_BOW) = CUR_CAPACITY(UPG_QUIVER);
         }
-        
+
         // Fairy Slingshot (Ammo)
         if (AMMO(ITEM_SLINGSHOT) < CUR_CAPACITY(UPG_BULLET_BAG)) {
             AMMO(ITEM_SLINGSHOT) = CUR_CAPACITY(UPG_BULLET_BAG);
         }
-        
+
         // Bombchus (max: 50, no upgrades)
         if (AMMO(ITEM_BOMBCHU) < 50) {
             AMMO(ITEM_BOMBCHU) = 50;
         }
     }
-    
+
     // Inf Magic
     if (CVar_GetS32("gInfiniteMagic", 0) != 0) {
         if (gSaveContext.magicAcquired && gSaveContext.magic != (gSaveContext.doubleMagic + 1) * 0x30) {
             gSaveContext.magic = (gSaveContext.doubleMagic + 1) * 0x30;
         }
     }
-    
+
     // Moon Jump On L
     if (CVar_GetS32("gMoonJumpOnL", 0) != 0) {
         if (gGlobalCtx) {

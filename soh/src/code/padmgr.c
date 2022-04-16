@@ -174,7 +174,7 @@ void PadMgr_RumbleStop(PadMgr* padMgr) {
     for (i = 0; i < 4; i++) {
         if (osMotorInit(ctrlrQ, &padMgr->pfs[i], i) == 0) {
 #if 0
-            if ((gFaultStruct.msgId == 0) && (padMgr->rumbleOnFrames != 0)) 
+            if ((gFaultStruct.msgId == 0) && (padMgr->rumbleOnFrames != 0))
             {
                 osSyncPrintf(VT_FGCOL(YELLOW));
                 // "Stop vibration pack"

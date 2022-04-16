@@ -1,4 +1,4 @@
-const char gBuildVersion[] = "DECKARD ALFA (1.0.0)";
+const char gBuildVersion[] = "ROY ALFA (1.1.0)";
 const char gBuildTeam[] = "github.com/harbourmasters";
 #ifdef __TIMESTAMP__
 const char gBuildDate[] = __TIMESTAMP__;

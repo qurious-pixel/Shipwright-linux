@@ -33,7 +33,7 @@ void KaleidoScope_DrawEquipmentImage(GlobalContext* globalCtx, void* source, u32
     gDPSetCombineMode(POLY_KAL_DISP++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
     gDPSetTextureFilter(POLY_KAL_DISP++, G_TF_POINT);
     gDPSetPrimColor(POLY_KAL_DISP++, 0, 0, 255, 255, 255, pauseCtx->alpha); //Link env colour on pause menu
-	
+
     curTexture = source;
     remainingSize = width * height * 2;
     textureHeight = 4096 / (width * 2);
@@ -64,7 +64,7 @@ void KaleidoScope_DrawEquipmentImage(GlobalContext* globalCtx, void* source, u32
 
         gDPLoadSync(POLY_KAL_DISP++);
         gDPLoadTile(POLY_KAL_DISP++, G_TX_LOADTILE, 0, 0, (width - 1) << 2, (textureHeight - 1) << 2);
-        
+
         gDPSetTextureImageFB(POLY_KAL_DISP++, G_IM_FMT_RGBA, G_IM_SIZ_16b, width, fbTest);
         gSP1Quadrangle(POLY_KAL_DISP++, 0, 2, 3, 1, 0);
 
@@ -544,7 +544,7 @@ void KaleidoScope_DrawEquipment(GlobalContext* globalCtx) {
 
     gDPSetCombineMode(POLY_KAL_DISP++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
     gDPSetPrimColor(POLY_KAL_DISP++, 0, 0, 255, 255, 255, pauseCtx->alpha); //Equipement colour overlay.
-	
+
     for (rowStart = 0, j = 0, temp = 0, i = 0; i < 4; i++, rowStart += 4, j += 16) {
         gSPVertex(POLY_KAL_DISP++, &pauseCtx->equipVtx[j], 16, 0);
 
@@ -600,7 +600,7 @@ void KaleidoScope_DrawEquipment(GlobalContext* globalCtx) {
     gSPInvalidateTexCache(POLY_KAL_DISP++, pauseCtx->iconItemSegment);
     //gSPInvalidateTexCache(POLY_KAL_DISP++, pauseCtx->iconItem24Segment);
     gSPInvalidateTexCache(POLY_KAL_DISP++, pauseCtx->nameSegment);
-    gSPInvalidateTexCache(POLY_KAL_DISP++, globalCtx->interfaceCtx.mapSegment);
+    //gSPInvalidateTexCache(POLY_KAL_DISP++, globalCtx->interfaceCtx.mapSegment);
 
     //gSPSegment(POLY_KAL_DISP++, 0x07, pauseCtx->playerSegment);
     gSPSegment(POLY_KAL_DISP++, 0x08, pauseCtx->iconItemSegment);

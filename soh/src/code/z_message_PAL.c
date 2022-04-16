@@ -1,6 +1,7 @@
 #include "global.h"
 #include "message_data_static.h"
 #include "vt.h"
+#include "luslog.h"
 
 #include <string.h>
 
@@ -33,9 +34,16 @@ s16 sMessageHasSetSfx = false;
 u16 sOcarinaSongBitFlags = 0; // ocarina bit flags
 
 MessageTableEntry* sNesMessageEntryTablePtr;
+MessageTableEntry* sFraMessageEntryTablePtr;
+MessageTableEntry* sGerMessageEntryTablePtr;
+//MessageTableEntry* sNesMessageEntryTablePtr = sNesMessageEntryTable;
+//const char** sGerMessageEntryTablePtr = sGerMessageEntryTable;
+//const char** sFraMessageEntryTablePtr = sFraMessageEntryTable;
 MessageTableEntry* sStaffMessageEntryTablePtr;
 
 char* _message_0xFFFC_nes;
+char* _message_0xFFFC_fra;
+char* _message_0xFFFC_ger;
 
 //MessageTableEntry sNesMessageEntryTable[] = {
 //#define DEFINE_MESSAGE(textId, type, yPos, nesMessage, gerMessage, fraMessage) \
@@ -279,7 +287,7 @@ void Message_DrawTextChar(GlobalContext* globalCtx, void* textureImage, Gfx** p)
     gSPTextureRectangle(gfx++, x << 2, y << 2, (x + sCharTexSize) << 2, (y + sCharTexSize) << 2, G_TX_RENDERTILE, 0, 0,
                         sCharTexScale, sCharTexScale);
     *p = gfx;
-    
+
     gDPSetOtherMode(gfx++, G_AD_DISABLE | G_CD_DISABLE | G_CK_NONE | G_TC_FILT | G_TF_BILERP | G_TT_IA16 | G_TL_TILE | G_TD_CLAMP | G_TP_NONE | G_CYC_1CYCLE | G_PM_NPRIMITIVE, G_AC_NONE | G_ZS_PRIM | G_RM_XLU_SURF | G_RM_XLU_SURF2);
 }
 
@@ -325,11 +333,10 @@ void Message_FindMessage(GlobalContext* globalCtx, u16 textId) {
     const char* foundSeg;
     const char* nextSeg;
     MessageTableEntry* messageTableEntry = sNesMessageEntryTablePtr;
-    const char** languageSegmentTable;
+    MessageTableEntry** languageSegmentTable;
     Font* font;
     const char* seg;
 
-    
     if (gSaveContext.language == LANGUAGE_ENG) {
         seg = messageTableEntry->segment;
 
@@ -352,19 +359,25 @@ void Message_FindMessage(GlobalContext* globalCtx, u16 textId) {
             messageTableEntry++;
         }
     } else {
-        //languageSegmentTable = (gSaveContext.language == LANGUAGE_GER) ? sGerMessageEntryTablePtr : sFraMessageEntryTablePtr; // OTRTODO
+        messageTableEntry = (gSaveContext.language == LANGUAGE_GER) ? sGerMessageEntryTablePtr : sFraMessageEntryTablePtr;
         seg = messageTableEntry->segment;
-
+        //messageTableEntry->textId = 0x0001;
+        messageTableEntry->typePos = 7;
+        textId = 0x0002;
         while (messageTableEntry->textId != 0xFFFF) {
             font = &globalCtx->msgCtx.font;
 
             if (messageTableEntry->textId == textId) {
-                foundSeg = *languageSegmentTable;
+                foundSeg = messageTableEntry->segment;
                 font->charTexBuf[0] = messageTableEntry->typePos;
-                languageSegmentTable++;
-                nextSeg = *languageSegmentTable;
-                font->msgOffset = foundSeg - seg;
-                font->msgLength = nextSeg - foundSeg;
+                //languageSegmentTable++;
+                nextSeg = messageTableEntry->segment;
+                font->msgOffset = messageTableEntry->segment;
+                font->msgLength = messageTableEntry->msgSize;
+                LUS_LOG(1,messageTableEntry->segment);
+                //LUS_LOG(1,messageTableEntry->msgSize);
+                //font->msgOffset = foundSeg - seg;
+                //font->msgLength = nextSeg - foundSeg;
                 // "Message found!!!"
                 osSyncPrintf(" メッセージが,見つかった！！！ = %x  "
                              "(data=%x) (data0=%x) (data1=%x) (data2=%x) (data3=%x)\n",
@@ -372,14 +385,21 @@ void Message_FindMessage(GlobalContext* globalCtx, u16 textId) {
                 return;
             }
             messageTableEntry++;
-            languageSegmentTable++;
+            //languageSegmentTable++;
         }
     }
-    // "Message not found!!!"
+
+
+
+
+
+
     osSyncPrintf(" メッセージが,見つからなかった！！！ = %x\n", textId);
     font = &globalCtx->msgCtx.font;
     messageTableEntry = sNesMessageEntryTablePtr;
-
+    if (gSaveContext.language != LANGUAGE_ENG) {
+        messageTableEntry = (gSaveContext.language == LANGUAGE_GER) ? sGerMessageEntryTablePtr : sFraMessageEntryTablePtr;
+    }
     if (gSaveContext.language == LANGUAGE_ENG) {
         foundSeg = messageTableEntry->segment;
         font->charTexBuf[0] = messageTableEntry->typePos;
@@ -1682,26 +1702,29 @@ void Message_OpenText(GlobalContext* globalCtx, u16 textId) {
         //DmaMgr_SendRequest1(font->msgBuf, (uintptr_t)(_staff_message_data_staticSegmentRomStart + 4 + font->msgOffset),
                             //font->msgLength, "../z_message_PAL.c", 1954);
     } else {
-        if (gSaveContext.language == LANGUAGE_ENG) 
+        if (gSaveContext.language == LANGUAGE_ENG)
         {
             Message_FindMessage(globalCtx, textId);
             msgCtx->msgLength = font->msgLength;
             char* src = (uintptr_t)font->msgOffset;
-            memcpy(font->msgBuf, src, font->msgLength); 
-            
-            /*Message_FindMessage(globalCtx, textId);
-            msgCtx->msgLength = font->msgLength;
-            DmaMgr_SendRequest1(font->msgBuf, (u32)(_fra_message_data_staticSegmentRomStart + font->msgOffset),
-                                font->msgLength, "../z_message_PAL.c", 1990);*/
-            
+            memcpy(font->msgBuf, src, font->msgLength);
         } else if (gSaveContext.language == LANGUAGE_GER) {
+            Message_FindMessage(globalCtx, textId);
+            msgCtx->msgLength = font->msgLength;
+            char* src = (uintptr_t)font->msgOffset;
+            memcpy(font->msgBuf, src, font->msgLength);
             // OTRTODO
             //Message_FindMessage(globalCtx, textId);
             //msgCtx->msgLength = font->msgLength;
             //DmaMgr_SendRequest1(font->msgBuf, (uintptr_t)(_ger_message_data_staticSegmentRomStart + font->msgOffset),
                                 //font->msgLength, "../z_message_PAL.c", 1978);
-        } else 
-        {
+        } else {
+            Message_FindMessage(globalCtx, textId);
+            msgCtx->msgLength = font->msgLength;
+            char* src = (uintptr_t)font->msgOffset;
+            //msgCtx->msgLength += - 3000;
+            //LUS_LOG(1,src);
+            memcpy(font->msgBuf, src, font->msgLength);
             // OTRTODO
             //Message_FindMessage(globalCtx, textId);
             //msgCtx->msgLength = font->msgLength;
@@ -2043,7 +2066,7 @@ void Message_DrawMain(GlobalContext* globalCtx, Gfx** p) {
     	sOcarinaNoteAPrimColors[1][0] = 100;
     	sOcarinaNoteAPrimColors[1][1] = 200;
     	sOcarinaNoteAPrimColors[1][2] = 255;
-    	
+
     	sOcarinaNoteAEnvColors[0][0] = 10;
     	sOcarinaNoteAEnvColors[0][1] = 10;
     	sOcarinaNoteAEnvColors[0][2] = 10;
@@ -3394,7 +3417,7 @@ void Message_Update(GlobalContext* globalCtx) {
 
 void Message_SetTables(void) {
     OTRMessage_Init();
-    
+
     // OTRTODO
     //sNesMessageEntryTablePtr = sNesMessageEntryTable;
     //sGerMessageEntryTablePtr = sGerMessageEntryTable;

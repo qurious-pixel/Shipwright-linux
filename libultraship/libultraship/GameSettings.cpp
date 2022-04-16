@@ -21,7 +21,6 @@
 using namespace Ship;
 
 namespace Game {
-
     bool DeSyncAudio = false;
     SoHConfigType Settings;
     const std::string ConfSection = DEBUG_SECTION;
@@ -29,6 +28,7 @@ namespace Game {
     const std::string ControllerSection = CONTROLLER_SECTION;
     const std::string EnhancementSection = ENHANCEMENTS_SECTION;
     const std::string CheatSection = CHEATS_SECTION;
+    const std::string LanguagesSection = LANGUAGES_SECTION;
 
     void UpdateAudio() {
         Audio_SetGameVolume(SEQ_BGM_MAIN, Settings.audio.music_main);
@@ -47,7 +47,7 @@ namespace Game {
         Settings.debug.menu_bar = stob(Conf[ConfSection]["menu_bar"]);
         Settings.debug.soh = stob(Conf[ConfSection]["soh_debug"]);
 
-    	Settings.debug.n64mode = stob(Conf[ConfSection]["n64_mode"]);
+    	   Settings.debug.n64mode = stob(Conf[ConfSection]["n64_mode"]);
 
         // Enhancements
         Settings.enhancements.fast_text = stob(Conf[EnhancementSection]["fast_text"]);
@@ -67,9 +67,12 @@ namespace Game {
 
         Settings.enhancements.n64color = stob(Conf[EnhancementSection]["n64color"]);
         CVar_SetS32("gN64Color", Settings.enhancements.n64color);
-        
-        Settings.enhancements.maskability = stob(Conf[EnhancementSection]["maskability"]);
-        CVar_SetS32("gMaskAbility", Settings.enhancements.maskability);
+
+        Settings.enhancements.visualagony = stob(Conf[EnhancementSection]["visualagony"]);
+        CVar_SetS32("gVisualAgony", Settings.enhancements.visualagony);
+
+        //Settings.enhancements.maskability = stob(Conf[EnhancementSection]["maskability"]);
+        //CVar_SetS32("gMaskAbility", Settings.enhancements.maskability);
 
         // Audio
         Settings.audio.master = Ship::stof(Conf[AudioSection]["master"]);
@@ -99,7 +102,7 @@ namespace Game {
 
         Settings.controller.input_enabled = stob(Conf[ControllerSection]["input_enabled"]);
         CVar_SetS32("gInputEnabled", Settings.controller.input_enabled);
-        
+
         // Cheats
         Settings.cheats.debug_mode = stob(Conf[CheatSection]["debug_mode"]);
         CVar_SetS32("gDebugEnabled", Settings.cheats.debug_mode);
@@ -128,6 +131,15 @@ namespace Game {
         Settings.cheats.super_tunic = stob(Conf[CheatSection]["super_tunic"]);
         CVar_SetS32("gSuperTunic", Settings.cheats.super_tunic);
 
+        Settings.languages.set_eng = stob(Conf[LanguagesSection]["set_eng"]);
+        CVar_SetS32("gSetENG", Settings.languages.set_eng);
+
+        Settings.languages.set_ger = stob(Conf[LanguagesSection]["set_ger"]);
+        CVar_SetS32("gSetGER", Settings.languages.set_ger);
+
+        Settings.languages.set_fra = stob(Conf[LanguagesSection]["set_fra"]);
+        CVar_SetS32("gSetFRA", Settings.languages.set_fra);
+
         UpdateAudio();
     }
 
@@ -153,9 +165,10 @@ namespace Game {
         Conf[EnhancementSection]["disable_lod"] = std::to_string(Settings.enhancements.disable_lod);
         Conf[EnhancementSection]["animated_pause_menu"] = std::to_string(Settings.enhancements.animated_pause_menu);
         Conf[EnhancementSection]["minimal_ui"] = std::to_string(Settings.enhancements.minimal_ui);
-		Conf[EnhancementSection]["newdrops"] = std::to_string(Settings.enhancements.newdrops);
-		Conf[EnhancementSection]["n64color"] = std::to_string(Settings.enhancements.n64color);
-		Conf[EnhancementSection]["maskability"] = std::to_string(Settings.enhancements.maskability);
+    		Conf[EnhancementSection]["newdrops"] = std::to_string(Settings.enhancements.newdrops);
+    		Conf[EnhancementSection]["n64color"] = std::to_string(Settings.enhancements.n64color);
+        Conf[EnhancementSection]["visualagony"] = std::to_string(Settings.enhancements.visualagony);
+    	   //Conf[EnhancementSection]["maskability"] = std::to_string(Settings.enhancements.maskability);
 
         // Controllers
         Conf[ControllerSection]["gyro_sensitivity"] = std::to_string(Settings.controller.gyro_sensitivity);
@@ -174,6 +187,10 @@ namespace Game {
         Conf[CheatSection]["moon_jump_on_l"] = std::to_string(Settings.cheats.moon_jump_on_l);
         Conf[CheatSection]["super_tunic"] = std::to_string(Settings.cheats.super_tunic);
 
+        //Languages
+        Conf[LanguagesSection]["set_eng"] = std::to_string(Settings.languages.set_eng);
+        Conf[LanguagesSection]["set_fra"] = std::to_string(Settings.languages.set_fra);
+        Conf[LanguagesSection]["set_ger"] = std::to_string(Settings.languages.set_ger);
         Conf.Save();
     }
 
