@@ -10275,13 +10275,7 @@ void func_80848EF8(GlobalContext* globalCtx, Player* this) {
             if (this->unk_6A0 > 4000000.0f) {
                 gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 255, 255, 255, 255);
             } else {
-                //if (this->unk_6A0 <= 3900000.0f) {
-                    //They see me rolling they hating! (link rolling animation.)
-                    //gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 255, 255, 255, DefaultIconA);
-                //} else {
-                    //out of range etc.
-                    gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 255, 255, 255, DefaultIconA);
-                //}
+                gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 255, 255, 255, DefaultIconA);
             }
             if (temp == 0 || temp <= 0.1f) {
                /*Fail check, it is used to draw off the icon when
@@ -10301,7 +10295,7 @@ void func_80848EF8(GlobalContext* globalCtx, Player* this) {
             this->unk_6A0 = 0.0f;
             if (CVar_GetS32("gVisualAgony", 0) !=0 && !this->stateFlags1) {
                 //This audio is placed here and not in previous CVar check to prevent ears ra.. :)
-                Audio_PlaySoundGeneral(NA_SE_SY_HIT_SOUND, &D_801333D4, 4, &D_801333E0, &D_801333E0, &D_801333E8);
+                Audio_PlaySoundGeneral(NA_SE_SY_MESSAGE_WOMAN, &D_801333D4, 4, &D_801333E0, &D_801333E0, &D_801333E0);
             }
             func_8083264C(this, 120, 20, 10, 0);
         }
