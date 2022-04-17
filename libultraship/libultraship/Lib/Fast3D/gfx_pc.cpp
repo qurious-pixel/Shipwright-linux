@@ -2143,7 +2143,7 @@ static void gfx_run_dl(Gfx* cmd) {
                 uintptr_t mtxAddr = cmd->words.w1;
 
                 // OTRTODO: Temp way of dealing with gMtxClear. Need something more elegant in the future...
-                if (mtxAddr == 0xF012DB20 || mtxAddr == 0xF012DB40)
+                if (mtxAddr == 0x0012DB21 || mtxAddr == 0x0012DB41)
                     mtxAddr = clearMtx;
 
 #ifdef F3DEX_GBI_2
