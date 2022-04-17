@@ -59,11 +59,11 @@ namespace Game {
         Settings.enhancements.animated_pause_menu = stob(Conf[EnhancementSection]["animated_pause_menu"]);
         CVar_SetS32("gPauseLiveLink", Settings.enhancements.animated_pause_menu);
 
+        Settings.enhancements.dynamic_wallet_icon = stob(Conf[EnhancementSection]["dynamic_wallet_icon"]);
+        CVar_SetS32("gDynamicWalletIcon", Settings.enhancements.dynamic_wallet_icon);
+
         Settings.enhancements.minimal_ui = stob(Conf[EnhancementSection]["minimal_ui"]);
         CVar_SetS32("gMinimalUI", Settings.enhancements.minimal_ui);
-
-        Settings.enhancements.reworked_controls = stob(Conf[EnhancementSection]["reworked_controls"]);
-        CVar_SetS32("gReworkedControls", Settings.enhancements.reworked_controls);
 
         Settings.enhancements.newdrops = stob(Conf[EnhancementSection]["newdrops"]);
         CVar_SetS32("gNewDrops", Settings.enhancements.newdrops);
@@ -192,6 +192,7 @@ namespace Game {
         Conf[EnhancementSection]["disable_lod"] = std::to_string(Settings.enhancements.disable_lod);
         Conf[EnhancementSection]["animated_pause_menu"] = std::to_string(Settings.enhancements.animated_pause_menu);
         Conf[EnhancementSection]["minimal_ui"] = std::to_string(Settings.enhancements.minimal_ui);
+        Conf[EnhancementSection]["dynamic_wallet_icon"] = std::to_string(Settings.enhancements.dynamic_wallet_icon);
     		Conf[EnhancementSection]["newdrops"] = std::to_string(Settings.enhancements.newdrops);
     		Conf[EnhancementSection]["n64color"] = std::to_string(Settings.enhancements.n64color);
         Conf[EnhancementSection]["visualagony"] = std::to_string(Settings.enhancements.visualagony);

@@ -27,6 +27,7 @@ struct SoHConfigType {
         bool reworked_controls = false;
         bool newdrops = false;
         bool n64color = false;
+        bool dynamic_wallet_icon = false;
         bool mm_bunny_hood = false;
         bool uniform_lr = true;
         bool visualagony = false;
