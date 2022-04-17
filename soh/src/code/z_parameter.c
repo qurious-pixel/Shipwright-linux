@@ -919,7 +919,11 @@ void func_80083108(GlobalContext* globalCtx) {
 
                 if (interfaceCtx->restrictions.tradeItems != 0) {
                     for (i = 1; i < 4; i++) {
-                        if ((gSaveContext.equips.buttonItems[i] >= ITEM_WEIRD_EGG) &&
+                      if ((CVar_GetS32("gMMBunnyHood", 0) != 0)
+                          && (gSaveContext.equips.buttonItems[i] >= ITEM_MASK_KEATON)
+                          && (gSaveContext.equips.buttonItems[i] <= ITEM_MASK_TRUTH)) {
+                          gSaveContext.buttonStatus[i] = BTN_ENABLED;
+                      } else if ((gSaveContext.equips.buttonItems[i] >= ITEM_WEIRD_EGG) &&
                             (gSaveContext.equips.buttonItems[i] <= ITEM_CLAIM_CHECK)) {
                             if (gSaveContext.buttonStatus[i] == BTN_ENABLED) {
                                 sp28 = 1;
@@ -2753,6 +2757,11 @@ void Interface_DrawItemButtons(GlobalContext* globalCtx) {
     s16 width;
     s16 height;
 
+    s16 C_Left_BTN_Pos[]  = { C_LEFT_BUTTON_X, C_LEFT_BUTTON_Y }; //(X,Y)
+    s16 C_Right_BTN_Pos[] = { C_RIGHT_BUTTON_X, C_RIGHT_BUTTON_Y };
+    s16 C_Up_BTN_Pos[]    = { C_UP_BUTTON_X, C_UP_BUTTON_Y };
+    s16 C_Down_BTN_Pos[]  = { C_DOWN_BUTTON_X, C_DOWN_BUTTON_Y };
+
     OPEN_DISPS(globalCtx->state.gfxCtx, "../z_parameter.c", 2900);
 
     // B Button Color & Texture
@@ -2770,25 +2779,25 @@ void Interface_DrawItemButtons(GlobalContext* globalCtx) {
     gDPPipeSync(OVERLAY_DISP++);
     gDPSetPrimColor(OVERLAY_DISP++, 0, 0, R_C_BTN_COLOR(0), R_C_BTN_COLOR(1), R_C_BTN_COLOR(2),
                     interfaceCtx->cLeftAlpha);
-    gSPWideTextureRectangle(OVERLAY_DISP++, OTRGetRectDimensionFromRightEdge(R_ITEM_BTN_X(1)) << 2, R_ITEM_BTN_Y(1) << 2,
-                        (OTRGetRectDimensionFromRightEdge(R_ITEM_BTN_X(1)) + R_ITEM_BTN_WIDTH(1)) << 2,
-                        (R_ITEM_BTN_Y(1) + R_ITEM_BTN_WIDTH(1)) << 2,
+    gSPWideTextureRectangle(OVERLAY_DISP++, OTRGetRectDimensionFromRightEdge(C_Left_BTN_Pos[0]) << 2, C_Left_BTN_Pos[1] << 2,
+                        (OTRGetRectDimensionFromRightEdge(C_Left_BTN_Pos[0]) + R_ITEM_BTN_WIDTH(1)) << 2,
+                        (C_Left_BTN_Pos[1] + R_ITEM_BTN_WIDTH(1)) << 2,
                         G_TX_RENDERTILE, 0, 0, R_ITEM_BTN_DD(1) << 1, R_ITEM_BTN_DD(1) << 1);
 
     // C-Down Button Color & Texture
     gDPSetPrimColor(OVERLAY_DISP++, 0, 0, R_C_BTN_COLOR(0), R_C_BTN_COLOR(1), R_C_BTN_COLOR(2),
                     interfaceCtx->cDownAlpha);
-    gSPWideTextureRectangle(OVERLAY_DISP++,  OTRGetRectDimensionFromRightEdge(R_ITEM_BTN_X(2)) << 2, R_ITEM_BTN_Y(2) << 2,
-                        (OTRGetRectDimensionFromRightEdge(R_ITEM_BTN_X(2)) + R_ITEM_BTN_WIDTH(2)) << 2,
-                        (R_ITEM_BTN_Y(2) + R_ITEM_BTN_WIDTH(2)) << 2,
+    gSPWideTextureRectangle(OVERLAY_DISP++,  OTRGetRectDimensionFromRightEdge(C_Down_BTN_Pos[0]) << 2, C_Down_BTN_Pos[1] << 2,
+                        (OTRGetRectDimensionFromRightEdge(C_Down_BTN_Pos[0]) + R_ITEM_BTN_WIDTH(2)) << 2,
+                        (C_Down_BTN_Pos[1] + R_ITEM_BTN_WIDTH(2)) << 2,
                         G_TX_RENDERTILE, 0, 0, R_ITEM_BTN_DD(2) << 1, R_ITEM_BTN_DD(2) << 1);
 
     // C-Right Button Color & Texture
     gDPSetPrimColor(OVERLAY_DISP++, 0, 0, R_C_BTN_COLOR(0), R_C_BTN_COLOR(1), R_C_BTN_COLOR(2),
                     interfaceCtx->cRightAlpha);
-    gSPWideTextureRectangle(OVERLAY_DISP++, OTRGetRectDimensionFromRightEdge(R_ITEM_BTN_X(3)) << 2, R_ITEM_BTN_Y(3) << 2,
-                        (OTRGetRectDimensionFromRightEdge(R_ITEM_BTN_X(3)) + R_ITEM_BTN_WIDTH(3)) << 2,
-                        (R_ITEM_BTN_Y(3) + R_ITEM_BTN_WIDTH(3)) << 2,
+    gSPWideTextureRectangle(OVERLAY_DISP++, OTRGetRectDimensionFromRightEdge(C_Right_BTN_Pos[0]) << 2, C_Right_BTN_Pos[1] << 2,
+                        (OTRGetRectDimensionFromRightEdge(C_Right_BTN_Pos[0]) + R_ITEM_BTN_WIDTH(3)) << 2,
+                        (C_Right_BTN_Pos[1] + R_ITEM_BTN_WIDTH(3)) << 2,
                         G_TX_RENDERTILE, 0, 0, R_ITEM_BTN_DD(3) << 1, R_ITEM_BTN_DD(3) << 1);
 
     if ((pauseCtx->state < 8) || (pauseCtx->state >= 18)) {
@@ -3276,8 +3285,7 @@ void Interface_Draw(GlobalContext* globalCtx) {
                     Gfx_TextureI8(OVERLAY_DISP, ((u8*)digitTextures[interfaceCtx->counterDigits[svar2]]), 8, 16,
                         OTRGetRectDimensionFromLeftEdge(svar3), 206, 8, 16, 1 << 10, 1 << 10);
             }
-        }
-        else {
+        } else {
             // Make sure item counts have black backgrounds
             gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 0, 0, 0, interfaceCtx->magicAlpha);
             gDPSetEnvColor(OVERLAY_DISP++, 0, 0, 0, 0);

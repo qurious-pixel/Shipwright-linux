@@ -35,10 +35,6 @@
 #define _do_action_staticSegmentRomEnd 0
 #define _nes_font_staticSegmentRomStart 0
 #define _nes_font_staticSegmentRomEnd 0
-#define _fra_font_staticSegmentRomStart 0
-#define _fra_font_staticSegmentRomEnd 0
-#define _ger_font_staticSegmentRomStart 0
-#define _ger_font_staticSegmentRomEnd 0
 #define _nintendo_rogo_staticSegmentRomStart 0
 #define _nintendo_rogo_staticSegmentRomEnd 0
 #define _dmadataSegmentStart 0

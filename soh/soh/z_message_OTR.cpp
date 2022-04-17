@@ -31,32 +31,20 @@ extern "C" void OTRMessage_Init()
 		sNesMessageEntryTablePtr[i].msgSize = file_eng->messages[i].msg.size();
 
 		if (file_eng->messages[i].id == 0xFFFC) {
-			_message_0xFFFC_nes = (char*)file_eng->messages[i].msg.c_str();
+			_message_0xFFFC = (char*)file_eng->messages[i].msg.c_str();
 		}
 	}
 
 	for (int i = 0; i < file_ger->messages.size(); i++)
 	{
-		sGerMessageEntryTablePtr[i].textId = file_ger->messages[i].id;
-		sGerMessageEntryTablePtr[i].typePos = (file_ger->messages[i].textboxType << 4) | file_ger->messages[i].textboxYPos;
 		sGerMessageEntryTablePtr[i].segment = file_ger->messages[i].msg.c_str();
 		sGerMessageEntryTablePtr[i].msgSize = file_ger->messages[i].msg.size();
-
-		if (file_ger->messages[i].id == 0xFFFC) {
-			_message_0xFFFC_ger = (char*)file_ger->messages[i].msg.c_str();
-		}
 	}
 
 	for (int i = 0; i < file_fra->messages.size(); i++)
 	{
-		sFraMessageEntryTablePtr[i].textId = file_fra->messages[i].id;
-		sFraMessageEntryTablePtr[i].typePos = (file_fra->messages[i].textboxType << 4) | file_fra->messages[i].textboxYPos;
 		sFraMessageEntryTablePtr[i].segment = file_fra->messages[i].msg.c_str();
 		sFraMessageEntryTablePtr[i].msgSize = file_fra->messages[i].msg.size();
-
-		if (file_fra->messages[i].id == 0xFFFC) {
-			_message_0xFFFC_fra = (char*)file_fra->messages[i].msg.c_str();
-		}
 	}
 
 	auto file2 = std::static_pointer_cast<Ship::Text>(OTRGlobals::Instance->context->GetResourceManager()->LoadResource("text/staff_message_data_static/staff_message_data_static"));

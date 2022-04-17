@@ -47,6 +47,7 @@ typedef struct {
 #undef DEFINE_MESSAGE
 
 #define DEFINE_MESSAGE(textId, type, yPos, nesMessage, gerMessage, fraMessage) \
+    { textId, (_SHIFTL(type, 4, 8) | _SHIFTL(yPos, 0, 8)), _message_##textId##_fra }\
 extern const char _message_##textId##_nes[];\
 extern const char _message_##textId##_ger[];\
 extern const char _message_##textId##_fra[];
@@ -57,9 +58,7 @@ extern const char _message_##textId##_fra[];
 extern const char _message_##textId##_staff[];
 
 //#include "text/message_data.h"
-extern char* _message_0xFFFC_nes;
-extern char* _message_0xFFFC_ger;
-extern char* _message_0xFFFC_fra;
+extern char* _message_0xFFFC;
 
 #undef DEFINE_MESSAGE
 

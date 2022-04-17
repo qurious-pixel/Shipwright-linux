@@ -199,8 +199,8 @@ void Font_LoadOrderedFont(Font* font) {
     s32 fontBufIndex;
     s32 offset;
 
-    len = strlen(_message_0xFFFC_nes);
-    memcpy(font->msgBuf, _message_0xFFFC_nes, len);
+    len = strlen(_message_0xFFFC);
+    memcpy(font->msgBuf, _message_0xFFFC, len);
 
     osSyncPrintf("msg_data=%x,  msg_data0=%x   jj=%x\n", font->msgOffset, font->msgLength, jj = len);
 

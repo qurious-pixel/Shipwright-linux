@@ -35,14 +35,13 @@ void VisMono_UpdateTexture(VisMono* this, u16* tex) {
     }
 }
 
-Gfx* VisMono_DrawTexture(VisMono* this, Gfx* gfx) 
+Gfx* VisMono_DrawTexture(VisMono* this, Gfx* gfx)
 {
 // OTRTODO
 #if 1
     s32 y;
     s32 height = 3;
     //u16* tex = D_0F000000;
-    //u16* tex = 0xFF000000;
     u16* tex = SEG_ADDR(0xf, 0);
     
     gDPPipeSync(gfx++);

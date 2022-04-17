@@ -24,9 +24,11 @@ struct SoHConfigType {
         bool disable_lod = false;
         bool animated_pause_menu = false;
         bool minimal_ui = false;
+        bool reworked_controls = false;
         bool newdrops = false;
         bool n64color = false;
-        //bool maskability = false;
+        bool mm_bunny_hood = false;
+        bool uniform_lr = true;
         bool visualagony = false;
     } enhancements;
 
@@ -38,6 +40,9 @@ struct SoHConfigType {
         float gyroDriftX = 0.0f;
         float gyroDriftY = 0.0f;
         bool input_enabled = false;
+        bool dpad_pause_name = false;
+        bool dpad_ocarina_text = false;
+        bool dpad_shop = false;
     } controller;
 
     // Cheats

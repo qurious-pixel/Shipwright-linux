@@ -1,5 +1,6 @@
 #include "global.h"
 #include <textures/do_action_static/do_action_static.h>
+#include <string.h>
 
 void func_80110990(GlobalContext* globalCtx) {
     Map_Destroy(globalCtx);
@@ -154,31 +155,32 @@ void func_801109B0(GlobalContext* globalCtx) {
     Map_Init(globalCtx);
 
     interfaceCtx->unk_23C = interfaceCtx->unk_242 = 0;
-	if (CVar_GetS32("gN64Color", 0) !=0) {
-		R_ITEM_BTN_X(0) = B_BUTTON_X;
-		R_B_BTN_COLOR(0) = 0;
-		R_B_BTN_COLOR(1) = 150;
-		R_B_BTN_COLOR(2) = 0;
-		R_ITEM_ICON_X(0) = B_BUTTON_X;
-		R_ITEM_AMMO_X(0) = B_BUTTON_X + 2;
-		R_A_BTN_X = A_BUTTON_X;
-		R_A_ICON_X = A_BUTTON_X;
-		R_A_BTN_COLOR(0) = 90;
-		R_A_BTN_COLOR(1) = 90;
-		R_A_BTN_COLOR(2) = 255;
-	} else {
-		R_ITEM_BTN_X(0) = B_BUTTON_X;
-		R_B_BTN_COLOR(0) = 255;
-		R_B_BTN_COLOR(1) = 30;
-		R_B_BTN_COLOR(2) = 30;
-		R_ITEM_ICON_X(0) = B_BUTTON_X;
-		R_ITEM_AMMO_X(0) = B_BUTTON_X + 2;
-		R_A_BTN_X = A_BUTTON_X;
-		R_A_ICON_X = A_BUTTON_X;
-		R_A_BTN_COLOR(0) = 0;
-		R_A_BTN_COLOR(1) = 200;
-		R_A_BTN_COLOR(2) = 50;
+  	if (CVar_GetS32("gN64Color", 0) !=0) {
+  		R_ITEM_BTN_X(0) = B_BUTTON_X;
+  		R_B_BTN_COLOR(0) = 0;
+  		R_B_BTN_COLOR(1) = 150;
+  		R_B_BTN_COLOR(2) = 0;
+  		R_ITEM_ICON_X(0) = B_BUTTON_X;
+  		R_ITEM_AMMO_X(0) = B_BUTTON_X + 2;
+  		R_A_BTN_X = A_BUTTON_X;
+  		R_A_ICON_X = A_BUTTON_X;
+  		R_A_BTN_COLOR(0) = 90;
+  		R_A_BTN_COLOR(1) = 90;
+  		R_A_BTN_COLOR(2) = 255;
+  	} else {
+    		R_ITEM_BTN_X(0) = B_BUTTON_X;
+    		R_B_BTN_COLOR(0) = 255;
+    		R_B_BTN_COLOR(1) = 30;
+    		R_B_BTN_COLOR(2) = 30;
+    		R_ITEM_ICON_X(0) = B_BUTTON_X;
+    		R_ITEM_AMMO_X(0) = B_BUTTON_X + 2;
+    		R_A_BTN_X = A_BUTTON_X;
+    		R_A_ICON_X = A_BUTTON_X;
+    		R_A_BTN_COLOR(0) = 0;
+    		R_A_BTN_COLOR(1) = 200;
+    		R_A_BTN_COLOR(2) = 50;
     }
+
 }
 
 void Message_Init(GlobalContext* globalCtx) {

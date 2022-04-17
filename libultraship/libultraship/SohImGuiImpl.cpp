@@ -230,6 +230,7 @@ namespace SohImGui {
             LoadTexture("C-Right", "assets/ship_of_harkinian/buttons/CRight.png");
             LoadTexture("C-Up", "assets/ship_of_harkinian/buttons/CUp.png");
             LoadTexture("C-Down", "assets/ship_of_harkinian/buttons/CDown.png");
+
         } });
 
         ModInternal::registerHookListener({ CONTROLLER_READ, [](const HookEvent ev) {
@@ -362,6 +363,23 @@ namespace SohImGui {
                     needs_save = true;
                 }
 
+                ImGui::Separator();
+
+                if (ImGui::Checkbox("Dpad Support on Pause and File Select", &Game::Settings.controller.dpad_pause_name)) {
+                    CVar_SetS32("gDpadPauseName", Game::Settings.controller.dpad_pause_name);
+                    needs_save = true;
+                }
+
+                if (ImGui::Checkbox("DPad Support in Ocarina and Text Choice", &Game::Settings.controller.dpad_ocarina_text)) {
+                    CVar_SetS32("gDpadOcarinaText", Game::Settings.controller.dpad_ocarina_text);
+                    needs_save = true;
+                }
+
+                if (ImGui::Checkbox("DPad Support for Browsing Shop Items", &Game::Settings.controller.dpad_shop)) {
+                    CVar_SetS32("gDpadShop", Game::Settings.controller.dpad_shop);
+                    needs_save = true;
+                }
+
                 ImGui::EndMenu();
             }
 
@@ -377,6 +395,16 @@ namespace SohImGui {
 
                 if (ImGui::Checkbox("Minimal UI", &Game::Settings.enhancements.minimal_ui)) {
                     CVar_SetS32("gMinimalUI", Game::Settings.enhancements.minimal_ui);
+                    needs_save = true;
+                }
+
+                if (ImGui::Checkbox("MM Bunny Hood", &Game::Settings.enhancements.mm_bunny_hood)) {
+                    CVar_SetS32("gMMBunnyHood", Game::Settings.enhancements.mm_bunny_hood);
+                    needs_save = true;
+                }
+
+                if (ImGui::Checkbox("Fix L&R Pause menu", &Game::Settings.enhancements.uniform_lr)) {
+                    CVar_SetS32("gUniformLR", Game::Settings.enhancements.uniform_lr);
                     needs_save = true;
                 }
 
@@ -601,7 +629,7 @@ namespace SohImGui {
 
                 ImGui::BeginGroup();
                 const ImVec2 sPos = ImGui::GetCursorPos();
-                ImGui::SetCursorPos(ImVec2(sPos.x + 21, sPos.y - 20 * scale));
+                ImGui::SetCursorPos(ImVec2(sPos.x + 4, sPos.y - 20 * scale));
                 BindButton("Z-Btn", pads[0].button & BTN_Z);
                 ImGui::SetCursorPos(ImVec2(sPos.x + 22, sPos.y + 16 * scale));
                 BindButton("Start-Btn", pads[0].button & BTN_START);
