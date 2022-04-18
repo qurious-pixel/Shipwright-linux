@@ -378,6 +378,14 @@ void Message_FindCreditsMessage(GlobalContext* globalCtx, u16 textId) {
             nextSeg = messageTableEntry->segment;
             font->msgOffset = messageTableEntry->segment;
             font->msgLength = messageTableEntry->msgSize;
+		
+            char *CheckedSTR; //Temp char to hold our checked string
+            CheckedSTR = strcasestr(messageTableEntry->segment, "Deleted"); //Check if word Deleted is present
+            if (CheckedSTR) { //If found
+              font->msgOffset = ""; //Remove the segment (aka string to be displayed)
+              font->msgLength = 0x0000; //and to be sure nothing is show make length to zero.
+            }
+		
             // "Message found!!!"
             osSyncPrintf(" メッセージが,見つかった！！！ = %x  (data=%x) (data0=%x) (data1=%x) (data2=%x) (data3=%x)\n",
                          textId, font->msgOffset, font->msgLength, foundSeg, seg, nextSeg);
