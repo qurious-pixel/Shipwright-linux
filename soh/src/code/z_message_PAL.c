@@ -1638,7 +1638,7 @@ void Message_OpenText(GlobalContext* globalCtx, u16 textId) {
     }
 
     if (sTextIsCredits) {
-        if (textId != 514 && textId != 522) { //Both "Deleted" textId of Credit roll.
+        if (textId != 514 && textId < 522) { //Both "Deleted" textId of Credit roll. the first condition might not be needed but id 514 is actually a Deleted in the file so that in case.
             Message_FindCreditsMessage(globalCtx, textId);
             msgCtx->msgLength = font->msgLength;
             char* src = (uintptr_t)font->msgOffset;
