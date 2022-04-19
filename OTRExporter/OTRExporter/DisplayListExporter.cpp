@@ -653,7 +653,7 @@ void OTRExporter_DisplayList::Save(ZResource* res, const fs::path& outPath, Bina
 		{
 			int sss =	(data & 0x00FFF00000000000) >> 44;
 			int ttt =	(data & 0x00000FFF00000000) >> 32;
-			int i =		(data & 0x000000000F000000) >> 16;
+			int i =		(data & 0x000000000F000000) >> 24;
 			int uuu =	(data & 0x0000000000FFF000) >> 12;
 			int vvv=	(data & 0x0000000000000FFF);
 
@@ -675,7 +675,7 @@ void OTRExporter_DisplayList::Save(ZResource* res, const fs::path& outPath, Bina
 				uint32_t fmt = (__ & 0xE0) >> 5;
 				uint32_t siz = (__ & 0x18) >> 3;
 
-				Gfx value = gsDPSetTextureImage(fmt, siz, www - 1, (seg & 0x0FFFFFFF) + 1);
+				Gfx value = gsDPSetTextureImage(fmt, siz, www + 1, (seg & 0x0FFFFFFF) + 1);
 				word0 = value.words.w0;
 				word1 = value.words.w1;
 
