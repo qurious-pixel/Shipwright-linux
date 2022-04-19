@@ -374,7 +374,6 @@ void Message_FindCreditsMessage(GlobalContext* globalCtx, u16 textId) {
         if (messageTableEntry->textId == textId) {
             foundSeg = messageTableEntry->segment;
             font->charTexBuf[0] = messageTableEntry->typePos;
-            messageTableEntry++;
             nextSeg = messageTableEntry->segment;
             font->msgOffset = messageTableEntry->segment;
             font->msgLength = messageTableEntry->msgSize;
@@ -1638,12 +1637,10 @@ void Message_OpenText(GlobalContext* globalCtx, u16 textId) {
     }
 
     if (sTextIsCredits) {
-        if (textId != 514 && textId < 522) { //Both "Deleted" textId of Credit roll. the first condition might not be needed but id 514 is actually a Deleted in the file so that in case.
-            Message_FindCreditsMessage(globalCtx, textId);
-            msgCtx->msgLength = font->msgLength;
-            char* src = (uintptr_t)font->msgOffset;
-            memcpy(font->msgBuf, src, font->msgLength);
-        }
+        Message_FindCreditsMessage(globalCtx, textId);
+        msgCtx->msgLength = font->msgLength;
+        char* src = (uintptr_t)font->msgOffset;
+        memcpy(font->msgBuf, src, font->msgLength);
     } else {
         if (gSaveContext.language == LANGUAGE_ENG)
         {
