@@ -379,13 +379,6 @@ void Message_FindCreditsMessage(GlobalContext* globalCtx, u16 textId) {
             font->msgOffset = messageTableEntry->segment;
             font->msgLength = messageTableEntry->msgSize;
 		
-            char *CheckedSTR; //Temp char to hold our checked string
-            CheckedSTR = strcasestr(messageTableEntry->segment, "Deleted"); //Check if word Deleted is present
-            if (CheckedSTR) { //If found
-              font->msgOffset = ""; //Remove the segment (aka string to be displayed)
-              font->msgLength = 0x0000; //and to be sure nothing is show make length to zero.
-            }
-		
             // "Message found!!!"
             osSyncPrintf(" メッセージが,見つかった！！！ = %x  (data=%x) (data0=%x) (data1=%x) (data2=%x) (data3=%x)\n",
                          textId, font->msgOffset, font->msgLength, foundSeg, seg, nextSeg);
@@ -1645,10 +1638,12 @@ void Message_OpenText(GlobalContext* globalCtx, u16 textId) {
     }
 
     if (sTextIsCredits) {
-        Message_FindCreditsMessage(globalCtx, textId);
-        msgCtx->msgLength = font->msgLength;
-        char* src = (uintptr_t)font->msgOffset;
-        memcpy(font->msgBuf, src, font->msgLength);
+        if (textId != 514 && textId != 522) { //Both "Deleted" textId of Credit roll.
+            Message_FindCreditsMessage(globalCtx, textId);
+            msgCtx->msgLength = font->msgLength;
+            char* src = (uintptr_t)font->msgOffset;
+            memcpy(font->msgBuf, src, font->msgLength);
+        }
     } else {
         if (gSaveContext.language == LANGUAGE_ENG)
         {
