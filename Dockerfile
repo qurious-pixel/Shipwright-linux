@@ -1,5 +1,10 @@
-
-
+#Change "FROM ubuntu:21.04 as build" to "FROM ubuntu:20.04 as build" or lower to build on your system
+#By doing so it will require you to edits things in code mainly "/libultraship/libultraship/SDLController.cpp"
+#Check comment about to uncomment stuff for Ubuntu 20.04 and probably lower.
+#I advice to find a way to update your Ubuntu but if you do not want I can not force so I can confirm that 20.04 is working if you
+#disable some things in SDLController.cpp.
+#If you test lower version nor have a better way to support a lower version feel free to tell me :)
+#Good luck ~
 FROM ubuntu:21.04 as build
 
 ENV LANG C.UTF-8

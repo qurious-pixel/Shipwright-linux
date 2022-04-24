@@ -26,7 +26,6 @@ struct SoHConfigType {
         bool minimal_ui = false;
         bool reworked_controls = false;
         bool newdrops = false;
-        bool n64color = false;
         bool dynamic_wallet_icon = false;
         bool mm_bunny_hood = false;
         bool uniform_lr = true;
@@ -63,6 +62,62 @@ struct SoHConfigType {
         bool freeze_time = false;
     } cheats;
 
+    // Graphics
+    struct {
+        bool show = false;
+    } graphics;
+
+    // HUD Colors
+    struct {
+        bool n64_colors = true;
+        bool gc_colors = false;
+        bool custom_colors = false;
+        //hearts colors
+        int ccheartsprimr = 255;
+        int ccheartsprimg = 70;
+        int ccheartsprimb = 50;
+        //hearts double defense colors
+        int ddccheartsprimr = 255;
+        int ddccheartsprimg = 255;
+        int ddccheartsprimb = 255;
+        //A Button Main colors
+        int ccabtnprimr = 90;
+        int ccabtnprimg = 90;
+        int ccabtnprimb = 255;
+        //B Button Main colors
+        int ccbbtnprimr = 0;
+        int ccbbtnprimg = 150;
+        int ccbbtnprimb = 0;
+        //C Button Main colors
+        int cccbtnprimr = 255;
+        int cccbtnprimg = 160;
+        int cccbtnprimb = 0;
+        //Start Button Main colors
+        int ccstartbtnprimr = 200;
+        int ccstartbtnprimg = 0;
+        int ccstartbtnprimb = 0;
+        //Magic Border colors
+        int ccmagicborderprimr = 255;
+        int ccmagicborderprimg = 255;
+        int ccmagicborderprimb = 255;
+        //Magic Main colors
+        int ccmagicprimr = 10;
+        int ccmagicprimg = 255;
+        int ccmagicprimb = 10;
+        //Magic Being used colors
+        int ccmagicuseprimr = 250;
+        int ccmagicuseprimg = 250;
+        int ccmagicuseprimb = 0;
+        //Minimap
+        int ccminimapprimr = 10;
+        int ccminimapprimg = 10;
+        int ccminimapprimb = 180;
+        //Rupee icon
+        int ccrupeeprimr = 10;
+        int ccrupeeprimg = 220;
+        int ccrupeeprimb = 10;
+    } hudcolors;
+
     // Languages
     struct {
         bool set_eng = true;
@@ -84,6 +139,7 @@ enum SeqPlayers {
 #define CONTROLLER_SECTION "CONTROLLER SECTION"
 #define ENHANCEMENTS_SECTION "ENHANCEMENT SETTINGS"
 #define CHEATS_SECTION "CHEATS SETTINGS"
+#define HUDCOLOR_SECTION "HUD COLORS SETTINGS"
 #define LANGUAGES_SECTION "LANGUAGES SETTINGS"
 
 namespace Game {
