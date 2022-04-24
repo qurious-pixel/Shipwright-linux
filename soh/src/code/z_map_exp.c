@@ -410,6 +410,9 @@ void Map_InitData(GlobalContext* globalCtx, s16 room) {
                 memcpy(globalCtx->interfaceCtx.mapSegment, ResourceMgr_LoadTexByName(minimapTableOW[sEntranceIconMapIndex]), gMapData->owMinimapTexSize[mapIndex]);
 
             interfaceCtx->unk_258 = mapIndex;
+            OPEN_DISPS(globalCtx->state.gfxCtx, "../z_map_exp.c", 626);
+            gSPInvalidateTexCache(OVERLAY_DISP++, interfaceCtx->mapSegment);
+            CLOSE_DISPS(globalCtx->state.gfxCtx, "../z_map_exp.c", 782);
             break;
         case SCENE_YDAN:
         case SCENE_DDAN:
@@ -444,6 +447,9 @@ void Map_InitData(GlobalContext* globalCtx, s16 room) {
             R_COMPASS_OFFSET_Y = gMapData->roomCompassOffsetY[mapIndex][room];
             Map_SetFloorPalettesData(globalCtx, VREG(30));
             //osSyncPrintf("ＭＡＰ 各階ＯＮチェック\n"); // "MAP Individual Floor ON Check"
+            OPEN_DISPS(globalCtx->state.gfxCtx, "../z_map_exp.c", 626);
+            gSPInvalidateTexCache(OVERLAY_DISP++, interfaceCtx->mapSegment);
+            CLOSE_DISPS(globalCtx->state.gfxCtx, "../z_map_exp.c", 782);
             break;
     }
 }
@@ -653,9 +659,11 @@ void Minimap_Draw(GlobalContext* globalCtx) {
                                       TEXEL0, 0, PRIMITIVE, 0);
 
                     if (CHECK_DUNGEON_ITEM(DUNGEON_MAP, mapIndex)) {
-                        gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 100, 255, 255, interfaceCtx->minimapAlpha);
-
-                        gSPInvalidateTexCache(OVERLAY_DISP++, interfaceCtx->mapSegment);
+                        if (CVar_GetS32("gCustomColors", 0) != 0) { //Dungeon minimap
+                            gDPSetPrimColor(OVERLAY_DISP++, 0, 0, CVar_GetInt("gCCMinimapPrimR", 255), CVar_GetInt("gCCMinimapPrimG", 255), CVar_GetInt("gCCMinimapPrimB", 255), interfaceCtx->magicAlpha);
+                        } else {
+                            gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 100, 255, 255, interfaceCtx->minimapAlpha);
+                        }
                         gDPLoadTextureBlock_4b(OVERLAY_DISP++, interfaceCtx->mapSegment, G_IM_FMT_I, 96, 85, 0,
                                                G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK,
                                                G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
@@ -710,7 +718,11 @@ void Minimap_Draw(GlobalContext* globalCtx) {
                     func_80094520(globalCtx->state.gfxCtx);
 
                     gDPSetCombineMode(OVERLAY_DISP++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
-                    gDPSetPrimColor(OVERLAY_DISP++, 0, 0, R_MINIMAP_COLOR(0), R_MINIMAP_COLOR(1), R_MINIMAP_COLOR(2), interfaceCtx->minimapAlpha);
+                    if (CVar_GetS32("gCustomColors", 0) != 0) {//Overworld minimap
+                        gDPSetPrimColor(OVERLAY_DISP++, 0, 0, CVar_GetInt("gCCMinimapPrimR", 255), CVar_GetInt("gCCMinimapPrimG", 255), CVar_GetInt("gCCMinimapPrimB", 255), interfaceCtx->magicAlpha);
+                    } else {
+                        gDPSetPrimColor(OVERLAY_DISP++, 0, 0, R_MINIMAP_COLOR(0), R_MINIMAP_COLOR(1), R_MINIMAP_COLOR(2), interfaceCtx->minimapAlpha);
+                    }
 
                     gDPLoadTextureBlock_4b(OVERLAY_DISP++, interfaceCtx->mapSegment, G_IM_FMT_IA,
                                            gMapData->owMinimapWidth[mapIndex], gMapData->owMinimapHeight[mapIndex], 0,
@@ -723,6 +735,10 @@ void Minimap_Draw(GlobalContext* globalCtx) {
                                            (oWMiniMapX + gMapData->owMinimapWidth[mapIndex]) << 2,
                                            (R_OW_MINIMAP_Y + gMapData->owMinimapHeight[mapIndex]) << 2, G_TX_RENDERTILE, 0,
                                             0, 1 << 10, 1 << 10);
+
+                    if (CVar_GetS32("gCustomColors", 0) != 1) {//This need to be added else it will color dungeon entrance icon too. (it re-init prim color to default color)
+                        gDPSetPrimColor(OVERLAY_DISP++, 0, 0, R_MINIMAP_COLOR(0), R_MINIMAP_COLOR(1), R_MINIMAP_COLOR(2), interfaceCtx->minimapAlpha);
+                    }
 
                     if (((globalCtx->sceneNum != SCENE_SPOT01) && (globalCtx->sceneNum != SCENE_SPOT04) &&
                          (globalCtx->sceneNum != SCENE_SPOT08)) ||

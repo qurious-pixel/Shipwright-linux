@@ -94,33 +94,20 @@ void Message_ResetOcarinaNoteState(void) {
     sOcarinaNotesAlphaValues[0] = sOcarinaNotesAlphaValues[1] = sOcarinaNotesAlphaValues[2] =
         sOcarinaNotesAlphaValues[3] = sOcarinaNotesAlphaValues[4] = sOcarinaNotesAlphaValues[5] =
             sOcarinaNotesAlphaValues[6] = sOcarinaNotesAlphaValues[7] = sOcarinaNotesAlphaValues[8] = 0;
-    if (CVar_GetS32("gN64Color", 0) !=0) {
-		sOcarinaNoteAPrimR = 80;
-		sOcarinaNoteAPrimG = 150;
-		sOcarinaNoteAPrimB = 255;
-		sOcarinaNoteAEnvR = 10;
-		sOcarinaNoteAEnvG = 10;
-		sOcarinaNoteAEnvB = 10;
-		sOcarinaNoteCPrimR = 255;
-		sOcarinaNoteCPrimG = 255;
-		sOcarinaNoteCPrimB = 50;
-		sOcarinaNoteCEnvR = 10;
-		sOcarinaNoteCEnvG = 10;
-		sOcarinaNoteCEnvB = 10;
-    } else {
-		sOcarinaNoteAPrimR = 80;
-		sOcarinaNoteAPrimG = 255;
-		sOcarinaNoteAPrimB = 150;
-		sOcarinaNoteAEnvR = 10;
-		sOcarinaNoteAEnvG = 10;
-		sOcarinaNoteAEnvB = 10;
-		sOcarinaNoteCPrimR = 255;
-		sOcarinaNoteCPrimG = 255;
-		sOcarinaNoteCPrimB = 50;
-		sOcarinaNoteCEnvR = 10;
-		sOcarinaNoteCEnvG = 10;
-		sOcarinaNoteCEnvB = 10;
-    }
+
+    sOcarinaNoteAPrimR = 80;
+    sOcarinaNoteAPrimG = 255;
+    sOcarinaNoteAPrimB = 150;
+    sOcarinaNoteAEnvR = 10;
+    sOcarinaNoteAEnvG = 10;
+    sOcarinaNoteAEnvB = 10;
+    sOcarinaNoteCPrimR = 255;
+    sOcarinaNoteCPrimG = 255;
+    sOcarinaNoteCPrimB = 50;
+    sOcarinaNoteCEnvR = 10;
+    sOcarinaNoteCEnvG = 10;
+    sOcarinaNoteCEnvB = 10;
+    
 
 }
 
@@ -148,7 +135,7 @@ void Message_UpdateOcarinaGame(GlobalContext* globalCtx) {
 u8 Message_ShouldAdvance(GlobalContext* globalCtx) {
     Input* input = &globalCtx->state.input[0];
 
-    bool isB_Held = CVar_GetS32("gFastText", 0) != 0 ? CHECK_BTN_ALL(input->cur.button, BTN_B)
+    bool isB_Held = CVar_GetS32("gSkipText", 0) != 0 ? CHECK_BTN_ALL(input->cur.button, BTN_B)
                                                      : CHECK_BTN_ALL(input->press.button, BTN_B);
 
     if (CHECK_BTN_ALL(input->press.button, BTN_A) || isB_Held || CHECK_BTN_ALL(input->press.button, BTN_CUP)) {
@@ -160,7 +147,7 @@ u8 Message_ShouldAdvance(GlobalContext* globalCtx) {
 u8 Message_ShouldAdvanceSilent(GlobalContext* globalCtx) {
     Input* input = &globalCtx->state.input[0];
 
-    bool isB_Held = CVar_GetS32("gFastText", 0) != 0 ? CHECK_BTN_ALL(input->cur.button, BTN_B)
+    bool isB_Held = CVar_GetS32("gSkipText", 0) != 0 ? CHECK_BTN_ALL(input->cur.button, BTN_B)
                                                      : CHECK_BTN_ALL(input->press.button, BTN_B);
 
     return CHECK_BTN_ALL(input->press.button, BTN_A) || isB_Held || CHECK_BTN_ALL(input->press.button, BTN_CUP);
@@ -374,17 +361,9 @@ void Message_FindCreditsMessage(GlobalContext* globalCtx, u16 textId) {
         if (messageTableEntry->textId == textId) {
             foundSeg = messageTableEntry->segment;
             font->charTexBuf[0] = messageTableEntry->typePos;
-            messageTableEntry++;
             nextSeg = messageTableEntry->segment;
             font->msgOffset = messageTableEntry->segment;
             font->msgLength = messageTableEntry->msgSize;
-		
-            char *CheckedSTR; //Temp char to hold our checked string
-            CheckedSTR = strcasestr(messageTableEntry->segment, "Deleted"); //Check if word Deleted is present
-            if (CheckedSTR) { //If found
-              font->msgOffset = ""; //Remove the segment (aka string to be displayed)
-              font->msgLength = 0x0000; //and to be sure nothing is show make length to zero.
-            }
 		
             // "Message found!!!"
             osSyncPrintf(" メッセージが,見つかった！！！ = %x  (data=%x) (data0=%x) (data1=%x) (data2=%x) (data3=%x)\n",
@@ -495,33 +474,54 @@ void Message_DrawTextboxIcon(GlobalContext* globalCtx, Gfx** p, s16 x, s16 y) {
 		{ 0, 0, 0 },
 		{ 0, 255, 130 },
 	};
-	if (CVar_GetS32("gN64Color", 0) !=0) {
-		sIconPrimColors[0][0] = 4;
-		sIconPrimColors[0][1] = 84;
-		sIconPrimColors[0][2] = 204;
-		sIconPrimColors[1][0] = 45;
-		sIconPrimColors[1][1] = 125;
-		sIconPrimColors[1][2] = 255;
-		sIconEnvColors[0][0] = 0;
-		sIconEnvColors[0][1] = 0;
-		sIconEnvColors[0][2] = 0;
-		sIconEnvColors[1][0] = 0;
-		sIconEnvColors[1][1] = 70;
-		sIconEnvColors[1][2] = 255;
-	};
     static s16 sIconPrimR = 0;
     static s16 sIconPrimG = 200;
     static s16 sIconPrimB = 80;
-    if (CVar_GetS32("gN64Color", 0) !=0) {
-		sIconPrimR = 0;
-		sIconPrimG = 70;
-		sIconPrimB = 255;
-    }
     static s16 sIconFlashTimer = 12;
     static s16 sIconFlashColorIdx = 0;
     static s16 sIconEnvR = 0;
     static s16 sIconEnvG = 0;
     static s16 sIconEnvB = 0;
+    if (CVar_GetS32("gN64Colors", 0) != 0) {
+      sIconPrimColors[0][0] = 4;
+      sIconPrimColors[0][1] = 84;
+      sIconPrimColors[0][2] = 204;
+      sIconPrimColors[1][0] = 45;
+      sIconPrimColors[1][1] = 125;
+      sIconPrimColors[1][2] = 255;
+      sIconEnvColors[0][0] = 0;
+      sIconEnvColors[0][1] = 0;
+      sIconEnvColors[0][2] = 0;
+      sIconEnvColors[1][0] = 0;
+      sIconEnvColors[1][1] = 70;
+      sIconEnvColors[1][2] = 255;
+    } else if (CVar_GetS32("gGameCubeColors", 0) != 0) {//Probably could emptied I need some testing there, I will do it later.
+      sIconPrimColors[0][0] = 4;
+      sIconPrimColors[0][1] = 200;
+      sIconPrimColors[0][2] = 80;
+      sIconPrimColors[1][0] = 50;
+      sIconPrimColors[1][1] = 255;
+      sIconPrimColors[1][2] = 130;
+      sIconEnvColors[0][0] = 0;
+      sIconEnvColors[0][1] = 0;
+      sIconEnvColors[0][2] = 0;
+      sIconEnvColors[1][0] = 0;
+      sIconEnvColors[1][1] = 255;
+      sIconEnvColors[1][2] = 130;
+    } else if (CVar_GetS32("gCustomColors", 0) != 0) {
+      sIconPrimColors[0][0] = (CVar_GetInt("gCCABtnPrimR", 4)/255)*80;
+      sIconPrimColors[0][1] = (CVar_GetInt("gCCABtnPrimG", 200)/255)*80;
+      sIconPrimColors[0][2] = (CVar_GetInt("gCCABtnPrimB", 80)/255)*80;
+      sIconPrimColors[1][0] = CVar_GetInt("gCCABtnPrimR", 50);
+      sIconPrimColors[1][1] = CVar_GetInt("gCCABtnPrimG", 255);
+      sIconPrimColors[1][2] = CVar_GetInt("gCCABtnPrimB", 130);
+      sIconEnvColors[0][0] = 0;
+      sIconEnvColors[0][1] = 0;
+      sIconEnvColors[0][2] = 0;
+      sIconEnvColors[1][0] = 10;
+      sIconEnvColors[1][1] = 10;
+      sIconEnvColors[1][2] = 10;
+    }
     MessageContext* msgCtx = &globalCtx->msgCtx;
     Font* font = &msgCtx->font;
     Gfx* gfx = *p;
@@ -598,6 +598,7 @@ void Message_DrawTextboxIcon(GlobalContext* globalCtx, Gfx** p, s16 x, s16 y) {
 
     gDPSetCombineLERP(gfx++, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, TEXEL0, 0, PRIMITIVE, 0, PRIMITIVE,
                       ENVIRONMENT, TEXEL0, ENVIRONMENT, TEXEL0, 0, PRIMITIVE, 0);
+
 
     gDPSetPrimColor(gfx++, 0, 0, sIconPrimR, sIconPrimG, sIconPrimB, 255);
     gDPSetEnvColor(gfx++, sIconEnvR, sIconEnvG, sIconEnvB, 255);
@@ -966,7 +967,7 @@ void Message_DrawText(GlobalContext* globalCtx, Gfx** gfxP) {
                         }
                     }
                     i = j - 1;
-                    msgCtx->textDrawPos = i + 1;
+                    msgCtx->textDrawPos = i + CVar_GetS32("gTextSpeed", 1);
 
                     if (character) {}
                 }
@@ -1076,7 +1077,7 @@ void Message_DrawText(GlobalContext* globalCtx, Gfx** gfxP) {
                 msgCtx->textDelay = msgCtx->msgBufDecoded[++i];
                 break;
             case MESSAGE_UNSKIPPABLE:
-                msgCtx->textUnskippable = CVar_GetS32("gFastText", 0) != 1;
+                msgCtx->textUnskippable = CVar_GetS32("gSkipText", 0) != 1;
                 break;
             case MESSAGE_TWO_CHOICE:
                 msgCtx->textboxEndType = TEXTBOX_ENDTYPE_2_CHOICE;
@@ -1159,7 +1160,7 @@ void Message_DrawText(GlobalContext* globalCtx, Gfx** gfxP) {
         }
     }
     if (msgCtx->textDelayTimer == 0) {
-        msgCtx->textDrawPos = i + 1;
+        msgCtx->textDrawPos = i + CVar_GetS32("gTextSpeed", 1);
         msgCtx->textDelayTimer = msgCtx->textDelay;
     } else {
         msgCtx->textDelayTimer--;
@@ -1995,21 +1996,6 @@ void Message_DrawMain(GlobalContext* globalCtx, Gfx** p) {
         { 10, 10, 10 },
         { 110, 110, 50 },
     };
-    if (CVar_GetS32("gN64Color", 0) !=0) {
-    	sOcarinaNoteAPrimColors[0][0] = 80;
-    	sOcarinaNoteAPrimColors[0][1] = 150;
-    	sOcarinaNoteAPrimColors[0][2] = 255;
-    	sOcarinaNoteAPrimColors[1][0] = 100;
-    	sOcarinaNoteAPrimColors[1][1] = 200;
-    	sOcarinaNoteAPrimColors[1][2] = 255;
-
-    	sOcarinaNoteAEnvColors[0][0] = 10;
-    	sOcarinaNoteAEnvColors[0][1] = 10;
-    	sOcarinaNoteAEnvColors[0][2] = 10;
-    	sOcarinaNoteAEnvColors[1][0] = 50;
-    	sOcarinaNoteAEnvColors[1][1] = 50;
-    	sOcarinaNoteAEnvColors[1][2] = 255;
-    }
     static s16 sOcarinaNoteFlashTimer = 12;
     static s16 sOcarinaNoteFlashColorIdx = 1;
     static s16 sOcarinaSongFanfares[] = {
@@ -2049,7 +2035,7 @@ void Message_DrawMain(GlobalContext* globalCtx, Gfx** p) {
         gDPSetCombineLERP(gfx++, 0, 0, 0, PRIMITIVE, TEXEL0, 0, PRIMITIVE, 0, 0, 0, 0, PRIMITIVE, TEXEL0, 0, PRIMITIVE,
                           0);
 
-            bool isB_Held = CVar_GetS32("gFastText", 0) != 0 ? CHECK_BTN_ALL(globalCtx->state.input[0].cur.button, BTN_B)
+            bool isB_Held = CVar_GetS32("gSkipText", 0) != 0 ? CHECK_BTN_ALL(globalCtx->state.input[0].cur.button, BTN_B)
                                                          : CHECK_BTN_ALL(globalCtx->state.input[0].press.button, BTN_B);
 
         switch (msgCtx->msgMode) {
@@ -2322,14 +2308,6 @@ void Message_DrawMain(GlobalContext* globalCtx, Gfx** p) {
                     sOcarinaNoteCEnvB = sOcarinaNoteCEnvColors[sOcarinaNoteFlashColorIdx][2];
                     sOcarinaNoteFlashTimer = 3;
                     sOcarinaNoteFlashColorIdx ^= 1;
-                    if (CVar_GetS32("gN64Color", 0) !=0) {
-		                sOcarinaNoteAPrimR = 70;
-		                sOcarinaNoteAPrimG = 70;
-		                sOcarinaNoteAPrimB = 255;
-		                sOcarinaNoteAEnvR = 50;
-		                sOcarinaNoteAEnvG = 50;
-		                sOcarinaNoteAEnvB = 255;
-					}
                 }
 
                 msgCtx->stateTimer--;
@@ -2933,15 +2911,27 @@ void Message_DrawMain(GlobalContext* globalCtx, Gfx** p) {
 
                     gDPPipeSync(gfx++);
                     if (sOcarinaNoteBuf[i] == OCARINA_NOTE_A) {
+                      if (CVar_GetS32("gN64Colors", 0) != 0) { //A buttons :)
+                        gDPSetPrimColor(gfx++, 0, 0, 80, 150, 255, sOcarinaNotesAlphaValues[i]);
+                        gDPSetEnvColor(gfx++, 100, 200, 255, 0);
+                      } else if (CVar_GetS32("gGameCubeColors", 0) != 0) {
                         gDPSetPrimColor(gfx++, 0, 0, sOcarinaNoteAPrimR, sOcarinaNoteAPrimG, sOcarinaNoteAPrimB, sOcarinaNotesAlphaValues[i]);
-                        if (CVar_GetS32("gN64Color", 0) !=0) {
-                        	gDPSetPrimColor(gfx++, 0, 0, 81, 135, 221, sOcarinaNotesAlphaValues[i]);
-                        }
                         gDPSetEnvColor(gfx++, sOcarinaNoteAEnvR, sOcarinaNoteAEnvG, sOcarinaNoteAEnvB, 0);
+                      } else if (CVar_GetS32("gCustomColors", 0) != 0) {
+                        gDPSetPrimColor(gfx++, 0, 0, CVar_GetInt("gCCABtnPrimR", 0), CVar_GetInt("gCCABtnPrimG", 0), CVar_GetInt("gCCABtnPrimB", 0), sOcarinaNotesAlphaValues[i]);
+                        gDPSetEnvColor(gfx++, CVar_GetInt("gCCABtnPrimR", 0)/2, CVar_GetInt("gCCABtnPrimG", 0)/2, CVar_GetInt("gCCABtnPrimB", 0)/2, 0);
+                      }
                     } else {
-                        gDPSetPrimColor(gfx++, 0, 0, sOcarinaNoteCPrimR, sOcarinaNoteCPrimG, sOcarinaNoteCPrimB,
-                                        sOcarinaNotesAlphaValues[i]);
+                       if (CVar_GetS32("gN64Colors", 0) != 0) { //C buttons :)
+                        gDPSetPrimColor(gfx++, 0, 0, sOcarinaNoteCPrimR, sOcarinaNoteCPrimG, sOcarinaNoteCPrimB, sOcarinaNotesAlphaValues[i]);
                         gDPSetEnvColor(gfx++, sOcarinaNoteCEnvR, sOcarinaNoteCEnvG, sOcarinaNoteCEnvB, 0);
+                      } else if (CVar_GetS32("gGameCubeColors", 0) != 0) {
+                        gDPSetPrimColor(gfx++, 0, 0, sOcarinaNoteCPrimR, sOcarinaNoteCPrimG, sOcarinaNoteCPrimB, sOcarinaNotesAlphaValues[i]);
+                        gDPSetEnvColor(gfx++, sOcarinaNoteCEnvR, sOcarinaNoteCEnvG, sOcarinaNoteCEnvB, 0);
+                      } else if (CVar_GetS32("gCustomColors", 0) != 0) {
+                        gDPSetPrimColor(gfx++, 0, 0, CVar_GetInt("gCCCBtnPrimR", 0), CVar_GetInt("gCCCBtnPrimG", 0), CVar_GetInt("gCCCBtnPrimB", 0), sOcarinaNotesAlphaValues[i]);
+                        gDPSetEnvColor(gfx++, CVar_GetInt("gCCCBtnPrimR", 0)/2, CVar_GetInt("gCCCBtnPrimG", 0)/2, CVar_GetInt("gCCCBtnPrimB", 0)/2, 0);
+                      }
                     }
 
                     gDPLoadTextureBlock(gfx++, sOcarinaNoteTextures[sOcarinaNoteBuf[i]], G_IM_FMT_IA, G_IM_SIZ_8b, 16,
@@ -3100,7 +3090,7 @@ void Message_Update(GlobalContext* globalCtx) {
         return;
     }
 
-    bool isB_Held = CVar_GetS32("gFastText", 0) != 0 ? CHECK_BTN_ALL(input->cur.button, BTN_B) && !sTextboxSkipped
+    bool isB_Held = CVar_GetS32("gSkipText", 0) != 0 ? CHECK_BTN_ALL(input->cur.button, BTN_B) && !sTextboxSkipped
                                                      : CHECK_BTN_ALL(input->press.button, BTN_B);
 
     switch (msgCtx->msgMode) {

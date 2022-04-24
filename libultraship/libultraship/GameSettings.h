@@ -7,6 +7,7 @@ struct SoHConfigType {
         bool n64mode = false;
         bool menu_bar = false;
         bool soh_sink = true;
+        bool buildinfos = false;
     } debug;
 
     // Audio
@@ -20,7 +21,8 @@ struct SoHConfigType {
 
     // Enhancements
     struct {
-        bool fast_text = false;
+        int text_speed = 1;
+        bool skip_text = false;
         bool disable_lod = false;
         bool animated_pause_menu = false;
         bool minimal_ui = false;

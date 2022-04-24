@@ -290,7 +290,6 @@ namespace SohImGui {
             pads = static_cast<OSContPad*>(ev->baseArgs["cont_pad"]);
         } });
         Game::InitSettings();
-        //LoadHUDColors();
     }
 
     void Update(EventImpl event) {
@@ -445,8 +444,14 @@ namespace SohImGui {
                 ImGui::Text("Gameplay");
                 ImGui::Separator();
 
-                if (ImGui::Checkbox("Fast Text", &Game::Settings.enhancements.fast_text)) {
-                    CVar_SetS32("gFastText", Game::Settings.enhancements.fast_text);
+                ImGui::Text("Text Speed: %dx", Game::Settings.enhancements.text_speed);
+                if (ImGui::SliderInt("##TEXTSPEED", &Game::Settings.enhancements.text_speed, 1, 5, "")) {
+                    CVar_SetS32("gTextSpeed", Game::Settings.enhancements.text_speed);
+                    needs_save = true;
+                }
+
+                if (ImGui::Checkbox("Skip Text", &Game::Settings.enhancements.skip_text)) {
+                    CVar_SetS32("gSkipText", Game::Settings.enhancements.skip_text);
                     needs_save = true;
                 }
 
@@ -504,6 +509,11 @@ namespace SohImGui {
 
                 ImGui::Text("Debug");
                 ImGui::Separator();
+
+                if (ImGui::Checkbox("Hide build infos", &Game::Settings.debug.buildinfos)) {
+                    CVar_SetS32("gBuildInfos", Game::Settings.debug.buildinfos);
+                    needs_save = true;
+                }
 
                 if (ImGui::Checkbox("Debug Mode", &Game::Settings.cheats.debug_mode)) {
                     CVar_SetS32("gDebugEnabled", Game::Settings.cheats.debug_mode);
