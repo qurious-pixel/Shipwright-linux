@@ -33,23 +33,23 @@ void Title_PrintBuildInfo(Gfx** gfxp) {
     GfxPrint_SetPos(&printer, 12, 20);
 
 #ifdef _MSC_VER
-    if (CVar_GetS32("gBuildInfos", 0) != 1) {GfxPrint_Printf(&printer, "MSVC SHIP");};
+    GfxPrint_Printf(&printer, "MSVC SHIP");
 #else
-    if (CVar_GetS32("gBuildInfos", 0) != 1) {GfxPrint_Printf(&printer, "GCC SHIP");};
+    GfxPrint_Printf(&printer, "GCC SHIP");
 #endif
 
     GfxPrint_SetPos(&printer, 5, 4);
-    if (CVar_GetS32("gBuildInfos", 0) != 1) {GfxPrint_Printf(&printer, "Game Version: %s", gameVersionStr);};
+    GfxPrint_Printf(&printer, "Game Version: %s", gameVersionStr);
 
     GfxPrint_SetColor(&printer, 255, 255, 255, 255);
     GfxPrint_SetPos(&printer, 2, 22);
-    if (CVar_GetS32("gBuildInfos", 0) != 1) {GfxPrint_Printf(&printer, quote);};
+    GfxPrint_Printf(&printer, quote);
     GfxPrint_SetPos(&printer, 1, 25);
-    if (CVar_GetS32("gBuildInfos", 0) != 1) {GfxPrint_Printf(&printer, "Build Date:%s", gBuildDate);};
+    GfxPrint_Printf(&printer, "Build Date:%s", gBuildDate);
     GfxPrint_SetPos(&printer, 3, 26);
-    if (CVar_GetS32("gBuildInfos", 0) != 1) {GfxPrint_Printf(&printer, "%s", gBuildTeam);};
+    GfxPrint_Printf(&printer, "%s", gBuildTeam);
     GfxPrint_SetPos(&printer, 3, 28);
-    if (CVar_GetS32("gBuildInfos", 0) != 1) {GfxPrint_Printf(&printer, "Release Version: %s", gBuildVersion);};
+    GfxPrint_Printf(&printer, "Release Version: %s", gBuildVersion);
     g = GfxPrint_Close(&printer);
     GfxPrint_Destroy(&printer);
     *gfxp = g;
@@ -238,7 +238,9 @@ void Title_Main(GameState* thisx) {
         Gfx* gfx = POLY_OPA_DISP;
         s32 pad;
 
-        Title_PrintBuildInfo(&gfx);
+        if (CVar_GetS32("gBuildInfos", 0) != 1) {
+            Title_PrintBuildInfo(&gfx);
+        };
         POLY_OPA_DISP = gfx;
     }
 

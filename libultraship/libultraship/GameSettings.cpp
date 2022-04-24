@@ -49,6 +49,7 @@ namespace Game {
         Settings.debug.soh = stob(Conf[ConfSection]["soh_debug"]);
     	Settings.debug.n64mode = stob(Conf[ConfSection]["n64_mode"]);
         Settings.debug.buildinfos = stob(Conf[ConfSection]["hide_buildinfos"]);
+        CVar_SetS32("gBuildInfos", Settings.debug.buildinfos);
 
         // Enhancements
         Settings.enhancements.skip_text = stob(Conf[EnhancementSection]["skip_text"]);

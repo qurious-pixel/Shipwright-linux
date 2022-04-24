@@ -293,11 +293,9 @@ void Message_FindMessage(GlobalContext* globalCtx, u16 textId) {
 
             if (messageTableEntry->textId == textId) {
                 foundSeg = messageTableEntry->segment;
-                //LUS_LOG(1,foundSeg);
                 font->charTexBuf[0] = messageTableEntry->typePos;
                 //messageTableEntry++;
                 nextSeg = messageTableEntry->segment;
-                //LUS_LOG(1,nextSeg);
                 font->msgOffset = messageTableEntry->segment;
                 font->msgLength = messageTableEntry->msgSize;
                 // "Message found!!!"
@@ -602,7 +600,6 @@ void Message_DrawTextboxIcon(GlobalContext* globalCtx, Gfx** p, s16 x, s16 y) {
 
     gDPSetPrimColor(gfx++, 0, 0, sIconPrimR, sIconPrimG, sIconPrimB, 255);
     gDPSetEnvColor(gfx++, sIconEnvR, sIconEnvG, sIconEnvB, 255);
-
     gDPLoadTextureBlock_4b(gfx++, iconTexture, G_IM_FMT_I, FONT_CHAR_TEX_WIDTH, FONT_CHAR_TEX_HEIGHT, 0,
                            G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD,
                            G_TX_NOLOD);
@@ -1160,7 +1157,7 @@ void Message_DrawText(GlobalContext* globalCtx, Gfx** gfxP) {
         }
     }
     if (msgCtx->textDelayTimer == 0) {
-        msgCtx->textDrawPos = i + CVar_GetS32("gTextSpeed", 1);
+        msgCtx->textDrawPos = i + 1;
         msgCtx->textDelayTimer = msgCtx->textDelay;
     } else {
         msgCtx->textDelayTimer--;
@@ -2035,8 +2032,7 @@ void Message_DrawMain(GlobalContext* globalCtx, Gfx** p) {
         gDPSetCombineLERP(gfx++, 0, 0, 0, PRIMITIVE, TEXEL0, 0, PRIMITIVE, 0, 0, 0, 0, PRIMITIVE, TEXEL0, 0, PRIMITIVE,
                           0);
 
-            bool isB_Held = CVar_GetS32("gSkipText", 0) != 0 ? CHECK_BTN_ALL(globalCtx->state.input[0].cur.button, BTN_B)
-                                                         : CHECK_BTN_ALL(globalCtx->state.input[0].press.button, BTN_B);
+        bool isB_Held = CVar_GetS32("gSkipText", 0) != 0 ? CHECK_BTN_ALL(globalCtx->state.input[0].cur.button, BTN_B) : CHECK_BTN_ALL(globalCtx->state.input[0].press.button, BTN_B);
 
         switch (msgCtx->msgMode) {
             case MSGMODE_TEXT_START:
