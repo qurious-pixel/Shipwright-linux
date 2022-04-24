@@ -1,23 +1,23 @@
 # Welcome to the Ship of Harkinian 
 ## Linux Twisted build !
-This a PC port of OOT bla bla you know it if you are there.
+This a PC port of OOT bla bla you know it if you are there.  
 Here some usefull information : 
 ```
 Build team: `zelda@srd022j`
 Build date: `03-02-21 00:49:18` (year-month-day)
 sha1: cee6bc3c2a634b41728f2af8da54d9bf8cc14099
 ```
---
-Attention, the linux build require Ubuntu 21.04+
-You can make it working on lower system version but you will need to edit some files.
-If you do want to run it on 20.04 or lower check Dockerfile I have added comments about how to do so.
--- 
 
-This build feature all my mods pre-installed, they can be toggle on and off with the DEV menu.
-DEV Menu can be open with F1.
+Attention, the linux build require Ubuntu 21.04+   
+You can make it working on lower system version but you will need to edit some files.  
+If you do want to run it on 20.04 or lower check Dockerfile I have added comments about how to do so.  
+
+
+This build feature all my mods pre-installed, they can be toggle on and off with the DEV menu.  
+DEV Menu can be open with F1.  
 I will manually add PR from the main repo -> https://github.com/HarbourMasters/Shipwright
 
-Before starting be sure to open a terminal or what ever you use in a folder that has no space in it's path.
+Before starting be sure to open a terminal or what ever you use in a folder that has no space in it's path.  
 How to build (All thanks to Random :) )
 ```
 git clone https://github.com/Baoulettes/Shipwright-linux.git
