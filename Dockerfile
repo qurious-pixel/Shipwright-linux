@@ -27,8 +27,6 @@ RUN dpkg --add-architecture i386 && \
     ln -s /usr/bin/g++-10 /usr/bin/g++ && \
     ln -s /usr/bin/g++-10 /usr/bin/c++
 
-#RUN apt-get purge -y libsdl2-dev:i386
-
 RUN git clone https://github.com/Perlmint/glew-cmake.git && \
 	cmake glew-cmake && \
     make -j$(nproc) && \
