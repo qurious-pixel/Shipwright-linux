@@ -6,7 +6,8 @@ jobs:
   linux_gcc:
     name: Build Linux GCC
     runs-on: ubuntu-20.04
-
+    env:
+      TEST: ${{ secrets.TEST }}
     steps:
     - uses: actions/checkout@v3
 
@@ -16,6 +17,7 @@ jobs:
     - name: Build StormLib
       run: |
         sudo docker run --rm -v $(pwd):/soh soh /bin/bash -c "
+        echo $TEST &&
         git clone https://github.com/ladislav-zezula/StormLib external/StormLib &&
         cmake -B external/StormLib/build -S external/StormLib &&
         cmake --build external/StormLib/build &&
