@@ -16,7 +16,6 @@ jobs:
     - name: Build StormLib
       run: |
         sudo docker run --rm -v $(pwd):/soh soh /bin/bash -c "
-        git config --global --add safe.directory /soh &&
         git clone https://github.com/ladislav-zezula/StormLib external/StormLib &&
         cmake -B external/StormLib/build -S external/StormLib &&
         cmake --build external/StormLib/build &&
@@ -30,7 +29,13 @@ jobs:
       run: sudo docker run --rm -v $(pwd):/soh soh /bin/bash -c "make -C OTRExporter/OTRExporter -j$(nproc)"
 
     - name: Build ZAPDTR
-      run: sudo docker run --rm -v $(pwd):/soh soh /bin/bash -c "make -C ZAPDTR -j$(nproc)"
+      run: |
+        sudo docker run --rm -v $(pwd):/soh soh /bin/bash -c "
+        git config --global --add safe.directory /soh &&
+        make -C ZAPDTR -j$(nproc)"
 
     - name: Build SOH
-      run: sudo docker run --rm -v $(pwd):/soh soh /bin/bash -c "make -C soh -j$(nproc)"
+      run: |
+        sudo docker run --rm -v $(pwd):/soh soh /bin/bash -c "
+        git config --global --add safe.directory /soh &&
+        make -C soh -j$(nproc)"
