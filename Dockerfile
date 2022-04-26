@@ -10,6 +10,7 @@ RUN dpkg --add-architecture i386 && \
         binutils:i386 \
         gcc-10:i386 \
         g++-10:i386 \
+	p7zip-full \
         python3 \
         python \
         make \
