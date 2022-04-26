@@ -17,7 +17,6 @@ jobs:
     - name: Build StormLib
       run: |
         sudo docker run --rm -v $(pwd):/soh soh /bin/bash -c "
-        7za i &&
         git clone https://github.com/ladislav-zezula/StormLib external/StormLib &&
         cmake -B external/StormLib/build -S external/StormLib &&
         cmake --build external/StormLib/build &&
@@ -40,6 +39,6 @@ jobs:
       run: |
         sudo docker run --rm -v $(pwd):/soh soh /bin/bash -c "
         git config --global --add safe.directory /soh &&
-        wget -qO ROM.zip ${{ secrets.DEBUG_ROM }} 2>/dev/null &&
+        wget -qO ROM.zip $DEBUG_ROM 2>/dev/null &&
         7za e ROM.zip -so > soh/baserom_non_mq.z64 &&
         make -C soh -j$(nproc)"
