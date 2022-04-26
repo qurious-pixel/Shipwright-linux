@@ -59,10 +59,12 @@ namespace Ship {
                 if (Conf[ConfSection]["GUID"].compare("") == 0 || Conf[ConfSection]["GUID"].compare(INVALID_SDL_CONTROLLER_GUID) == 0 || Conf[ConfSection]["GUID"].compare(NewGuid) == 0) {
                     auto NewCont = SDL_GameControllerOpen(i);
 
+                    //  /* Uncomment me if you want to build for Ubuntu 20.04 and probably lower !
                     if (SDL_GameControllerHasSensor(NewCont, SDL_SENSOR_GYRO))
                     {
                         SDL_GameControllerSetSensorEnabled(NewCont, SDL_SENSOR_GYRO, SDL_TRUE);
                     }
+                    //  */ Uncomment me if you want to build for Ubuntu 20.04 and probably lower !
 
                     // We failed to load the controller. Go to next.
                     if (NewCont == nullptr) {
@@ -176,6 +178,7 @@ namespace Ship {
             }
         }
 
+        //  /* Uncomment me if you want to build for Ubuntu 20.04 and probably lower !
         if (SDL_GameControllerHasSensor(Cont, SDL_SENSOR_GYRO))
         {
             float gyroData[3];
@@ -210,6 +213,7 @@ namespace Ship {
             wGyroX *= gyroSensitivity;
             wGyroY *= gyroSensitivity;
         }
+        //  */ Uncomment me if you want to build for Ubuntu 20.04 and probably lower !
 
         for (int32_t i = SDL_CONTROLLER_BUTTON_A; i < SDL_CONTROLLER_BUTTON_MAX; i++) {
             if (ButtonMapping.contains(i)) {
@@ -336,6 +340,7 @@ namespace Ship {
         //     }
         // }
 
+        //  /* Uncomment me if you want to build for Ubuntu 20.04 and probably lower !
         if (SDL_GameControllerHasLED(Cont)) {
             switch (controller->ledColor) {
             case 0:
@@ -352,6 +357,7 @@ namespace Ship {
                 break;
             }
         }
+        //  */ Uncomment me if you want to build for Ubuntu 20.04 and probably lower !
     }
 
     void SDLController::CreateDefaultBinding() {

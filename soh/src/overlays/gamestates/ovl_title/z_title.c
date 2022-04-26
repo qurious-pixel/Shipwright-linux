@@ -33,29 +33,29 @@ void Title_PrintBuildInfo(Gfx** gfxp) {
     GfxPrint_SetPos(&printer, 12, 20);
 
 #ifdef _MSC_VER
-    //GfxPrint_Printf(&printer, "MSVC SHIP");
+    GfxPrint_Printf(&printer, "MSVC SHIP");
 #else
-    //GfxPrint_Printf(&printer, "GCC SHIP");
+    GfxPrint_Printf(&printer, "GCC SHIP");
 #endif
 
     GfxPrint_SetPos(&printer, 5, 4);
-    //GfxPrint_Printf(&printer, "Game Version: %s", gameVersionStr);
+    GfxPrint_Printf(&printer, "Game Version: %s", gameVersionStr);
 
     GfxPrint_SetColor(&printer, 255, 255, 255, 255);
     GfxPrint_SetPos(&printer, 2, 22);
-    //GfxPrint_Printf(&printer, quote);
+    GfxPrint_Printf(&printer, quote);
     GfxPrint_SetPos(&printer, 1, 25);
-    //GfxPrint_Printf(&printer, "Build Date:%s", gBuildDate);
+    GfxPrint_Printf(&printer, "Build Date:%s", gBuildDate);
     GfxPrint_SetPos(&printer, 3, 26);
-    //GfxPrint_Printf(&printer, "%s", gBuildTeam);
+    GfxPrint_Printf(&printer, "%s", gBuildTeam);
     GfxPrint_SetPos(&printer, 3, 28);
-    //GfxPrint_Printf(&printer, "Release Version: %s", gBuildVersion);
+    GfxPrint_Printf(&printer, "Release Version: %s", gBuildVersion);
     g = GfxPrint_Close(&printer);
     GfxPrint_Destroy(&printer);
     *gfxp = g;
 }
 
-const char* quotes[11] = {
+const char* quotes[12] = {
     "My boy! This peace is what all true warriors strive for!",
     "Hmm. How can we help?",
     "Zelda! Duke Onkled is under attack by the evil forces of Ganon!",
@@ -66,12 +66,13 @@ const char* quotes[11] = {
     "I wonder what's for dinner.",
     "You've saved me!",
     "After you've scrubbed all the floors in Hyrule, then we can talk about mercy! Take him away!",
-    "Waaaahahahohohahahahahahaha"
+    "Waaaahahahohohahahahahahaha",
+    "Where is the 60 FPS mod? Enough! My ship sails in the morning."
 };
 
 char* SetQuote() {
     srand(time(NULL));
-    int randomQuote = rand() % 11;
+    int randomQuote = rand() % 12;
     return quotes[randomQuote];
 }
 
@@ -237,7 +238,9 @@ void Title_Main(GameState* thisx) {
         Gfx* gfx = POLY_OPA_DISP;
         s32 pad;
 
-        Title_PrintBuildInfo(&gfx);
+        if (CVar_GetS32("gBuildInfos", 0) != 1) {
+            Title_PrintBuildInfo(&gfx);
+        };
         POLY_OPA_DISP = gfx;
     }
 

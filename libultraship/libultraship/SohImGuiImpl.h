@@ -50,8 +50,13 @@ namespace SohImGui {
     extern Console* console;
     void Init(WindowImpl window_impl);
     void Update(EventImpl event);
-    void Draw(void);
+    int ClampFloatToInt(float value, int min, int max);
+    void DrawMainMenuAndCalculateGameSize(void);
+    void DrawFramebufferAndGameInput(void);
+    void Render(void);
+    void CancelFrame(void);
     void ShowCursor(bool hide, Dialogues w);
     void BindCmd(const std::string& cmd, CommandEntry entry);
     void* GetTextureByID(int id);
+    void LoadHUDColors();
 }

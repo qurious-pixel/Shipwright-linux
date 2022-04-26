@@ -28,7 +28,6 @@
  * env color for the base hearts is the purple-ish outline, while the env color for the double defense
  * hearts is the red color of the hearts.
  */
-
 #define HEARTS_PRIM_R 255
 #define HEARTS_PRIM_G 70
 #define HEARTS_PRIM_B 50
