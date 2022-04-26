@@ -7,38 +7,9 @@ jobs:
     name: Build Linux GCC
     runs-on: ubuntu-20.04
     env:
-      DEBUG_ROM: ${{ secrets.DEBUG_ROM }}
+      TEST: ${{ secrets.TEST }}
     steps:
     - uses: actions/checkout@v3
-
-    - name: Build Docker Image
-      run: sudo docker build . -t soh --no-cache
-
-    - name: Build StormLib
-      run: |
-        sudo docker run --rm -v $(pwd):/soh soh /bin/bash -c "
-        git clone https://github.com/ladislav-zezula/StormLib external/StormLib &&
-        cmake -B external/StormLib/build -S external/StormLib &&
-        cmake --build external/StormLib/build &&
-        cp external/StormLib/build/libstorm.a external &&
-        cp /usr/local/lib/libGLEW.a external"
-
-    - name: Build libultraship
-      run: sudo docker run --rm -v $(pwd):/soh soh /bin/bash -c "make -C libultraship -j$(nproc)"
-
-    - name: Build OTRExporter
-      run: sudo docker run --rm -v $(pwd):/soh soh /bin/bash -c "make -C OTRExporter/OTRExporter -j$(nproc)"
-
-    - name: Build ZAPDTR
-      run: |
-        sudo docker run --rm -v $(pwd):/soh soh /bin/bash -c "
-        git config --global --add safe.directory /soh &&
-        make -C ZAPDTR -j$(nproc)"
-
-    - name: Build SOH
-      run: |
-        sudo docker run --rm -v $(pwd):/soh soh /bin/bash -c "
-        git config --global --add safe.directory /soh &&
-        wget -qO ROM.zip $DEBUG_ROM 2>/dev/null &&
-        7za e ROM.zip -so > soh/baserom_non_mq.z64 &&
-        make -C soh -j$(nproc)"
+    
+    - name: Find Path
+      run: ls -al 
