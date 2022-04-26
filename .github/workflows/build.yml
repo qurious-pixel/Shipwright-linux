@@ -10,6 +10,16 @@ jobs:
       TEST: ${{ secrets.TEST }}
     steps:
     - uses: actions/checkout@v3
-    
+
+    - name: cache
+      uses: actions/cache@v3
+      with:
+        path: ~/.ccache
+        key: build-ccache-${{ env.GITHUB_RUN_ID }}
+        restore-keys: |
+          build-ccache
+            
     - name: Find Path
-      run: ls -al 
+      run: |
+        pwd
+        ls -al ~/
