@@ -22,4 +22,5 @@ jobs:
     - name: Find Path
       run: |
         pwd
-        ls -al ~/
+        ls -al $GITHUB_WORKSPACE
+        echo $GITHUB_WORKSPACE
