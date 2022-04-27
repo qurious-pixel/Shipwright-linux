@@ -59,6 +59,9 @@ jobs:
             libglib2.0-0:i386 \
             libmount-dev:i386 \
             libselinux1-dev:i386 \
+            libmount1:i386 \
+            libselinux1:i386 \
+            libpcre2-dev:i386 \
             libgles2-mesa-dev
         sudo ln -s /usr/bin/gcc-10 /usr/bin/gcc
         sudo ln -s /usr/bin/gcc-10 /usr/bin/cc
