@@ -14,11 +14,11 @@ jobs:
     - name: Checkout Repo
       uses: actions/checkout@v3
             
-    - name: Fix GitHub's mess
-      run: |
-        sudo rm -f /etc/apt/sources.list.d/microsoft-prod.list
-        sudo apt-get update -qq
-        sudo apt-get install -yqq --allow-downgrades libpcre2-8-0/focal libpcre2-16-0/focal libpcre2-32-0/focal libpcre2-posix2/focal
+    #- name: Fix GitHub's mess
+    #  run: |
+    #    sudo rm -f /etc/apt/sources.list.d/microsoft-prod.list
+    #    sudo apt-get update -qq
+    #    sudo apt-get install -yqq --allow-downgrades libpcre2-8-0/focal libpcre2-16-0/focal libpcre2-32-0/focal libpcre2-posix2/focal
           
     - name: Install Dependencies
       run: |
@@ -28,6 +28,11 @@ jobs:
         sudo apt-get install -yq --no-install-suggests --no-install-recommends --allow-unauthenticated \
             libc6-dev:i386 \
             gcc-multilib \
-            g++-multilib
-
+            g++-multilib \
+            lld \
+            libsdl2-dev:i386 \
+            zlib1g-dev:i386 \
+            libbz2-dev:i386 \
+            libpng-dev:i386 \
+            libgles2-mesa-dev
    
