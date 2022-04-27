@@ -20,7 +20,7 @@ jobs:
         sudo dpkg --add-architecture i386
         sudo apt-get update
         sudo apt-get upgrade -y
-        sudo apt-get install -y \
+        sudo apt-get install -yq --no-install-suggests --no-install-recommends --allow-unauthenticated \
             binutils:i386 \
             gcc-multilib \
             g++-multilib
