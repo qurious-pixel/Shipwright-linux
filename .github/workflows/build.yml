@@ -39,7 +39,9 @@ jobs:
         
     - name: Prepare Dockerfile (Ubuntu 20.04)
       run: |
-        cp -av .github/workflows/Dockerfile .
+        #cp -av .github/workflows/Dockerfile .
+        ls -al
+        ls -al .github
         
     - name: Build Docker Image
       run: sudo docker build . -t soh --no-cache
