@@ -1,7 +1,7 @@
 name: Build
 
 on: 
-  push:
+  #push:
   #  branches: 
   #    - main
   workflow_dispatch:
@@ -17,6 +17,7 @@ jobs:
       with:
         repository: Baoulettes/Shipwright-linux
         ref: main
+        clean: false
         #path: .
 
     - name: cache
