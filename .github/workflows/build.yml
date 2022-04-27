@@ -25,8 +25,33 @@ jobs:
           7za e soh/ROM/ROM.zip -so > soh/ROM/baserom_non_mq.z64
         fi
         cp soh/ROM/baserom_non_mq.z64 soh
+    - name: Build Docker Image
+      run: sudo docker build . -t soh --no-cache
 
-    - name: Find Path
+    - name: Build StormLib
       run: |
-        ls -al soh
-        ls -al soh/ROM
+        sudo docker run --rm -v $(pwd):/soh soh /bin/bash -c "
+        git clone https://github.com/ladislav-zezula/StormLib external/StormLib &&
+        cmake -B external/StormLib/build -S external/StormLib &&
+        cmake --build external/StormLib/build &&
+        cp external/StormLib/build/libstorm.a external &&
+        cp /usr/local/lib/libGLEW.a external"
+
+    - name: Build libultraship
+      run: sudo docker run --rm -v $(pwd):/soh soh /bin/bash -c "make -C libultraship -j$(nproc)"
+
+    - name: Build OTRExporter
+      run: sudo docker run --rm -v $(pwd):/soh soh /bin/bash -c "make -C OTRExporter/OTRExporter -j$(nproc)"
+
+    - name: Build ZAPDTR
+      run: |
+        sudo docker run --rm -v $(pwd):/soh soh /bin/bash -c "
+        git config --global --add safe.directory /soh &&
+        make -C ZAPDTR -j$(nproc)"
+
+    - name: Build SOH
+      run: |
+        sudo docker run --rm -v $(pwd):/soh soh /bin/bash -c "
+        git config --global --add safe.directory /soh &&
+        make -C soh -j$(nproc)"
+
