@@ -56,3 +56,7 @@ jobs:
         make setup -C soh -j$(nproc) &&
         make -C soh -j$(nproc)"
 
+    - uses: actions/upload-artifact@v3
+      with:
+          name: SOH-Linux
+          path: soh/soh.elf
