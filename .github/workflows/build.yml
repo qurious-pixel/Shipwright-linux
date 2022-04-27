@@ -7,20 +7,20 @@ jobs:
     name: Build Linux GCC
     runs-on: ubuntu-20.04
     env:
-      TEST: ${{ secrets.TEST }}
+      TEST: 
     steps:
     - uses: actions/checkout@v3
 
     - name: cache
       uses: actions/cache@v3
       with:
-        path: ~/.ccache
-        key: build-ccache-${{ env.GITHUB_RUN_ID }}
+        path: ${{github.workspace}}/ROM
+        key: build-${{github.run_id}}
         restore-keys: |
-          build-ccache
+          build
             
     - name: Find Path
       run: |
-        pwd
-        ls -al $GITHUB_WORKSPACE
-        echo $GITHUB_WORKSPACE
+        mkdir TEST
+        wget -qO soh/TEST/README.md ${{ secrets.TEST }}
+        ls soh/TEST/
