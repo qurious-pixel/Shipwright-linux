@@ -1,7 +1,7 @@
 name: Build
 
 on: 
-  push:
+  #push:
   #  branches: 
   #    - main
   workflow_dispatch:
@@ -12,6 +12,12 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v3
+    - name: Checkout Upstream Repo
+      uses: actions/checkout@v3
+      with:
+        repository: Baoulettes/Shipwright-linux
+        ref: main
+        #path: .
 
     - name: cache
       uses: actions/cache@v3
@@ -20,7 +26,6 @@ jobs:
         key: build-${{github.run_id}}
         restore-keys: |
           build
-          ~/.ccache
             
     - name: Prepare Build
       run: |
@@ -31,75 +36,34 @@ jobs:
         fi
         cp soh/ROM/baserom_non_mq.z64 soh
         
-    - name: Install Dependencies
-      run: |
-        sudo dpkg --add-architecture i386
-        sudo apt-get update
-        sudo apt purge libpcre2-8-0:amd64
-        #sudo apt --fix-broken install
-        sudo apt-get install -y \
-            binutils:i386 \
-            gcc-10:i386 \
-            g++-10:i386 \
-            python \
-            cmake \
-            lld \
-            zlib1g-dev:i386 \
-            libbz2-dev:i386 \
-            libpng-dev:i386 \
-            libgles2-mesa-dev
-        sudo ln -s /usr/bin/gcc-10 /usr/bin/gcc
-        sudo ln -s /usr/bin/gcc-10 /usr/bin/cc
-        sudo ln -s /usr/bin/g++-10 /usr/bin/g++
-        sudo ln -s /usr/bin/g++-10 /usr/bin/c++
+    - name: Build Docker Image
+      run: sudo docker build . -t soh --no-cache
 
-    - name: Build glew:i386
-      run: |
-        git clone https://github.com/Perlmint/glew-cmake.git 
-        cmake glew-cmake 
-        make -j$(nproc) 
-        make install ARCH64=false
-
-    - name: Build SDL2:i386
-      run: |
-        SDL2VER=2.0.22
-        if [[ ! -e ~/.ccache ]]; then
-          mkdir ~/.ccache
-        fi  
-        cd ~/.ccache
-        if [[ ! -e SDL2-${SDL2VER} ]]; then
-          curl -sLO https://libsdl.org/release/SDL2-${SDL2VER}.tar.gz
-          tar -xzf SDL2-${SDL2VER}.tar.gz
-          cd SDL2-${SDL2VER}
-          ./configure --build=i386-linux-gnu --prefix=/usr
-          make && cd ../
-          rm SDL2-${SDL2VER}.tar.gz
-        fi
-        sudo make -C SDL2-${SDL2VER} install
-        sudo cp -av /lib/libSDL* /lib/i386-linux-gnu/
-        
     - name: Build StormLib
       run: |
-        git clone https://github.com/ladislav-zezula/StormLib external/StormLib
-        cmake -B external/StormLib/build -S external/StormLib
-        cmake --build external/StormLib/build
-        cp external/StormLib/build/libstorm.a external
-        cp /usr/local/lib/libGLEW.a external
-
+        sudo docker run --rm -v $(pwd):/soh soh /bin/bash -c "
+        git clone https://github.com/ladislav-zezula/StormLib external/StormLib &&
+        cmake -B external/StormLib/build -S external/StormLib &&
+        cmake --build external/StormLib/build &&
+        cp external/StormLib/build/libstorm.a external &&
+        cp /usr/local/lib/libGLEW.a external"
     - name: Build libultraship
-      run: make -C libultraship -j$(nproc)
+      run: sudo docker run --rm -v $(pwd):/soh soh /bin/bash -c "make -C libultraship -j$(nproc)"
 
     - name: Build OTRExporter
-      run: make -C OTRExporter/OTRExporter -j$(nproc)
+      run: sudo docker run --rm -v $(pwd):/soh soh /bin/bash -c "make -C OTRExporter/OTRExporter -j$(nproc)"
 
     - name: Build ZAPDTR
-      run: make -C ZAPDTR -j$(nproc)
-
+      run: |
+        sudo docker run --rm -v $(pwd):/soh soh /bin/bash -c "
+        git config --global --add safe.directory /soh &&
+        make -C ZAPDTR -j$(nproc)"
     - name: Build SOH
       run: |
-        make setup -C soh -j$(nproc) 
-        make -C soh -j$(nproc)
-
+        sudo docker run --rm -v $(pwd):/soh soh /bin/bash -c "
+        git config --global --add safe.directory /soh &&
+        make setup -C soh -j$(nproc) &&
+        make -C soh -j$(nproc)"
     - uses: actions/upload-artifact@v3
       with:
           name: SOH-Linux
