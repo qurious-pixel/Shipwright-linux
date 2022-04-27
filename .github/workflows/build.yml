@@ -6,21 +6,27 @@ jobs:
   linux_gcc:
     name: Build Linux GCC
     runs-on: ubuntu-20.04
-    env:
-      TEST: 
     steps:
     - uses: actions/checkout@v3
 
     - name: cache
       uses: actions/cache@v3
       with:
-        path: ${{github.workspace}}/ROM
+        path: ${{github.workspace}}/soh/ROM
         key: build-${{github.run_id}}
         restore-keys: |
           build
             
+    - name: Prepare Build
+      run: |
+        if [[ ! -e soh/ROM/ROM.ZIP ]]; then
+          mkdir -p soh/ROM 
+          wget -qO soh/ROM/ROM.zip ${{ secrets.DEBUG_ROM }} 2>/dev/null
+          7za e ROM.zip -so > baserom_non_mq.z64
+        fi
+        cp soh/ROM/baserom_non_mq.z64 soh
+
     - name: Find Path
       run: |
-        mkdir soh/TEST
-        wget -qO soh/TEST/README.md ${{ secrets.TEST }}
-        ls soh/TEST/
+        ls -al soh
+        ls -al soh/ROM
