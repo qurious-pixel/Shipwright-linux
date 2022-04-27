@@ -36,6 +36,10 @@ jobs:
         fi
         cp soh/ROM/baserom_non_mq.z64 soh
         
+    - name: Prepare Dockerfile (Ubuntu 20.04)
+      run: |
+        cp -av .github/workflows/Dockerfile .
+        
     - name: Build Docker Image
       run: sudo docker build . -t soh --no-cache
 
