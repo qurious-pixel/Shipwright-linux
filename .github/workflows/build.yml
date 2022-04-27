@@ -35,6 +35,7 @@ jobs:
       run: |
         sudo dpkg --add-architecture i386
         sudo apt-get update
+        sudo apt --fix-broken install
         sudo apt-get install -y \
             binutils:i386 \
             gcc-10:i386 \
