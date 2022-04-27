@@ -16,11 +16,12 @@ jobs:
       with:
         repository: Baoulettes/Shipwright-linux
         ref: main
-        clean: false
         #path: .
     - name: Checkout AppImage Repo
       uses: actions/checkout@v3
-    
+      with:
+          clean: false
+          
     - name: cache
       uses: actions/cache@v3
       with:
@@ -40,9 +41,9 @@ jobs:
         
     - name: Prepare Dockerfile (Ubuntu 20.04)
       run: |
-        #cp -av .github/workflows/Dockerfile .
         ls -al
-        ls -al .github
+        ls -al .github/workflows
+        cp -av .github/workflows/Dockerfile .
         
     - name: Build Docker Image
       run: sudo docker build . -t soh --no-cache
