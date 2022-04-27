@@ -11,8 +11,6 @@ jobs:
     name: Build Linux GCC
     runs-on: ubuntu-20.04
     steps:
-    - name: Checkout AppImage Repo
-    - uses: actions/checkout@v3
     - name: Checkout Upstream Repo
       uses: actions/checkout@v3
       with:
@@ -20,7 +18,9 @@ jobs:
         ref: main
         clean: false
         #path: .
-
+    - name: Checkout AppImage Repo
+    - uses: actions/checkout@v3
+    
     - name: cache
       uses: actions/cache@v3
       with:
