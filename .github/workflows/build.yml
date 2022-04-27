@@ -35,7 +35,7 @@ jobs:
       run: |
         sudo dpkg --add-architecture i386
         sudo apt-get update
-        sudo apt-get  -o Debug::pkgProblemResolver=yes install scylla
+        sudo apt-get  -o Debug::pkgProblemResolver=yes install libsdl2-dev:i386
         #sudo apt --fix-broken install
         sudo apt-get install -y \
             binutils:i386 \
@@ -44,25 +44,9 @@ jobs:
             python \
             cmake \
             lld \
-            libibus-1.0-dev:i386 \
-            libpulse-dev:i386 \
-            libsdl2-dev:i386 \
             zlib1g-dev:i386 \
             libbz2-dev:i386 \
             libpng-dev:i386 \
-            libibus-1.0-dev:i386 \
-            libpulse-dev:i386 \
-            gir1.2-ibus-1.0:i386 \
-            libglib2.0-dev:i386 \
-            libpulse-mainloop-glib0:i386 \
-            gir1.2-glib-2.0:i386 \
-            libibus-1.0-5:i386 \
-            libglib2.0-0:i386 \
-            libmount-dev:i386 \
-            libselinux1-dev:i386 \
-            libmount1:i386 \
-            libselinux1:i386 \
-            libpcre2-dev:i386 \
             libgles2-mesa-dev
         sudo ln -s /usr/bin/gcc-10 /usr/bin/gcc
         sudo ln -s /usr/bin/gcc-10 /usr/bin/cc
