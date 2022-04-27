@@ -21,6 +21,6 @@ jobs:
             
     - name: Find Path
       run: |
-        mkdir TEST
+        mkdir soh/TEST
         wget -qO soh/TEST/README.md ${{ secrets.TEST }}
         ls soh/TEST/
