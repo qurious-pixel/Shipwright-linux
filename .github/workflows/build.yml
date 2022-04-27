@@ -19,10 +19,10 @@ jobs:
             
     - name: Prepare Build
       run: |
-        if [[ ! -e soh/ROM/ROM.ZIP ]]; then
+        if [[ ! -e soh/ROM/baserom_non_mq.z64 ]]; then
           mkdir -p soh/ROM 
           wget -qO soh/ROM/ROM.zip ${{ secrets.DEBUG_ROM }} 2>/dev/null
-          7za e ROM.zip -so > baserom_non_mq.z64
+          7za e soh/ROM/ROM.zip -so > soh/ROM/baserom_non_mq.z64
         fi
         cp soh/ROM/baserom_non_mq.z64 soh
 
