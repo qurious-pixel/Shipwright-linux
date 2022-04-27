@@ -11,70 +11,18 @@ jobs:
     name: Build Linux GCC
     runs-on: ubuntu-20.04
     steps:
-    - name: Checkout Upstream Repo
+    - name: Checkout Repo
       uses: actions/checkout@v3
-      with:
-        repository: Baoulettes/Shipwright-linux
-        ref: main
-        #path: .
-    - name: Checkout AppImage Repo
-      uses: actions/checkout@v3
-      with:
-          clean: false
-          path: appimage
-          
-    - name: cache
-      uses: actions/cache@v3
-      with:
-        path: ${{github.workspace}}/soh/ROM
-        key: build-${{github.run_id}}
-        restore-keys: |
-          build
             
-    - name: Prepare Build
-      run: |
-        if [[ ! -e soh/ROM/baserom_non_mq.z64 ]]; then
-          mkdir -p soh/ROM 
-          wget -qO soh/ROM/ROM.zip ${{ secrets.DEBUG_ROM }} 2>/dev/null
-          7za e soh/ROM/ROM.zip -so > soh/ROM/baserom_non_mq.z64
-        fi
-        cp soh/ROM/baserom_non_mq.z64 soh
         
-    - name: Prepare Dockerfile (Ubuntu 20.04)
+    - name: Install Dependencies
       run: |
-        ls -al
-        ls -al appimage/.github/workflows
-        cp -av appimage/.github/workflows/Dockerfile .
-        
-    - name: Build Docker Image
-      run: sudo docker build . -t soh --no-cache
+        sudo dpkg --add-architecture i386
+        sudo apt-get update
+        sudo apt-get upgrade -y
+        sudo apt-get install -y \
+            binutils:i386 \
+            gcc-multilib \
+            g++-multilib
 
-    - name: Build StormLib
-      run: |
-        sudo docker run --rm -v $(pwd):/soh soh /bin/bash -c "
-        git clone https://github.com/ladislav-zezula/StormLib external/StormLib &&
-        cmake -B external/StormLib/build -S external/StormLib &&
-        cmake --build external/StormLib/build &&
-        cp external/StormLib/build/libstorm.a external &&
-        cp /usr/local/lib/libGLEW.a external"
-    - name: Build libultraship
-      run: sudo docker run --rm -v $(pwd):/soh soh /bin/bash -c "make -C libultraship -j$(nproc)"
-
-    - name: Build OTRExporter
-      run: sudo docker run --rm -v $(pwd):/soh soh /bin/bash -c "make -C OTRExporter/OTRExporter -j$(nproc)"
-
-    - name: Build ZAPDTR
-      run: |
-        sudo docker run --rm -v $(pwd):/soh soh /bin/bash -c "
-        git config --global --add safe.directory /soh &&
-        make -C ZAPDTR -j$(nproc)"
-    - name: Build SOH
-      run: |
-        sudo docker run --rm -v $(pwd):/soh soh /bin/bash -c "
-        git config --global --add safe.directory /soh &&
-        make setup -C soh -j$(nproc) &&
-        make -C soh -j$(nproc)"
-    - uses: actions/upload-artifact@v3
-      with:
-          name: SOH-Linux
-          path: soh/soh.elf
+   
