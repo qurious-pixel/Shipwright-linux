@@ -12,6 +12,7 @@ REGISTER_ZFILENODE(Text, ZText);
 ZText::ZText(ZFile* nParent) : ZResource(nParent)
 {
 	RegisterRequiredAttribute("CodeOffset");
+	RegisterOptionalAttribute("LangOffset", "0");
 }
 
 void ZText::ParseRawData()
@@ -20,8 +21,18 @@ void ZText::ParseRawData()
 
 	const auto& rawData = parent->GetRawData();
 	uint32_t currentPtr = StringHelper::StrToL(registeredAttributes.at("CodeOffset").value, 16);
+	uint32_t langPtr = currentPtr;
+	bool isPalLang = false;
 
-	std::vector<uint8_t> codeData = File::ReadAllBytes((Globals::Instance->baseRomPath / "code").string());
+	if (StringHelper::StrToL(registeredAttributes.at("LangOffset").value, 16) != 0)
+	{
+		langPtr = StringHelper::StrToL(registeredAttributes.at("LangOffset").value, 16);
+
+		if (langPtr != currentPtr)
+			isPalLang = true;
+	}
+
+	std::vector<uint8_t> codeData;
 
 	if (Globals::Instance->fileMode == ZFileMode::ExtractDirectory)
 		codeData = Globals::Instance->GetBaseromFile("code");
@@ -34,13 +45,23 @@ void ZText::ParseRawData()
 		msgEntry.id = BitConverter::ToInt16BE(codeData, currentPtr + 0);
 		msgEntry.textboxType = (codeData[currentPtr + 2] & 0xF0) >> 4;
 		msgEntry.textboxYPos = (codeData[currentPtr + 2] & 0x0F);
-		msgEntry.segmentId = (codeData[currentPtr + 4]);
-		msgEntry.msgOffset = BitConverter::ToInt32BE(codeData, currentPtr + 4) & 0x00FFFFFF;
+
+		if (isPalLang)
+		{
+			msgEntry.segmentId = (codeData[langPtr + 0]);
+			msgEntry.msgOffset = BitConverter::ToInt32BE(codeData, langPtr + 0) & 0x00FFFFFF;
+		}
+		else
+		{
+			msgEntry.segmentId = (codeData[langPtr + 4]);
+			msgEntry.msgOffset = BitConverter::ToInt32BE(codeData, langPtr + 4) & 0x00FFFFFF;
+		}
+
 		uint32_t msgPtr = msgEntry.msgOffset;
 
 		unsigned char c = rawData[msgPtr];
 		unsigned int extra = 0;
-    bool stop = false;
+		bool stop = false;
 
 		while ((c != '\0' && !stop) || extra > 0)
 		{
@@ -82,6 +103,11 @@ void ZText::ParseRawData()
 			break;
 
 		currentPtr += 8;
+
+		if (isPalLang)
+			langPtr += 4;
+		else
+			langPtr += 8;
 	}
 
 	int bp2 = 0;

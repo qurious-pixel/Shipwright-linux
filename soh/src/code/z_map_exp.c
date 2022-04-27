@@ -659,8 +659,8 @@ void Minimap_Draw(GlobalContext* globalCtx) {
                                       TEXEL0, 0, PRIMITIVE, 0);
 
                     if (CHECK_DUNGEON_ITEM(DUNGEON_MAP, mapIndex)) {
-                        if (CVar_GetS32("gCustomColors", 0) != 0) { //Dungeon minimap
-                            gDPSetPrimColor(OVERLAY_DISP++, 0, 0, CVar_GetInt("gCCMinimapPrimR", 255), CVar_GetInt("gCCMinimapPrimG", 255), CVar_GetInt("gCCMinimapPrimB", 255), interfaceCtx->magicAlpha);
+                        if (CVar_GetS32("gHudColors", 1) == 2) { //Dungeon minimap
+                            gDPSetPrimColor(OVERLAY_DISP++, 0, 0, CVar_GetS32("gCCMinimapPrimR", 255), CVar_GetS32("gCCMinimapPrimG", 255), CVar_GetS32("gCCMinimapPrimB", 255), interfaceCtx->magicAlpha);
                         } else {
                             gDPSetPrimColor(OVERLAY_DISP++, 0, 0, 100, 255, 255, interfaceCtx->minimapAlpha);
                         }
@@ -718,8 +718,8 @@ void Minimap_Draw(GlobalContext* globalCtx) {
                     func_80094520(globalCtx->state.gfxCtx);
 
                     gDPSetCombineMode(OVERLAY_DISP++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
-                    if (CVar_GetS32("gCustomColors", 0) != 0) {//Overworld minimap
-                        gDPSetPrimColor(OVERLAY_DISP++, 0, 0, CVar_GetInt("gCCMinimapPrimR", 255), CVar_GetInt("gCCMinimapPrimG", 255), CVar_GetInt("gCCMinimapPrimB", 255), interfaceCtx->magicAlpha);
+                    if (CVar_GetS32("gHudColors", 1) == 2) {//Overworld minimap
+                        gDPSetPrimColor(OVERLAY_DISP++, 0, 0, CVar_GetS32("gCCMinimapPrimR", 255), CVar_GetS32("gCCMinimapPrimG", 255), CVar_GetS32("gCCMinimapPrimB", 255), interfaceCtx->magicAlpha);
                     } else {
                         gDPSetPrimColor(OVERLAY_DISP++, 0, 0, R_MINIMAP_COLOR(0), R_MINIMAP_COLOR(1), R_MINIMAP_COLOR(2), interfaceCtx->minimapAlpha);
                     }
@@ -736,7 +736,7 @@ void Minimap_Draw(GlobalContext* globalCtx) {
                                            (R_OW_MINIMAP_Y + gMapData->owMinimapHeight[mapIndex]) << 2, G_TX_RENDERTILE, 0,
                                             0, 1 << 10, 1 << 10);
 
-                    if (CVar_GetS32("gCustomColors", 0) != 1) {//This need to be added else it will color dungeon entrance icon too. (it re-init prim color to default color)
+                    if (CVar_GetS32("gHudColors", 1) != 2) {//This need to be added else it will color dungeon entrance icon too. (it re-init prim color to default color)
                         gDPSetPrimColor(OVERLAY_DISP++, 0, 0, R_MINIMAP_COLOR(0), R_MINIMAP_COLOR(1), R_MINIMAP_COLOR(2), interfaceCtx->minimapAlpha);
                     }
 

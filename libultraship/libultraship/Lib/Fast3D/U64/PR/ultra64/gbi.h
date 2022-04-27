@@ -173,7 +173,8 @@
 /* GFX Effects */
 
 // RDP Cmd
-#define G_SET_GFX_EFFECT       0x39
+#define G_SETGRAYSCALE       0x39
+#define G_SETINTENSITY       0x40
 
 // Effects
 enum GFXEffects {
@@ -2832,12 +2833,12 @@ _DW({                                   \
     _g->words.w1 = 0;                       \
 }
 
-#define gsSPSetGfxEffect(pkt, fb)                        \
-{                                   \
-    Gfx *_g = (Gfx *)(pkt);                     \
-                                    \
-    _g->words.w0 = _SHIFTL(G_SET_GFX_EFFECT, 24, 8);             \
-    _g->words.w1 = fb;                       \
+#define gsSPGrayscale(pkt, state)                   \
+{                                                   \
+    Gfx *_g = (Gfx *)(pkt);                         \
+                                                    \
+    _g->words.w0 = _SHIFTL(G_SETGRAYSCALE, 24, 8);  \
+    _g->words.w1 = state;                           \
 }
 
 #ifdef  F3DEX_GBI_2
@@ -3171,6 +3172,8 @@ _DW({                                   \
     _SHIFTL(c, 24, 8), (unsigned int)(d)                \
 }
 
+
+
 #define DPRGBColor(pkt, cmd, r, g, b, a)                \
             gDPSetColor(pkt, cmd,                   \
             (_SHIFTL(r, 24, 8) | _SHIFTL(g, 16, 8) |    \
@@ -3180,6 +3183,8 @@ _DW({                                   \
              (_SHIFTL(r, 24, 8) | _SHIFTL(g, 16, 8) |   \
               _SHIFTL(b, 8, 8) | _SHIFTL(a, 0, 8)))
 
+#define gsDPSetGrayscaleColor(pkt, r, g, b, lerp)        \
+            DPRGBColor(pkt, G_SETINTENSITY, r, g, b, lerp)
 #define gDPSetEnvColor(pkt, r, g, b, a)                 \
             DPRGBColor(pkt, G_SETENVCOLOR, r,g,b,a)
 #define gsDPSetEnvColor(r, g, b, a)                 \

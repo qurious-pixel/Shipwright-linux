@@ -1119,6 +1119,7 @@ void Gameplay_Draw(GlobalContext* globalCtx) {
 
             gfxP = Graph_GfxPlusOne(sp1CC);
             gSPDisplayList(OVERLAY_DISP++, gfxP);
+            gsSPGrayscale(gfxP++, false);
 
             if ((globalCtx->transitionMode == 3) || (globalCtx->transitionMode == 11) ||
                 (globalCtx->transitionCtx.transitionType >= 56)) {
@@ -1136,8 +1137,8 @@ void Gameplay_Draw(GlobalContext* globalCtx) {
             TransitionFade_Draw(&globalCtx->transitionFade, &gfxP);
 
             if (D_801614B0.a > 0) {
-                D_80161498.primColor.rgba = D_801614B0.rgba;
-                VisMono_Draw(&D_80161498, &gfxP);
+                gsDPSetGrayscaleColor(gfxP++, D_801614B0.r, D_801614B0.g, D_801614B0.b, D_801614B0.a);
+                gsSPGrayscale(gfxP++, true);
             }
 
             gSPEndDisplayList(gfxP++);

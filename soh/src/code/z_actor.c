@@ -334,6 +334,38 @@ void func_8002BE98(TargetContext* targetCtx, s32 actorCategory, GlobalContext* g
 
 void func_8002BF60(TargetContext* targetCtx, Actor* actor, s32 actorCategory, GlobalContext* globalCtx) {
     NaviColor* naviColor = &sNaviColorList[actorCategory];
+    if (actorCategory == ACTORCAT_PLAYER) {
+        naviColor->inner.r = CVar_GetS32("gNavi_Idle_Inner_R", naviColor->inner.r);
+        naviColor->inner.g = CVar_GetS32("gNavi_Idle_Inner_G", naviColor->inner.g);
+        naviColor->inner.b = CVar_GetS32("gNavi_Idle_Inner_B", naviColor->inner.b);
+        naviColor->outer.r = CVar_GetS32("gNavi_Idle_Outer_R", naviColor->outer.r);
+        naviColor->outer.g = CVar_GetS32("gNavi_Idle_Outer_G", naviColor->outer.g);
+        naviColor->outer.b = CVar_GetS32("gNavi_Idle_Outer_B", naviColor->outer.b);
+    }
+    if (actorCategory == ACTORCAT_NPC) {
+        naviColor->inner.r = CVar_GetS32("gNavi_NPC_Inner_R", naviColor->inner.r);
+        naviColor->inner.g = CVar_GetS32("gNavi_NPC_Inner_G", naviColor->inner.g);
+        naviColor->inner.b = CVar_GetS32("gNavi_NPC_Inner_B", naviColor->inner.b);
+        naviColor->outer.r = CVar_GetS32("gNavi_NPC_Outer_R", naviColor->outer.r);
+        naviColor->outer.g = CVar_GetS32("gNavi_NPC_Outer_G", naviColor->outer.g);
+        naviColor->outer.b = CVar_GetS32("gNavi_NPC_Outer_B", naviColor->outer.b);
+    }
+    if (actorCategory == ACTORCAT_BOSS || actorCategory == ACTORCAT_ENEMY) {
+        naviColor->inner.r = CVar_GetS32("gNavi_Enemy_Inner_R", naviColor->inner.r);
+        naviColor->inner.g = CVar_GetS32("gNavi_Enemy_Inner_G", naviColor->inner.g);
+        naviColor->inner.b = CVar_GetS32("gNavi_Enemy_Inner_B", naviColor->inner.b);
+        naviColor->outer.r = CVar_GetS32("gNavi_Enemy_Outer_R", naviColor->outer.r);
+        naviColor->outer.g = CVar_GetS32("gNavi_Enemy_Outer_G", naviColor->outer.g);
+        naviColor->outer.b = CVar_GetS32("gNavi_Enemy_Outer_B", naviColor->outer.b);
+    }
+    if (actorCategory == ACTORCAT_PROP) {
+        naviColor->inner.r = CVar_GetS32("gNavi_Prop_Inner_R", naviColor->inner.r);
+        naviColor->inner.g = CVar_GetS32("gNavi_Prop_Inner_G", naviColor->inner.g);
+        naviColor->inner.b = CVar_GetS32("gNavi_Prop_Inner_B", naviColor->inner.b);
+        naviColor->outer.r = CVar_GetS32("gNavi_Prop_Outer_R", naviColor->outer.r);
+        naviColor->outer.g = CVar_GetS32("gNavi_Prop_Outer_G", naviColor->outer.g);
+        naviColor->outer.b = CVar_GetS32("gNavi_Prop_Outer_B", naviColor->outer.b);
+    }
     targetCtx->naviRefPos.x = actor->focus.pos.x;
     targetCtx->naviRefPos.y = actor->focus.pos.y + (actor->targetArrowOffset * actor->scale.y);
     targetCtx->naviRefPos.z = actor->focus.pos.z;
@@ -990,26 +1022,25 @@ void TitleCard_Draw(GlobalContext* globalCtx, TitleCardContext* titleCtx) {
         height = (width * height > 0x1000) ? 0x1000 / width : height;
         titleSecondY = titleY + (height * 4);
 
-        //OVERLAY_DISP = func_80093808(OVERLAY_DISP);
-        TITLE_CARD_DISP = func_80093808(TITLE_CARD_DISP);
-        gDPSetPrimColor(TITLE_CARD_DISP++, 0, 0, (u8)titleCtx->intensity, (u8)titleCtx->intensity, (u8)titleCtx->intensity, (u8)titleCtx->alpha);
+        WORLD_OVERLAY_DISP = func_80093808(WORLD_OVERLAY_DISP);
+        gDPSetPrimColor(WORLD_OVERLAY_DISP++, 0, 0, (u8)titleCtx->intensity, (u8)titleCtx->intensity, (u8)titleCtx->intensity, (u8)titleCtx->alpha);
 
-        gDPLoadTextureBlock(TITLE_CARD_DISP++, (uintptr_t)titleCtx->texture, G_IM_FMT_IA, G_IM_SIZ_8b, width, height, 0,
+        gDPLoadTextureBlock(WORLD_OVERLAY_DISP++, (uintptr_t)titleCtx->texture, G_IM_FMT_IA, G_IM_SIZ_8b, width, height, 0,
         G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
 
-        gSPTextureRectangle(TITLE_CARD_DISP++, titleX, titleY, ((doubleWidth * 2) + titleX) - 4, titleY + (height * 4) - 1, G_TX_RENDERTILE, 0, 0, 1 << 10, 1 << 10);
+        gSPTextureRectangle(WORLD_OVERLAY_DISP++, titleX, titleY, ((doubleWidth * 2) + titleX) - 4, titleY + (height * 4) - 1, G_TX_RENDERTILE, 0, 0, 1 << 10, 1 << 10);
 
 
         height = titleCtx->height - height;
 
         // If texture is bigger than 0x1000, display the rest
         if (height > 0) {
-            gDPLoadTextureBlock(TITLE_CARD_DISP++, (uintptr_t)titleCtx->texture + 0x1000,
+            gDPLoadTextureBlock(WORLD_OVERLAY_DISP++, (uintptr_t)titleCtx->texture + 0x1000,
                                 G_IM_FMT_IA,
                                 G_IM_SIZ_8b, width, height, 0, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP,
                                 G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
 
-            gSPTextureRectangle(TITLE_CARD_DISP++, titleX, titleSecondY, ((doubleWidth * 2) + titleX) - 4,
+            gSPTextureRectangle(WORLD_OVERLAY_DISP++, titleX, titleSecondY, ((doubleWidth * 2) + titleX) - 4,
                                 titleSecondY + (height * 4) - 1, G_TX_RENDERTILE, 0, 0, 1 << 10, 1 << 10);
         }
         CLOSE_DISPS(globalCtx->state.gfxCtx, "../z_actor.c", 2880);

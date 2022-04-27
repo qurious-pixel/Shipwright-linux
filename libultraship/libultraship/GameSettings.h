@@ -4,12 +4,13 @@ struct SoHConfigType {
     // Debug
     struct {
         bool soh = false;
-        bool n64mode = false;
         bool menu_bar = false;
         bool soh_sink = true;
-        bool buildinfos = false;
+        //bool n64mode = false;
+        //bool buildinfos = false;
     } debug;
 
+    /*
     // Audio
     struct {
         float master = 1.0f;
@@ -32,21 +33,22 @@ struct SoHConfigType {
         bool mm_bunny_hood = false;
         bool uniform_lr = true;
         bool visualagony = false;
-    } enhancements;
+    } enhancements;*/
 
     // Controller
     struct {
-        float gyro_sensitivity = 1.0f;
-        float rumble_strength = 1.0f;
-        float input_scale = 1.0f;
+        //float gyro_sensitivity = 1.0f;
+        //float rumble_strength = 1.0f;
+        //float input_scale = 1.0f;
         float gyroDriftX = 0.0f;
         float gyroDriftY = 0.0f;
-        bool input_enabled = false;
-        bool dpad_pause_name = false;
-        bool dpad_ocarina_text = false;
-        bool dpad_shop = false;
+        //bool input_enabled = false;
+        //bool dpad_pause_name = false;
+        //bool dpad_ocarina_text = false;
+        //bool dpad_shop = false;
     } controller;
 
+    /*
     // Cheats
     struct {
         bool debug_mode = false;
@@ -63,17 +65,15 @@ struct SoHConfigType {
         bool no_restrict_item = false;
         bool freeze_time = false;
     } cheats;
-
+    */
     // Graphics
     struct {
         bool show = false;
     } graphics;
-
+    /*
     // HUD Colors
     struct {
-        bool n64_colors = true;
-        bool gc_colors = false;
-        bool custom_colors = false;
+        int hudcolor = 1;
         //hearts colors
         int ccheartsprimr = 255;
         int ccheartsprimg = 70;
@@ -118,14 +118,52 @@ struct SoHConfigType {
         int ccrupeeprimr = 10;
         int ccrupeeprimg = 220;
         int ccrupeeprimb = 10;
-    } hudcolors;
+
+        int tunic_kokiri_r = 30;
+        int tunic_kokiri_g = 105;
+        int tunic_kokiri_b = 27;
+        int tunic_goron_r = 100;
+        int tunic_goron_g = 20;
+        int tunic_goron_b = 0;
+        int tunic_zora_r = 0;
+        int tunic_zora_g = 60;
+        int tunic_zora_b = 100;
+
+        int navi_idle_inner_r = 255;
+        int navi_idle_inner_g = 255;
+        int navi_idle_inner_b = 255;
+        int navi_idle_outer_r = 0;
+        int navi_idle_outer_g = 0;
+        int navi_idle_outer_b = 255;
+
+        int navi_enemy_inner_r = 255;
+        int navi_enemy_inner_g = 255;
+        int navi_enemy_inner_b = 0;
+        int navi_enemy_outer_r = 200;
+        int navi_enemy_outer_g = 155;
+        int navi_enemy_outer_b = 0;
+
+        int navi_npc_inner_r = 150;
+        int navi_npc_inner_g = 150;
+        int navi_npc_inner_b = 255;
+        int navi_npc_outer_r = 150;
+        int navi_npc_outer_g = 150;
+        int navi_npc_outer_b = 255;
+
+        int navi_prop_inner_r = 0;
+        int navi_prop_inner_g = 250;
+        int navi_prop_inner_b = 0;
+        int navi_prop_outer_r = 0;
+        int navi_prop_outer_g = 250;
+        int navi_prop_outer_b = 0;
+
+    } cosmetic;
+
 
     // Languages
     struct {
-        bool set_eng = true;
-        bool set_ger = false;
-        bool set_fra = false;
-    } languages;
+        int sellanguages = 0;
+    } languages;*/
 };
 
 enum SeqPlayers {
@@ -141,7 +179,7 @@ enum SeqPlayers {
 #define CONTROLLER_SECTION "CONTROLLER SECTION"
 #define ENHANCEMENTS_SECTION "ENHANCEMENT SETTINGS"
 #define CHEATS_SECTION "CHEATS SETTINGS"
-#define HUDCOLOR_SECTION "HUD COLORS SETTINGS"
+#define COSMETICS_SECTION "COSMETIC SETTINGS"
 #define LANGUAGES_SECTION "LANGUAGES SETTINGS"
 
 namespace Game {

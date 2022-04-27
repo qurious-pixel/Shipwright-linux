@@ -15,6 +15,7 @@
 #include "../../soh/include/z64audio.h"
 #include <string>
 #include "SohHooks.h"
+#include "../../soh/soh/Enhancements/debugconsole.h"
 
 #define ABS(var) var < 0 ? -(var) : var
 
@@ -28,14 +29,14 @@ namespace Game {
     const std::string ControllerSection = CONTROLLER_SECTION;
     const std::string EnhancementSection = ENHANCEMENTS_SECTION;
     const std::string CheatSection = CHEATS_SECTION;
-    const std::string HUDColorSection = HUDCOLOR_SECTION;
+    const std::string CosmeticsSection = COSMETICS_SECTION;
     const std::string LanguagesSection = LANGUAGES_SECTION;
 
     void UpdateAudio() {
-        Audio_SetGameVolume(SEQ_BGM_MAIN, Settings.audio.music_main);
-        Audio_SetGameVolume(SEQ_BGM_SUB, Settings.audio.music_sub);
-        Audio_SetGameVolume(SEQ_FANFARE, Settings.audio.fanfare);
-        Audio_SetGameVolume(SEQ_SFX, Settings.audio.sfx);
+        Audio_SetGameVolume(SEQ_BGM_MAIN, CVar_GetFloat("gMainMusicVolume", 1));
+        Audio_SetGameVolume(SEQ_BGM_SUB, CVar_GetFloat("gSubMusicVolume", 1));
+        Audio_SetGameVolume(SEQ_FANFARE, CVar_GetFloat("gSFXMusicVolume", 1));
+        Audio_SetGameVolume(SEQ_SFX, CVar_GetFloat("gFanfareVolume", 1));
     }
 
     void LoadSettings() {
@@ -47,9 +48,9 @@ namespace Game {
         SohImGui::console->opened = stob(Conf[ConfSection]["console"]);
         Settings.debug.menu_bar = stob(Conf[ConfSection]["menu_bar"]);
         Settings.debug.soh = stob(Conf[ConfSection]["soh_debug"]);
-    	Settings.debug.n64mode = stob(Conf[ConfSection]["n64_mode"]);
-        Settings.debug.buildinfos = stob(Conf[ConfSection]["hide_buildinfos"]);
-        CVar_SetS32("gBuildInfos", Settings.debug.buildinfos);
+    	//Settings.debug.n64mode = stob(Conf[ConfSection]["n64_mode"]);
+        //Settings.debug.buildinfos = stob(Conf[ConfSection]["hide_buildinfos"]);
+        /*CVar_SetS32("gBuildInfos", Settings.debug.buildinfos);
 
         // Enhancements
         Settings.enhancements.skip_text = stob(Conf[EnhancementSection]["skip_text"]);
@@ -161,100 +162,164 @@ namespace Game {
         Settings.cheats.freeze_time = stob(Conf[CheatSection]["freeze_time"]);
         CVar_SetS32("gFreezeTime", Settings.cheats.freeze_time);
 
-        Settings.hudcolors.n64_colors = stob(Conf[HUDColorSection]["n64_colors"]);
-        CVar_SetS32("gN64Colors", Settings.hudcolors.n64_colors);
-
-        Settings.hudcolors.gc_colors = stob(Conf[HUDColorSection]["gc_colors"]);
-        CVar_SetS32("gGameCubeColors", Settings.hudcolors.gc_colors);
-
-        Settings.hudcolors.custom_colors = stob(Conf[HUDColorSection]["custom_colors"]);
-        CVar_SetS32("gCustomColors", Settings.hudcolors.custom_colors);
+        //Hud mods
+        Settings.cosmetic.hudcolor = stob(Conf[COSMETICS_SECTION]["hud_colors"]);
+        CVar_SetS32("gHudColors", Settings.cosmetic.hudcolor);
         //hearts main colors
-        Settings.hudcolors.ccheartsprimr = (Conf[HUDColorSection]["cc_heartsprimr"] != "") ? Ship::stoi(Conf[HUDColorSection]["cc_heartsprimr"]) : Settings.hudcolors.ccheartsprimr;
-        CVar_SetInt("gCCHeartsPrimR", Settings.hudcolors.ccheartsprimr);
-        Settings.hudcolors.ccheartsprimg = (Conf[HUDColorSection]["cc_heartsprimr"] != "") ? Ship::stoi(Conf[HUDColorSection]["cc_heartsprimg"]) : Settings.hudcolors.ccheartsprimg;
-        CVar_SetInt("gCCHeartsPrimG", Settings.hudcolors.ccheartsprimg);
-        Settings.hudcolors.ccheartsprimb = (Conf[HUDColorSection]["cc_heartsprimr"] != "") ? Ship::stoi(Conf[HUDColorSection]["cc_heartsprimb"]) : Settings.hudcolors.ccheartsprimb;
-        CVar_SetInt("gCCHeartsPrimB", Settings.hudcolors.ccheartsprimb);
+        Settings.cosmetic.ccheartsprimr = (Conf[COSMETICS_SECTION]["cc_heartsprimr"] != "") ? Ship::stoi(Conf[COSMETICS_SECTION]["cc_heartsprimr"]) : Settings.cosmetic.ccheartsprimr;
+        CVar_SetS32("gCCHeartsPrimR", Settings.cosmetic.ccheartsprimr);
+        Settings.cosmetic.ccheartsprimg = (Conf[COSMETICS_SECTION]["cc_heartsprimr"] != "") ? Ship::stoi(Conf[COSMETICS_SECTION]["cc_heartsprimg"]) : Settings.cosmetic.ccheartsprimg;
+        CVar_SetS32("gCCHeartsPrimG", Settings.cosmetic.ccheartsprimg);
+        Settings.cosmetic.ccheartsprimb = (Conf[COSMETICS_SECTION]["cc_heartsprimr"] != "") ? Ship::stoi(Conf[COSMETICS_SECTION]["cc_heartsprimb"]) : Settings.cosmetic.ccheartsprimb;
+        CVar_SetS32("gCCHeartsPrimB", Settings.cosmetic.ccheartsprimb);
         //hearts double defense main colors
-        Settings.hudcolors.ddccheartsprimr = (Conf[HUDColorSection]["cc_ddheartsprimr"] != "") ? Ship::stoi(Conf[HUDColorSection]["cc_ddheartsprimr"]) : Settings.hudcolors.ddccheartsprimr;
-        CVar_SetInt("gDDCCHeartsPrimR", Settings.hudcolors.ddccheartsprimr);
-        Settings.hudcolors.ddccheartsprimg = (Conf[HUDColorSection]["cc_ddheartsprimg"] != "") ? Ship::stoi(Conf[HUDColorSection]["cc_ddheartsprimg"]) : Settings.hudcolors.ddccheartsprimg;
-        CVar_SetInt("gDDCCHeartsPrimG", Settings.hudcolors.ddccheartsprimg);
-        Settings.hudcolors.ddccheartsprimb = (Conf[HUDColorSection]["cc_ddheartsprimb"] != "") ? Ship::stoi(Conf[HUDColorSection]["cc_ddheartsprimb"]) : Settings.hudcolors.ddccheartsprimb;
-        CVar_SetInt("gDDCCHeartsPrimB", Settings.hudcolors.ddccheartsprimb);
+        Settings.cosmetic.ddccheartsprimr = (Conf[COSMETICS_SECTION]["cc_ddheartsprimr"] != "") ? Ship::stoi(Conf[COSMETICS_SECTION]["cc_ddheartsprimr"]) : Settings.cosmetic.ddccheartsprimr;
+        CVar_SetS32("gDDCCHeartsPrimR", Settings.cosmetic.ddccheartsprimr);
+        Settings.cosmetic.ddccheartsprimg = (Conf[COSMETICS_SECTION]["cc_ddheartsprimg"] != "") ? Ship::stoi(Conf[COSMETICS_SECTION]["cc_ddheartsprimg"]) : Settings.cosmetic.ddccheartsprimg;
+        CVar_SetS32("gDDCCHeartsPrimG", Settings.cosmetic.ddccheartsprimg);
+        Settings.cosmetic.ddccheartsprimb = (Conf[COSMETICS_SECTION]["cc_ddheartsprimb"] != "") ? Ship::stoi(Conf[COSMETICS_SECTION]["cc_ddheartsprimb"]) : Settings.cosmetic.ddccheartsprimb;
+        CVar_SetS32("gDDCCHeartsPrimB", Settings.cosmetic.ddccheartsprimb);
         //a button
-        Settings.hudcolors.ccabtnprimr = (Conf[HUDColorSection]["cc_abtnprimr"] != "") ? Ship::stoi(Conf[HUDColorSection]["cc_abtnprimr"]) : Settings.hudcolors.ccabtnprimr;
-        CVar_SetInt("gCCABtnPrimR", Settings.hudcolors.ccabtnprimr);
-        Settings.hudcolors.ccabtnprimg = (Conf[HUDColorSection]["cc_abtnprimg"] != "") ? Ship::stoi(Conf[HUDColorSection]["cc_abtnprimg"]) : Settings.hudcolors.ccabtnprimg;
-        CVar_SetInt("gCCABtnPrimG", Settings.hudcolors.ccabtnprimg);
-        Settings.hudcolors.ccabtnprimb = (Conf[HUDColorSection]["cc_abtnprimb"] != "") ? Ship::stoi(Conf[HUDColorSection]["cc_abtnprimb"]) : Settings.hudcolors.ccabtnprimb;
-        CVar_SetInt("gCCABtnPrimB", Settings.hudcolors.ccabtnprimb);
+        Settings.cosmetic.ccabtnprimr = (Conf[COSMETICS_SECTION]["cc_abtnprimr"] != "") ? Ship::stoi(Conf[COSMETICS_SECTION]["cc_abtnprimr"]) : Settings.cosmetic.ccabtnprimr;
+        CVar_SetS32("gCCABtnPrimR", Settings.cosmetic.ccabtnprimr);
+        Settings.cosmetic.ccabtnprimg = (Conf[COSMETICS_SECTION]["cc_abtnprimg"] != "") ? Ship::stoi(Conf[COSMETICS_SECTION]["cc_abtnprimg"]) : Settings.cosmetic.ccabtnprimg;
+        CVar_SetS32("gCCABtnPrimG", Settings.cosmetic.ccabtnprimg);
+        Settings.cosmetic.ccabtnprimb = (Conf[COSMETICS_SECTION]["cc_abtnprimb"] != "") ? Ship::stoi(Conf[COSMETICS_SECTION]["cc_abtnprimb"]) : Settings.cosmetic.ccabtnprimb;
+        CVar_SetS32("gCCABtnPrimB", Settings.cosmetic.ccabtnprimb);
         //b button
-        Settings.hudcolors.ccbbtnprimr = (Conf[HUDColorSection]["cc_bbtnprimr"] != "") ? Ship::stoi(Conf[HUDColorSection]["cc_bbtnprimr"]) : Settings.hudcolors.ccbbtnprimr;
-        CVar_SetInt("gCCBBtnPrimR", Settings.hudcolors.ccbbtnprimr);
-        Settings.hudcolors.ccbbtnprimg = (Conf[HUDColorSection]["cc_bbtnprimg"] != "") ? Ship::stoi(Conf[HUDColorSection]["cc_bbtnprimg"]) : Settings.hudcolors.ccbbtnprimg;
-        CVar_SetInt("gCCBBtnPrimG", Settings.hudcolors.ccbbtnprimg);
-        Settings.hudcolors.ccbbtnprimb = (Conf[HUDColorSection]["cc_bbtnprimb"] != "") ? Ship::stoi(Conf[HUDColorSection]["cc_bbtnprimb"]) : Settings.hudcolors.ccbbtnprimb;
-        CVar_SetInt("gCCBBtnPrimB", Settings.hudcolors.ccbbtnprimb);
+        Settings.cosmetic.ccbbtnprimr = (Conf[COSMETICS_SECTION]["cc_bbtnprimr"] != "") ? Ship::stoi(Conf[COSMETICS_SECTION]["cc_bbtnprimr"]) : Settings.cosmetic.ccbbtnprimr;
+        CVar_SetS32("gCCBBtnPrimR", Settings.cosmetic.ccbbtnprimr);
+        Settings.cosmetic.ccbbtnprimg = (Conf[COSMETICS_SECTION]["cc_bbtnprimg"] != "") ? Ship::stoi(Conf[COSMETICS_SECTION]["cc_bbtnprimg"]) : Settings.cosmetic.ccbbtnprimg;
+        CVar_SetS32("gCCBBtnPrimG", Settings.cosmetic.ccbbtnprimg);
+        Settings.cosmetic.ccbbtnprimb = (Conf[COSMETICS_SECTION]["cc_bbtnprimb"] != "") ? Ship::stoi(Conf[COSMETICS_SECTION]["cc_bbtnprimb"]) : Settings.cosmetic.ccbbtnprimb;
+        CVar_SetS32("gCCBBtnPrimB", Settings.cosmetic.ccbbtnprimb);
         //start button
-        Settings.hudcolors.ccstartbtnprimr = (Conf[HUDColorSection]["cc_startbtnprimr"] != "") ? Ship::stoi(Conf[HUDColorSection]["cc_startbtnprimr"]) : Settings.hudcolors.ccstartbtnprimr;
-        CVar_SetInt("gCCStartBtnPrimR", Settings.hudcolors.ccstartbtnprimr);
-        Settings.hudcolors.ccstartbtnprimg = (Conf[HUDColorSection]["cc_startbtnprimg"] != "") ? Ship::stoi(Conf[HUDColorSection]["cc_startbtnprimg"]) : Settings.hudcolors.ccstartbtnprimg;
-        CVar_SetInt("gCCStartBtnPrimG", Settings.hudcolors.ccstartbtnprimg);
-        Settings.hudcolors.ccstartbtnprimb = (Conf[HUDColorSection]["cc_startbtnprimb"] != "") ? Ship::stoi(Conf[HUDColorSection]["cc_startbtnprimb"]) : Settings.hudcolors.ccstartbtnprimb;
-        CVar_SetInt("gCCStartBtnPrimB", Settings.hudcolors.ccstartbtnprimb);
+        Settings.cosmetic.ccstartbtnprimr = (Conf[COSMETICS_SECTION]["cc_startbtnprimr"] != "") ? Ship::stoi(Conf[COSMETICS_SECTION]["cc_startbtnprimr"]) : Settings.cosmetic.ccstartbtnprimr;
+        CVar_SetS32("gCCStartBtnPrimR", Settings.cosmetic.ccstartbtnprimr);
+        Settings.cosmetic.ccstartbtnprimg = (Conf[COSMETICS_SECTION]["cc_startbtnprimg"] != "") ? Ship::stoi(Conf[COSMETICS_SECTION]["cc_startbtnprimg"]) : Settings.cosmetic.ccstartbtnprimg;
+        CVar_SetS32("gCCStartBtnPrimG", Settings.cosmetic.ccstartbtnprimg);
+        Settings.cosmetic.ccstartbtnprimb = (Conf[COSMETICS_SECTION]["cc_startbtnprimb"] != "") ? Ship::stoi(Conf[COSMETICS_SECTION]["cc_startbtnprimb"]) : Settings.cosmetic.ccstartbtnprimb;
+        CVar_SetS32("gCCStartBtnPrimB", Settings.cosmetic.ccstartbtnprimb);
         //c button
-        Settings.hudcolors.cccbtnprimr = (Conf[HUDColorSection]["cc_cbtnprimr"] != "") ? Ship::stoi(Conf[HUDColorSection]["cc_cbtnprimr"]) : Settings.hudcolors.cccbtnprimr;
-        CVar_SetInt("gCCCBtnPrimR", Settings.hudcolors.cccbtnprimr);
-        Settings.hudcolors.cccbtnprimg = (Conf[HUDColorSection]["cc_cbtnprimg"] != "") ? Ship::stoi(Conf[HUDColorSection]["cc_cbtnprimg"]) : Settings.hudcolors.cccbtnprimg;
-        CVar_SetInt("gCCCBtnPrimG", Settings.hudcolors.cccbtnprimg);
-        Settings.hudcolors.cccbtnprimb = (Conf[HUDColorSection]["cc_cbtnprimb"] != "") ? Ship::stoi(Conf[HUDColorSection]["cc_cbtnprimb"]) : Settings.hudcolors.cccbtnprimb;
-        CVar_SetInt("gCCCBtnPrimB", Settings.hudcolors.cccbtnprimb);
+        Settings.cosmetic.cccbtnprimr = (Conf[COSMETICS_SECTION]["cc_cbtnprimr"] != "") ? Ship::stoi(Conf[COSMETICS_SECTION]["cc_cbtnprimr"]) : Settings.cosmetic.cccbtnprimr;
+        CVar_SetS32("gCCCBtnPrimR", Settings.cosmetic.cccbtnprimr);
+        Settings.cosmetic.cccbtnprimg = (Conf[COSMETICS_SECTION]["cc_cbtnprimg"] != "") ? Ship::stoi(Conf[COSMETICS_SECTION]["cc_cbtnprimg"]) : Settings.cosmetic.cccbtnprimg;
+        CVar_SetS32("gCCCBtnPrimG", Settings.cosmetic.cccbtnprimg);
+        Settings.cosmetic.cccbtnprimb = (Conf[COSMETICS_SECTION]["cc_cbtnprimb"] != "") ? Ship::stoi(Conf[COSMETICS_SECTION]["cc_cbtnprimb"]) : Settings.cosmetic.cccbtnprimb;
+        CVar_SetS32("gCCCBtnPrimB", Settings.cosmetic.cccbtnprimb);
         //magic metter borders
-        Settings.hudcolors.ccmagicborderprimr = (Conf[HUDColorSection]["cc_magicborderprimr"] != "") ? Ship::stoi(Conf[HUDColorSection]["cc_magicborderprimr"]) : Settings.hudcolors.ccmagicborderprimr;
-        CVar_SetInt("gCCMagicBorderPrimR", Settings.hudcolors.ccmagicborderprimr);
-        Settings.hudcolors.ccmagicborderprimg = (Conf[HUDColorSection]["cc_magicborderprimg"] != "") ? Ship::stoi(Conf[HUDColorSection]["cc_magicborderprimg"]) : Settings.hudcolors.ccmagicborderprimg;
-        CVar_SetInt("gCCMagicBorderPrimG", Settings.hudcolors.ccmagicborderprimg);
-        Settings.hudcolors.ccmagicborderprimb = (Conf[HUDColorSection]["cc_magicborderprimb"] != "") ? Ship::stoi(Conf[HUDColorSection]["cc_magicborderprimb"]) : Settings.hudcolors.ccmagicborderprimb;
-        CVar_SetInt("gCCMagicBorderPrimB", Settings.hudcolors.ccmagicborderprimb);
+        Settings.cosmetic.ccmagicborderprimr = (Conf[COSMETICS_SECTION]["cc_magicborderprimr"] != "") ? Ship::stoi(Conf[COSMETICS_SECTION]["cc_magicborderprimr"]) : Settings.cosmetic.ccmagicborderprimr;
+        CVar_SetS32("gCCMagicBorderPrimR", Settings.cosmetic.ccmagicborderprimr);
+        Settings.cosmetic.ccmagicborderprimg = (Conf[COSMETICS_SECTION]["cc_magicborderprimg"] != "") ? Ship::stoi(Conf[COSMETICS_SECTION]["cc_magicborderprimg"]) : Settings.cosmetic.ccmagicborderprimg;
+        CVar_SetS32("gCCMagicBorderPrimG", Settings.cosmetic.ccmagicborderprimg);
+        Settings.cosmetic.ccmagicborderprimb = (Conf[COSMETICS_SECTION]["cc_magicborderprimb"] != "") ? Ship::stoi(Conf[COSMETICS_SECTION]["cc_magicborderprimb"]) : Settings.cosmetic.ccmagicborderprimb;
+        CVar_SetS32("gCCMagicBorderPrimB", Settings.cosmetic.ccmagicborderprimb);
         //magic metter remaining 
-        Settings.hudcolors.ccmagicprimr = (Conf[HUDColorSection]["cc_magicprimr"] != "") ? Ship::stoi(Conf[HUDColorSection]["cc_magicprimr"]) : Settings.hudcolors.ccmagicprimr;
-        CVar_SetInt("gCCMagicPrimR", Settings.hudcolors.ccmagicprimr);
-        Settings.hudcolors.ccmagicprimg = (Conf[HUDColorSection]["cc_magicprimg"] != "") ? Ship::stoi(Conf[HUDColorSection]["cc_magicprimg"]) : Settings.hudcolors.ccmagicprimg;
-        CVar_SetInt("gCCMagicPrimG", Settings.hudcolors.ccmagicprimg);
-        Settings.hudcolors.ccmagicprimb = (Conf[HUDColorSection]["cc_magicprimb"] != "") ? Ship::stoi(Conf[HUDColorSection]["cc_magicprimb"]) : Settings.hudcolors.ccmagicprimb;
-        CVar_SetInt("gCCMagicPrimB", Settings.hudcolors.ccmagicprimb);
+        Settings.cosmetic.ccmagicprimr = (Conf[COSMETICS_SECTION]["cc_magicprimr"] != "") ? Ship::stoi(Conf[COSMETICS_SECTION]["cc_magicprimr"]) : Settings.cosmetic.ccmagicprimr;
+        CVar_SetS32("gCCMagicPrimR", Settings.cosmetic.ccmagicprimr);
+        Settings.cosmetic.ccmagicprimg = (Conf[COSMETICS_SECTION]["cc_magicprimg"] != "") ? Ship::stoi(Conf[COSMETICS_SECTION]["cc_magicprimg"]) : Settings.cosmetic.ccmagicprimg;
+        CVar_SetS32("gCCMagicPrimG", Settings.cosmetic.ccmagicprimg);
+        Settings.cosmetic.ccmagicprimb = (Conf[COSMETICS_SECTION]["cc_magicprimb"] != "") ? Ship::stoi(Conf[COSMETICS_SECTION]["cc_magicprimb"]) : Settings.cosmetic.ccmagicprimb;
+        CVar_SetS32("gCCMagicPrimB", Settings.cosmetic.ccmagicprimb);
         //magic metter being used
-        Settings.hudcolors.ccmagicuseprimr = (Conf[HUDColorSection]["cc_magicuseprimr"] != "") ? Ship::stoi(Conf[HUDColorSection]["cc_magicuseprimr"]) : Settings.hudcolors.ccmagicuseprimr;
-        CVar_SetInt("gCCMagicUsePrimR", Settings.hudcolors.ccmagicuseprimr);
-        Settings.hudcolors.ccmagicuseprimg = (Conf[HUDColorSection]["cc_magicuseprimg"] != "") ? Ship::stoi(Conf[HUDColorSection]["cc_magicuseprimg"]) : Settings.hudcolors.ccmagicuseprimg;
-        CVar_SetInt("gCCMagicUsePrimG", Settings.hudcolors.ccmagicuseprimg);
-        Settings.hudcolors.ccmagicuseprimb = (Conf[HUDColorSection]["cc_magicuseprimb"] != "") ? Ship::stoi(Conf[HUDColorSection]["cc_magicuseprimb"]) : Settings.hudcolors.ccmagicuseprimb;
-        CVar_SetInt("gCCMagicUsePrimB", Settings.hudcolors.ccmagicuseprimb);
+        Settings.cosmetic.ccmagicuseprimr = (Conf[COSMETICS_SECTION]["cc_magicuseprimr"] != "") ? Ship::stoi(Conf[COSMETICS_SECTION]["cc_magicuseprimr"]) : Settings.cosmetic.ccmagicuseprimr;
+        CVar_SetS32("gCCMagicUsePrimR", Settings.cosmetic.ccmagicuseprimr);
+        Settings.cosmetic.ccmagicuseprimg = (Conf[COSMETICS_SECTION]["cc_magicuseprimg"] != "") ? Ship::stoi(Conf[COSMETICS_SECTION]["cc_magicuseprimg"]) : Settings.cosmetic.ccmagicuseprimg;
+        CVar_SetS32("gCCMagicUsePrimG", Settings.cosmetic.ccmagicuseprimg);
+        Settings.cosmetic.ccmagicuseprimb = (Conf[COSMETICS_SECTION]["cc_magicuseprimb"] != "") ? Ship::stoi(Conf[COSMETICS_SECTION]["cc_magicuseprimb"]) : Settings.cosmetic.ccmagicuseprimb;
+        CVar_SetS32("gCCMagicUsePrimB", Settings.cosmetic.ccmagicuseprimb);
         //minimap
-        Settings.hudcolors.ccminimapprimr = (Conf[HUDColorSection]["cc_minimapprimr"] != "") ? Ship::stoi(Conf[HUDColorSection]["cc_minimapprimr"]) : Settings.hudcolors.ccminimapprimr;
-        CVar_SetInt("gCCMinimapPrimR", Settings.hudcolors.ccminimapprimr);
-        Settings.hudcolors.ccminimapprimg = (Conf[HUDColorSection]["cc_minimapprimg"] != "") ? Ship::stoi(Conf[HUDColorSection]["cc_minimapprimg"]) : Settings.hudcolors.ccminimapprimg;
-        CVar_SetInt("gCCMinimapPrimG", Settings.hudcolors.ccminimapprimg);
-        Settings.hudcolors.ccminimapprimb = (Conf[HUDColorSection]["cc_minimapprimb"] != "") ? Ship::stoi(Conf[HUDColorSection]["cc_minimapprimb"]) : Settings.hudcolors.ccminimapprimb;
-        CVar_SetInt("gCCMinimapPrimB", Settings.hudcolors.ccminimapprimb);
+        Settings.cosmetic.ccminimapprimr = (Conf[COSMETICS_SECTION]["cc_minimapprimr"] != "") ? Ship::stoi(Conf[COSMETICS_SECTION]["cc_minimapprimr"]) : Settings.cosmetic.ccminimapprimr;
+        CVar_SetS32("gCCMinimapPrimR", Settings.cosmetic.ccminimapprimr);
+        Settings.cosmetic.ccminimapprimg = (Conf[COSMETICS_SECTION]["cc_minimapprimg"] != "") ? Ship::stoi(Conf[COSMETICS_SECTION]["cc_minimapprimg"]) : Settings.cosmetic.ccminimapprimg;
+        CVar_SetS32("gCCMinimapPrimG", Settings.cosmetic.ccminimapprimg);
+        Settings.cosmetic.ccminimapprimb = (Conf[COSMETICS_SECTION]["cc_minimapprimb"] != "") ? Ship::stoi(Conf[COSMETICS_SECTION]["cc_minimapprimb"]) : Settings.cosmetic.ccminimapprimb;
+        CVar_SetS32("gCCMinimapPrimB", Settings.cosmetic.ccminimapprimb);
         //rupee icon
-        Settings.hudcolors.ccrupeeprimr = (Conf[HUDColorSection]["cc_rupeeprimr"] != "") ? Ship::stoi(Conf[HUDColorSection]["cc_rupeeprimr"]) : Settings.hudcolors.ccrupeeprimr;
-        CVar_SetInt("gCCRupeePrimR", Settings.hudcolors.ccrupeeprimr);
-        Settings.hudcolors.ccrupeeprimg = (Conf[HUDColorSection]["cc_rupeeprimg"] != "") ? Ship::stoi(Conf[HUDColorSection]["cc_rupeeprimg"]) : Settings.hudcolors.ccrupeeprimg;
-        CVar_SetInt("gCCRupeePrimG", Settings.hudcolors.ccrupeeprimg);
-        Settings.hudcolors.ccrupeeprimb = (Conf[HUDColorSection]["cc_rupeeprimb"] != "") ? Ship::stoi(Conf[HUDColorSection]["cc_rupeeprimb"]) : Settings.hudcolors.ccrupeeprimb;
-        CVar_SetInt("gCCRupeePrimB", Settings.hudcolors.ccrupeeprimb);
+        Settings.cosmetic.ccrupeeprimr = (Conf[COSMETICS_SECTION]["cc_rupeeprimr"] != "") ? Ship::stoi(Conf[COSMETICS_SECTION]["cc_rupeeprimr"]) : Settings.cosmetic.ccrupeeprimr;
+        CVar_SetS32("gCCRupeePrimR", Settings.cosmetic.ccrupeeprimr);
+        Settings.cosmetic.ccrupeeprimg = (Conf[COSMETICS_SECTION]["cc_rupeeprimg"] != "") ? Ship::stoi(Conf[COSMETICS_SECTION]["cc_rupeeprimg"]) : Settings.cosmetic.ccrupeeprimg;
+        CVar_SetS32("gCCRupeePrimG", Settings.cosmetic.ccrupeeprimg);
+        Settings.cosmetic.ccrupeeprimb = (Conf[COSMETICS_SECTION]["cc_rupeeprimb"] != "") ? Ship::stoi(Conf[COSMETICS_SECTION]["cc_rupeeprimb"]) : Settings.cosmetic.ccrupeeprimb;
+        CVar_SetS32("gCCRupeePrimB", Settings.cosmetic.ccrupeeprimb);
 
-        Settings.languages.set_eng = stob(Conf[LanguagesSection]["set_eng"]);
-        CVar_SetS32("gSetENG", Settings.languages.set_eng);
+        //Tunics
+        Settings.cosmetic.tunic_kokiri_r = (Conf[CosmeticsSection]["tunic_kokiri_r"] != "") ? Ship::stoi(Conf[CosmeticsSection]["tunic_kokiri_r"]) : Settings.cosmetic.tunic_kokiri_r;
+        CVar_SetS32("gTunic_Kokiri_R", Settings.cosmetic.tunic_kokiri_r);
+        Settings.cosmetic.tunic_kokiri_g = (Conf[CosmeticsSection]["tunic_kokiri_g"] != "") ? Ship::stoi(Conf[CosmeticsSection]["tunic_kokiri_g"]) : Settings.cosmetic.tunic_kokiri_g;
+        CVar_SetS32("gTunic_Kokiri_G", Settings.cosmetic.tunic_kokiri_g);
+        Settings.cosmetic.tunic_kokiri_b = (Conf[CosmeticsSection]["tunic_kokiri_b"] != "") ? Ship::stoi(Conf[CosmeticsSection]["tunic_kokiri_b"]) : Settings.cosmetic.tunic_kokiri_b;
+        CVar_SetS32("gTunic_Kokiri_B", Settings.cosmetic.tunic_kokiri_b);
 
-        Settings.languages.set_ger = stob(Conf[LanguagesSection]["set_ger"]);
-        CVar_SetS32("gSetGER", Settings.languages.set_ger);
+        Settings.cosmetic.tunic_goron_r = (Conf[CosmeticsSection]["tunic_goron_r"] != "") ? Ship::stoi(Conf[CosmeticsSection]["tunic_goron_r"]) : Settings.cosmetic.tunic_goron_r;
+        CVar_SetS32("gTunic_Goron_R", Settings.cosmetic.tunic_goron_r);
+        Settings.cosmetic.tunic_goron_g = (Conf[CosmeticsSection]["tunic_goron_g"] != "") ? Ship::stoi(Conf[CosmeticsSection]["tunic_goron_g"]) : Settings.cosmetic.tunic_goron_g;
+        CVar_SetS32("gTunic_Goron_G", Settings.cosmetic.tunic_goron_g);
+        Settings.cosmetic.tunic_goron_b = (Conf[CosmeticsSection]["tunic_goron_b"] != "") ? Ship::stoi(Conf[CosmeticsSection]["tunic_goron_b"]) : Settings.cosmetic.tunic_goron_b;
+        CVar_SetS32("gTunic_Goron_B", Settings.cosmetic.tunic_goron_b);
 
-        Settings.languages.set_fra = stob(Conf[LanguagesSection]["set_fra"]);
-        CVar_SetS32("gSetFRA", Settings.languages.set_fra);
+        Settings.cosmetic.tunic_zora_r = (Conf[CosmeticsSection]["tunic_zora_g"] != "") ? Ship::stoi(Conf[CosmeticsSection]["tunic_zora_r"]) : Settings.cosmetic.tunic_zora_r;
+        CVar_SetS32("gTunic_Zora_R", Settings.cosmetic.tunic_zora_r);
+        Settings.cosmetic.tunic_zora_g = (Conf[CosmeticsSection]["tunic_zora_g"] != "") ? Ship::stoi(Conf[CosmeticsSection]["tunic_zora_g"]) : Settings.cosmetic.tunic_zora_g;
+        CVar_SetS32("gTunic_Zora_G", Settings.cosmetic.tunic_zora_g);
+        Settings.cosmetic.tunic_zora_b = (Conf[CosmeticsSection]["tunic_zora_b"] != "" ) ? Ship::stoi(Conf[CosmeticsSection]["tunic_zora_b"]) : Settings.cosmetic.tunic_zora_b;
+        CVar_SetS32("gTunic_Zora_B", Settings.cosmetic.tunic_zora_b);
+        //Navi
+        Settings.cosmetic.navi_idle_inner_r = (Conf[CosmeticsSection]["navi_idle_inner_r"] != "") ? Ship::stoi(Conf[CosmeticsSection]["navi_idle_inner_r"]) : Settings.cosmetic.navi_idle_inner_r;
+        CVar_SetS32("gNavi_Idle_Inner_R", Settings.cosmetic.navi_idle_inner_r);
+        Settings.cosmetic.navi_idle_inner_g = (Conf[CosmeticsSection]["navi_idle_inner_g"] != "") ? Ship::stoi(Conf[CosmeticsSection]["navi_idle_inner_g"]) : Settings.cosmetic.navi_idle_inner_g;
+        CVar_SetS32("gNavi_Idle_Inner_G", Settings.cosmetic.navi_idle_inner_g);
+        Settings.cosmetic.navi_idle_inner_b = (Conf[CosmeticsSection]["navi_idle_inner_b"] != "") ? Ship::stoi(Conf[CosmeticsSection]["navi_idle_inner_b"]) : Settings.cosmetic.navi_idle_inner_b;
+        CVar_SetS32("gNavi_Idle_Inner_B", Settings.cosmetic.navi_idle_inner_b);
+        Settings.cosmetic.navi_idle_outer_r = (Conf[CosmeticsSection]["navi_idle_outer_r"] != "") ? Ship::stoi(Conf[CosmeticsSection]["navi_idle_outer_r"]) : Settings.cosmetic.navi_idle_outer_r;
+        CVar_SetS32("gNavi_Idle_Outer_R", Settings.cosmetic.navi_idle_outer_r);
+        Settings.cosmetic.navi_idle_outer_g = (Conf[CosmeticsSection]["navi_idle_outer_g"] != "") ? Ship::stoi(Conf[CosmeticsSection]["navi_idle_outer_g"]) : Settings.cosmetic.navi_idle_outer_g;
+        CVar_SetS32("gNavi_Idle_Outer_G", Settings.cosmetic.navi_idle_outer_g);
+        Settings.cosmetic.navi_idle_outer_b = (Conf[CosmeticsSection]["navi_idle_outer_b"] != "") ? Ship::stoi(Conf[CosmeticsSection]["navi_idle_outer_b"]) : Settings.cosmetic.navi_idle_outer_b;
+        CVar_SetS32("gNavi_Idle_Outer_B", Settings.cosmetic.navi_idle_outer_b);
+
+        Settings.cosmetic.navi_npc_inner_r = (Conf[CosmeticsSection]["navi_npc_inner_r"] != "") ? Ship::stoi(Conf[CosmeticsSection]["navi_npc_inner_r"]) : Settings.cosmetic.navi_npc_inner_r;
+        CVar_SetS32("gNavi_NPC_Inner_R", Settings.cosmetic.navi_npc_inner_r);
+        Settings.cosmetic.navi_npc_inner_g = (Conf[CosmeticsSection]["navi_npc_inner_g"] != "") ? Ship::stoi(Conf[CosmeticsSection]["navi_npc_inner_g"]) : Settings.cosmetic.navi_npc_inner_g;
+        CVar_SetS32("gNavi_NPC_Inner_G", Settings.cosmetic.navi_npc_inner_g);
+        Settings.cosmetic.navi_npc_inner_b = (Conf[CosmeticsSection]["navi_npc_inner_b"] != "") ? Ship::stoi(Conf[CosmeticsSection]["navi_npc_inner_b"]) : Settings.cosmetic.navi_npc_inner_b;
+        CVar_SetS32("gNavi_NPC_Inner_B", Settings.cosmetic.navi_npc_inner_b);
+        Settings.cosmetic.navi_npc_outer_r = (Conf[CosmeticsSection]["navi_npc_outer_r"] != "") ? Ship::stoi(Conf[CosmeticsSection]["navi_npc_outer_r"]) : Settings.cosmetic.navi_npc_outer_r;
+        CVar_SetS32("gNavi_NPC_Outer_R", Settings.cosmetic.navi_npc_outer_r);
+        Settings.cosmetic.navi_npc_outer_g = (Conf[CosmeticsSection]["navi_npc_outer_g"] != "") ? Ship::stoi(Conf[CosmeticsSection]["navi_npc_outer_g"]) : Settings.cosmetic.navi_npc_outer_g;
+        CVar_SetS32("gNavi_NPC_Outer_G", Settings.cosmetic.navi_npc_outer_g);
+        Settings.cosmetic.navi_npc_outer_b = (Conf[CosmeticsSection]["navi_npc_outer_b"] != "") ? Ship::stoi(Conf[CosmeticsSection]["navi_npc_outer_b"]) : Settings.cosmetic.navi_npc_outer_b;
+        CVar_SetS32("gNavi_NPC_Outer_B", Settings.cosmetic.navi_npc_outer_b);
+
+        Settings.cosmetic.navi_enemy_inner_r = (Conf[CosmeticsSection]["navi_enemy_inner_r"] != "") ? Ship::stoi(Conf[CosmeticsSection]["navi_enemy_inner_r"]) : Settings.cosmetic.navi_enemy_inner_r;
+        CVar_SetS32("gNavi_Enemy_Inner_R", Settings.cosmetic.navi_enemy_inner_r);
+        Settings.cosmetic.navi_enemy_inner_g = (Conf[CosmeticsSection]["navi_enemy_inner_g"] != "") ? Ship::stoi(Conf[CosmeticsSection]["navi_enemy_inner_g"]) : Settings.cosmetic.navi_enemy_inner_g;
+        CVar_SetS32("gNavi_Enemy_Inner_G", Settings.cosmetic.navi_enemy_inner_g);
+        Settings.cosmetic.navi_enemy_inner_b = (Conf[CosmeticsSection]["navi_enemy_inner_b"] != "") ? Ship::stoi(Conf[CosmeticsSection]["navi_enemy_inner_b"]) : Settings.cosmetic.navi_enemy_inner_b;
+        CVar_SetS32("gNavi_Enemy_Inner_B", Settings.cosmetic.navi_enemy_inner_b);
+        Settings.cosmetic.navi_enemy_outer_r = (Conf[CosmeticsSection]["navi_enemy_outer_r"] != "") ? Ship::stoi(Conf[CosmeticsSection]["navi_enemy_outer_r"]) : Settings.cosmetic.navi_enemy_outer_r;
+        CVar_SetS32("gNavi_Enemy_Outer_R", Settings.cosmetic.navi_enemy_outer_r);
+        Settings.cosmetic.navi_enemy_outer_g = (Conf[CosmeticsSection]["navi_enemy_outer_g"] != "") ? Ship::stoi(Conf[CosmeticsSection]["navi_enemy_outer_g"]) : Settings.cosmetic.navi_enemy_outer_g;
+        CVar_SetS32("gNavi_Enemy_Outer_G", Settings.cosmetic.navi_enemy_outer_g);
+        Settings.cosmetic.navi_enemy_outer_b = (Conf[CosmeticsSection]["navi_enemy_outer_b"] != "") ? Ship::stoi(Conf[CosmeticsSection]["navi_enemy_outer_b"]) : Settings.cosmetic.navi_enemy_outer_b;
+        CVar_SetS32("gNavi_Enemy_Outer_B", Settings.cosmetic.navi_enemy_outer_b);
+
+        Settings.cosmetic.navi_prop_inner_r = (Conf[CosmeticsSection]["navi_prop_inner_r"] != "") ? Ship::stoi(Conf[CosmeticsSection]["navi_prop_inner_r"]) : Settings.cosmetic.navi_prop_inner_r;
+        CVar_SetS32("gNavi_Prop_Inner_R", Settings.cosmetic.navi_prop_inner_r);
+        Settings.cosmetic.navi_prop_inner_g = (Conf[CosmeticsSection]["navi_prop_inner_g"] != "") ? Ship::stoi(Conf[CosmeticsSection]["navi_prop_inner_g"]) : Settings.cosmetic.navi_prop_inner_g;
+        CVar_SetS32("gNavi_Prop_Inner_G", Settings.cosmetic.navi_prop_inner_g);
+        Settings.cosmetic.navi_prop_inner_b = (Conf[CosmeticsSection]["navi_prop_inner_b"] != "") ? Ship::stoi(Conf[CosmeticsSection]["navi_prop_inner_b"]) : Settings.cosmetic.navi_prop_inner_b;
+        CVar_SetS32("gNavi_Prop_Inner_B", Settings.cosmetic.navi_prop_inner_b);
+        Settings.cosmetic.navi_prop_outer_r = (Conf[CosmeticsSection]["navi_prop_outer_r"] != "") ? Ship::stoi(Conf[CosmeticsSection]["navi_prop_outer_r"]) : Settings.cosmetic.navi_prop_outer_r;
+        CVar_SetS32("gNavi_Prop_Outer_R", Settings.cosmetic.navi_prop_outer_r);
+        Settings.cosmetic.navi_prop_outer_g = (Conf[CosmeticsSection]["navi_prop_outer_g"] != "") ? Ship::stoi(Conf[CosmeticsSection]["navi_prop_outer_g"]) : Settings.cosmetic.navi_prop_outer_g;
+        CVar_SetS32("gNavi_Prop_Outer_G", Settings.cosmetic.navi_prop_outer_g);
+        Settings.cosmetic.navi_prop_outer_b = (Conf[CosmeticsSection]["navi_prop_outer_b"] != "") ? Ship::stoi(Conf[CosmeticsSection]["navi_prop_outer_b"]) : Settings.cosmetic.navi_prop_outer_b;
+        CVar_SetS32("gNavi_Prop_Outer_B", Settings.cosmetic.navi_prop_outer_b);
+
+        //languages
+        Settings.languages.sellanguages = stob(Conf[LanguagesSection]["sel_languages"]);
+        CVar_SetS32("gLanguages", Settings.languages.sellanguages);*/
 
         UpdateAudio();
     }
@@ -267,7 +332,7 @@ namespace Game {
         Conf[ConfSection]["console"] = std::to_string(SohImGui::console->opened);
         Conf[ConfSection]["menu_bar"] = std::to_string(Settings.debug.menu_bar);
         Conf[ConfSection]["soh_debug"] = std::to_string(Settings.debug.soh);
-        Conf[ConfSection]["n64_mode"] = std::to_string(Settings.debug.n64mode);
+        /*Conf[ConfSection]["n64_mode"] = std::to_string(Settings.debug.n64mode);
         Conf[ConfSection]["hide_buildinfos"] = std::to_string(Settings.debug.buildinfos);
 
         // Audio
@@ -310,48 +375,87 @@ namespace Game {
         Conf[CheatSection]["super_tunic"] = std::to_string(Settings.cheats.super_tunic);
 
         //HUD Color
-        Conf[HUDColorSection]["n64_colors"] = std::to_string(Settings.hudcolors.n64_colors);
-        Conf[HUDColorSection]["gc_colors"] = std::to_string(Settings.hudcolors.gc_colors);
-        Conf[HUDColorSection]["custom_colors"] = std::to_string(Settings.hudcolors.custom_colors);
-        Conf[HUDColorSection]["cc_heartsprimr"] = std::to_string(Settings.hudcolors.ccheartsprimr);
-        Conf[HUDColorSection]["cc_heartsprimg"] = std::to_string(Settings.hudcolors.ccheartsprimg);
-        Conf[HUDColorSection]["cc_heartsprimb"] = std::to_string(Settings.hudcolors.ccheartsprimb);
-        Conf[HUDColorSection]["cc_ddheartsprimr"] = std::to_string(Settings.hudcolors.ddccheartsprimr);
-        Conf[HUDColorSection]["cc_ddheartsprimg"] = std::to_string(Settings.hudcolors.ddccheartsprimg);
-        Conf[HUDColorSection]["cc_ddheartsprimb"] = std::to_string(Settings.hudcolors.ddccheartsprimb);
-        Conf[HUDColorSection]["cc_abtnprimr"] = std::to_string(Settings.hudcolors.ccabtnprimr);
-        Conf[HUDColorSection]["cc_abtnprimg"] = std::to_string(Settings.hudcolors.ccabtnprimg);
-        Conf[HUDColorSection]["cc_abtnprimb"] = std::to_string(Settings.hudcolors.ccabtnprimb);
-        Conf[HUDColorSection]["cc_bbtnprimr"] = std::to_string(Settings.hudcolors.ccbbtnprimr);
-        Conf[HUDColorSection]["cc_bbtnprimg"] = std::to_string(Settings.hudcolors.ccbbtnprimg);
-        Conf[HUDColorSection]["cc_bbtnprimb"] = std::to_string(Settings.hudcolors.ccbbtnprimb);
-        Conf[HUDColorSection]["cc_cbtnprimr"] = std::to_string(Settings.hudcolors.cccbtnprimr);
-        Conf[HUDColorSection]["cc_cbtnprimg"] = std::to_string(Settings.hudcolors.cccbtnprimg);
-        Conf[HUDColorSection]["cc_cbtnprimb"] = std::to_string(Settings.hudcolors.cccbtnprimb);
-        Conf[HUDColorSection]["cc_startbtnprimr"] = std::to_string(Settings.hudcolors.ccstartbtnprimr);
-        Conf[HUDColorSection]["cc_startbtnprimg"] = std::to_string(Settings.hudcolors.ccstartbtnprimg);
-        Conf[HUDColorSection]["cc_startbtnprimb"] = std::to_string(Settings.hudcolors.ccstartbtnprimb);
-        Conf[HUDColorSection]["cc_magicborderprimr"] = std::to_string(Settings.hudcolors.ccmagicborderprimr);
-        Conf[HUDColorSection]["cc_magicborderprimg"] = std::to_string(Settings.hudcolors.ccmagicborderprimg);
-        Conf[HUDColorSection]["cc_magicborderprimb"] = std::to_string(Settings.hudcolors.ccmagicborderprimb);
-        Conf[HUDColorSection]["cc_magicprimr"] = std::to_string(Settings.hudcolors.ccmagicprimr);
-        Conf[HUDColorSection]["cc_magicprimg"] = std::to_string(Settings.hudcolors.ccmagicprimg);
-        Conf[HUDColorSection]["cc_magicprimb"] = std::to_string(Settings.hudcolors.ccmagicprimb);
-        Conf[HUDColorSection]["cc_magicuseprimr"] = std::to_string(Settings.hudcolors.ccmagicuseprimr);
-        Conf[HUDColorSection]["cc_magicuseprimg"] = std::to_string(Settings.hudcolors.ccmagicuseprimg);
-        Conf[HUDColorSection]["cc_magicuseprimb"] = std::to_string(Settings.hudcolors.ccmagicuseprimb);
-        Conf[HUDColorSection]["cc_minimapprimr"] = std::to_string(Settings.hudcolors.ccminimapprimr);
-        Conf[HUDColorSection]["cc_minimapprimg"] = std::to_string(Settings.hudcolors.ccminimapprimg);
-        Conf[HUDColorSection]["cc_minimapprimb"] = std::to_string(Settings.hudcolors.ccminimapprimb);
-        Conf[HUDColorSection]["cc_rupeeprimr"] = std::to_string(Settings.hudcolors.ccrupeeprimr);
-        Conf[HUDColorSection]["cc_rupeeprimg"] = std::to_string(Settings.hudcolors.ccrupeeprimg);
-        Conf[HUDColorSection]["cc_rupeeprimb"] = std::to_string(Settings.hudcolors.ccrupeeprimb);
+        Conf[CosmeticsSection]["hud_colors"] = std::to_string(Settings.cosmetic.hudcolor);
+        Conf[CosmeticsSection]["cc_heartsprimr"] = std::to_string(Settings.cosmetic.ccheartsprimr);
+        Conf[CosmeticsSection]["cc_heartsprimg"] = std::to_string(Settings.cosmetic.ccheartsprimg);
+        Conf[CosmeticsSection]["cc_heartsprimb"] = std::to_string(Settings.cosmetic.ccheartsprimb);
+        Conf[CosmeticsSection]["cc_ddheartsprimr"] = std::to_string(Settings.cosmetic.ddccheartsprimr);
+        Conf[CosmeticsSection]["cc_ddheartsprimg"] = std::to_string(Settings.cosmetic.ddccheartsprimg);
+        Conf[CosmeticsSection]["cc_ddheartsprimb"] = std::to_string(Settings.cosmetic.ddccheartsprimb);
+        Conf[CosmeticsSection]["cc_abtnprimr"] = std::to_string(Settings.cosmetic.ccabtnprimr);
+        Conf[CosmeticsSection]["cc_abtnprimg"] = std::to_string(Settings.cosmetic.ccabtnprimg);
+        Conf[CosmeticsSection]["cc_abtnprimb"] = std::to_string(Settings.cosmetic.ccabtnprimb);
+        Conf[CosmeticsSection]["cc_bbtnprimr"] = std::to_string(Settings.cosmetic.ccbbtnprimr);
+        Conf[CosmeticsSection]["cc_bbtnprimg"] = std::to_string(Settings.cosmetic.ccbbtnprimg);
+        Conf[CosmeticsSection]["cc_bbtnprimb"] = std::to_string(Settings.cosmetic.ccbbtnprimb);
+        Conf[CosmeticsSection]["cc_cbtnprimr"] = std::to_string(Settings.cosmetic.cccbtnprimr);
+        Conf[CosmeticsSection]["cc_cbtnprimg"] = std::to_string(Settings.cosmetic.cccbtnprimg);
+        Conf[CosmeticsSection]["cc_cbtnprimb"] = std::to_string(Settings.cosmetic.cccbtnprimb);
+        Conf[CosmeticsSection]["cc_startbtnprimr"] = std::to_string(Settings.cosmetic.ccstartbtnprimr);
+        Conf[CosmeticsSection]["cc_startbtnprimg"] = std::to_string(Settings.cosmetic.ccstartbtnprimg);
+        Conf[CosmeticsSection]["cc_startbtnprimb"] = std::to_string(Settings.cosmetic.ccstartbtnprimb);
+        Conf[CosmeticsSection]["cc_magicborderprimr"] = std::to_string(Settings.cosmetic.ccmagicborderprimr);
+        Conf[CosmeticsSection]["cc_magicborderprimg"] = std::to_string(Settings.cosmetic.ccmagicborderprimg);
+        Conf[CosmeticsSection]["cc_magicborderprimb"] = std::to_string(Settings.cosmetic.ccmagicborderprimb);
+        Conf[CosmeticsSection]["cc_magicprimr"] = std::to_string(Settings.cosmetic.ccmagicprimr);
+        Conf[CosmeticsSection]["cc_magicprimg"] = std::to_string(Settings.cosmetic.ccmagicprimg);
+        Conf[CosmeticsSection]["cc_magicprimb"] = std::to_string(Settings.cosmetic.ccmagicprimb);
+        Conf[CosmeticsSection]["cc_magicuseprimr"] = std::to_string(Settings.cosmetic.ccmagicuseprimr);
+        Conf[CosmeticsSection]["cc_magicuseprimg"] = std::to_string(Settings.cosmetic.ccmagicuseprimg);
+        Conf[CosmeticsSection]["cc_magicuseprimb"] = std::to_string(Settings.cosmetic.ccmagicuseprimb);
+        Conf[CosmeticsSection]["cc_minimapprimr"] = std::to_string(Settings.cosmetic.ccminimapprimr);
+        Conf[CosmeticsSection]["cc_minimapprimg"] = std::to_string(Settings.cosmetic.ccminimapprimg);
+        Conf[CosmeticsSection]["cc_minimapprimb"] = std::to_string(Settings.cosmetic.ccminimapprimb);
+        Conf[CosmeticsSection]["cc_rupeeprimr"] = std::to_string(Settings.cosmetic.ccrupeeprimr);
+        Conf[CosmeticsSection]["cc_rupeeprimg"] = std::to_string(Settings.cosmetic.ccrupeeprimg);
+        Conf[CosmeticsSection]["cc_rupeeprimb"] = std::to_string(Settings.cosmetic.ccrupeeprimb);
+
+        // Tunic/Navi colors
+        Conf[CosmeticsSection]["tunic_kokiri_r"] = std::to_string(Settings.cosmetic.tunic_kokiri_r);
+        Conf[CosmeticsSection]["tunic_kokiri_g"] = std::to_string(Settings.cosmetic.tunic_kokiri_g);
+        Conf[CosmeticsSection]["tunic_kokiri_b"] = std::to_string(Settings.cosmetic.tunic_kokiri_b);
+
+        Conf[CosmeticsSection]["tunic_goron_r"] = std::to_string(Settings.cosmetic.tunic_goron_r);
+        Conf[CosmeticsSection]["tunic_goron_g"] = std::to_string(Settings.cosmetic.tunic_goron_g);
+        Conf[CosmeticsSection]["tunic_goron_b"] = std::to_string(Settings.cosmetic.tunic_goron_b);
+
+        Conf[CosmeticsSection]["tunic_zora_r"] = std::to_string(Settings.cosmetic.tunic_zora_r);
+        Conf[CosmeticsSection]["tunic_zora_g"] = std::to_string(Settings.cosmetic.tunic_zora_g);
+        Conf[CosmeticsSection]["tunic_zora_b"] = std::to_string(Settings.cosmetic.tunic_zora_b);
+
+        Conf[CosmeticsSection]["navi_idle_inner_r"] = std::to_string(Settings.cosmetic.navi_idle_inner_r);
+        Conf[CosmeticsSection]["navi_idle_inner_g"] = std::to_string(Settings.cosmetic.navi_idle_inner_g);
+        Conf[CosmeticsSection]["navi_idle_inner_b"] = std::to_string(Settings.cosmetic.navi_idle_inner_b);
+        Conf[CosmeticsSection]["navi_idle_outer_r"] = std::to_string(Settings.cosmetic.navi_idle_outer_r);
+        Conf[CosmeticsSection]["navi_idle_outer_g"] = std::to_string(Settings.cosmetic.navi_idle_outer_g);
+        Conf[CosmeticsSection]["navi_idle_outer_b"] = std::to_string(Settings.cosmetic.navi_idle_outer_b);
+
+        Conf[CosmeticsSection]["navi_npc_inner_r"] = std::to_string(Settings.cosmetic.navi_npc_inner_r);
+        Conf[CosmeticsSection]["navi_npc_inner_g"] = std::to_string(Settings.cosmetic.navi_npc_inner_g);
+        Conf[CosmeticsSection]["navi_npc_inner_b"] = std::to_string(Settings.cosmetic.navi_npc_inner_b);
+        Conf[CosmeticsSection]["navi_npc_outer_r"] = std::to_string(Settings.cosmetic.navi_npc_outer_r);
+        Conf[CosmeticsSection]["navi_npc_outer_g"] = std::to_string(Settings.cosmetic.navi_npc_outer_g);
+        Conf[CosmeticsSection]["navi_npc_outer_b"] = std::to_string(Settings.cosmetic.navi_npc_outer_b);
+
+        Conf[CosmeticsSection]["navi_enemy_inner_r"] = std::to_string(Settings.cosmetic.navi_enemy_inner_r);
+        Conf[CosmeticsSection]["navi_enemy_inner_g"] = std::to_string(Settings.cosmetic.navi_enemy_inner_g);
+        Conf[CosmeticsSection]["navi_enemy_inner_b"] = std::to_string(Settings.cosmetic.navi_enemy_inner_b);
+        Conf[CosmeticsSection]["navi_enemy_outer_r"] = std::to_string(Settings.cosmetic.navi_enemy_outer_r);
+        Conf[CosmeticsSection]["navi_enemy_outer_g"] = std::to_string(Settings.cosmetic.navi_enemy_outer_g);
+        Conf[CosmeticsSection]["navi_enemy_outer_b"] = std::to_string(Settings.cosmetic.navi_enemy_outer_b);
+
+        Conf[CosmeticsSection]["navi_prop_inner_r"] = std::to_string(Settings.cosmetic.navi_prop_inner_r);
+        Conf[CosmeticsSection]["navi_prop_inner_g"] = std::to_string(Settings.cosmetic.navi_prop_inner_g);
+        Conf[CosmeticsSection]["navi_prop_inner_b"] = std::to_string(Settings.cosmetic.navi_prop_inner_b);
+        Conf[CosmeticsSection]["navi_prop_outer_r"] = std::to_string(Settings.cosmetic.navi_prop_outer_r);
+        Conf[CosmeticsSection]["navi_prop_outer_g"] = std::to_string(Settings.cosmetic.navi_prop_outer_g);
+        Conf[CosmeticsSection]["navi_prop_outer_b"] = std::to_string(Settings.cosmetic.navi_prop_outer_b);
 
         //Languages
-        Conf[LanguagesSection]["set_eng"] = std::to_string(Settings.languages.set_eng);
-        Conf[LanguagesSection]["set_fra"] = std::to_string(Settings.languages.set_fra);
-        Conf[LanguagesSection]["set_ger"] = std::to_string(Settings.languages.set_ger);
+        Conf[LanguagesSection]["sel_languages"] = std::to_string(Settings.languages.sellanguages);*/
+
         Conf.Save();
+        DebugConsole_SaveCVars();
     }
 
     void InitSettings() {

@@ -30,9 +30,8 @@ void BootCommands_Init()
     CVar_RegisterS32("gNewDrops", 0);
     CVar_RegisterS32("gVisualAgony", 0);
     CVar_RegisterS32("gUniformLR", 0);
-    CVar_RegisterS32("gN64Colors", 1);
-    CVar_RegisterS32("gGameCubeColors", 0);
-    CVar_RegisterS32("gCustomColors", 0);
+    CVar_RegisterS32("gHudColors", 1);
+    CVar_RegisterS32("gLanguages", 0);
 }
 
 //void BootCommands_ParseBootArgs(char* str)
