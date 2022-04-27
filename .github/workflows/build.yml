@@ -21,7 +21,7 @@ jobs:
       uses: actions/checkout@v3
       with:
           clean: false
-          path: .
+          path: appimage
           
     - name: cache
       uses: actions/cache@v3
@@ -43,8 +43,8 @@ jobs:
     - name: Prepare Dockerfile (Ubuntu 20.04)
       run: |
         ls -al
-        ls -al .github/workflows
-        cp -av .github/workflows/Dockerfile .
+        ls -al appimage/.github/workflows
+        cp -av appimage/.github/workflows/Dockerfile .
         
     - name: Build Docker Image
       run: sudo docker build . -t soh --no-cache
