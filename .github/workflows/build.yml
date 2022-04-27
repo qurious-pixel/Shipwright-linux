@@ -53,5 +53,6 @@ jobs:
       run: |
         sudo docker run --rm -v $(pwd):/soh soh /bin/bash -c "
         git config --global --add safe.directory /soh &&
+        make setup -C soh -j$(nproc) &&
         make -C soh -j$(nproc)"
 
