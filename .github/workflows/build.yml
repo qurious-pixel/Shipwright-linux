@@ -35,18 +35,12 @@ jobs:
       run: |
         sudo dpkg --add-architecture i386
         sudo apt-get update
-        sudo apt-get upgrade -y
         sudo apt-get install -y \
             binutils:i386 \
             gcc-10:i386 \
             g++-10:i386 \
-            p7zip-full \
-            python3 \
             python \
-            make \
             cmake \
-            curl \
-            git \
             lld \
             libsdl2-dev:i386 \
             zlib1g-dev:i386 \
