@@ -3918,8 +3918,8 @@ void KaleidoScope_Update(GlobalContext* globalCtx){
             R_UPDATE_RATE = 3;
             R_PAUSE_MENU_MODE = 0;
 
-            ResourceMgr_DirtyDirectory("textures/icon_item_24_static*");
-            ResourceMgr_DirtyDirectory("textures/icon_item_static*");
+            //ResourceMgr_DirtyDirectory("textures/icon_item_24_static*");
+            //ResourceMgr_DirtyDirectory("textures/icon_item_static*");
             CVar_SetS32("gPauseTriforce", 0);
 
             func_800981B8(&globalCtx->objectCtx);

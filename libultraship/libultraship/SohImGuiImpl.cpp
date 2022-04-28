@@ -262,8 +262,9 @@ namespace SohImGui {
         kokiri_col[0] = (float)CVar_GetS32("gTunic_Kokiri_R", 30)/255;
         kokiri_col[1] = (float)CVar_GetS32("gTunic_Kokiri_G", 105)/255;
         kokiri_col[2] = (float)CVar_GetS32("gTunic_Kokiri_B", 27)/255;
-        kokiri_col[1] = (float)CVar_GetS32("gTunic_Kokiri_G", 105)/255;
-        kokiri_col[2] = (float)CVar_GetS32("gTunic_Kokiri_B", 27)/255;
+        goron_col[0] = (float)CVar_GetS32("gTunic_Goron_R", 100)/255;
+        goron_col[1] = (float)CVar_GetS32("gTunic_Goron_G", 20)/255;
+        goron_col[2] = (float)CVar_GetS32("gTunic_Goron_B", 0)/255;
         zora_col[0] = (float)CVar_GetS32("gTunic_Zora_R", 0)/255;
         zora_col[1] = (float)CVar_GetS32("gTunic_Zora_G", 60)/255;
         zora_col[2] = (float)CVar_GetS32("gTunic_Zora_B", 100)/255;
@@ -357,7 +358,7 @@ namespace SohImGui {
         float value = CVar_GetFloat(key, defaultValue);
 
         ImGui::Text(name, static_cast<int>(100 * value));
-        if (ImGui::SliderFloat((std::string("##") + key).c_str(), &value, 0.0f, 1.0f, "")) {
+        if (ImGui::SliderFloat((std::string("##") + key).c_str(), &value, 0.0f, 1.0f, "", ImGuiSliderFlags_AlwaysClamp)) {
             const float volume = floorf(value * 100) / 100;
             CVar_SetFloat(key, volume);
             needs_save = true;
@@ -524,7 +525,7 @@ namespace SohImGui {
 
                 EnhancementSliderFloat("Rumble Strength: %d %%", "##RUMBLE", "gRumbleStrength", 0.0f, 1.0f, "", 1.0f);
                 EnhancementCheckbox("Show Inputs", "gInputEnabled");
-                EnhancementSliderFloat("Input Scale: %.1f", "##Input", "gInputScale", 0.0f, 3.0f, "", 1.0f);
+                EnhancementSliderFloat("Input Scale: %dx", "##Input", "gInputScale", 1, 3, "", 1);
                 ImGui::Separator();
 
                 EnhancementCheckbox("Dpad Support on Pause and File Select", "gDpadPauseName");
@@ -552,19 +553,6 @@ namespace SohImGui {
                 EnhancementCheckbox("Disable LOD", "gDisableLOD");
                 EnhancementCheckbox("Enable 3D Dropped items", "gNewDrops");
                 EnhancementCheckbox("Dynamic Wallet Icon", "gDynamicWalletIcon");
-
-                ImGui::EndMenu();
-            }
-
-            if (ImGui::BeginMenu("Developer Tools")) {
-                HOOK(ImGui::MenuItem("Stats", nullptr, &Game::Settings.debug.soh));
-                HOOK(ImGui::MenuItem("Console", nullptr, &console->opened));
-
-                ImGui::Text("Debug");
-                ImGui::Separator();
-
-                EnhancementCheckbox("Hide build infos", "gBuildInfos");
-                EnhancementCheckbox("Debug Mode", "gDebugEnabled");
 
                 ImGui::EndMenu();
             }
@@ -604,12 +592,14 @@ namespace SohImGui {
             }
             if (ImGui::BeginMenu("Cosmetics")) {
                 if (ImGui::BeginMenu("Tunics")) {
+                    EnhancementCheckbox("Custom colors on tunics", "gUseTunicsCol");
                     EnhancementColorEdit3("Kokiri Tunic", "gTunic_Kokiri_", kokiri_col);
                     EnhancementColorEdit3("Goron Tunic", "gTunic_Goron_", goron_col);
                     EnhancementColorEdit3("Zora Tunic", "gTunic_Zora_", zora_col);
                     ImGui::EndMenu();
                 }
                 if (ImGui::BeginMenu("Navi")) {
+                    EnhancementCheckbox("Custom colors for Navi", "gUseNaviCol");
                     EnhancementColorEdit3("Navi Idle Inner", "gNavi_Idle_Inner_", navi_idle_i_col);
                     EnhancementColorEdit3("Navi Idle Outer", "gNavi_Idle_Outer_", navi_idle_o_col);
                     ImGui::Separator();
@@ -669,6 +659,19 @@ namespace SohImGui {
                 EnhancementRadioButton("English", "gLanguages", 0);
                 EnhancementRadioButton("German", "gLanguages", 1);
                 EnhancementRadioButton("French", "gLanguages", 2);
+                ImGui::EndMenu();
+            }
+
+            if (ImGui::BeginMenu("Developer Tools")) {
+                HOOK(ImGui::MenuItem("Stats", nullptr, &Game::Settings.debug.soh));
+                HOOK(ImGui::MenuItem("Console", nullptr, &console->opened));
+
+                ImGui::Text("Debug");
+                ImGui::Separator();
+
+                EnhancementCheckbox("Hide build infos", "gBuildInfos");
+                EnhancementCheckbox("Debug Mode (L + R + Z)", "gDebugEnabled");
+                EnhancementCheckbox("Debug Camera (DPad < + R)", "gDebugCamera");
                 ImGui::EndMenu();
             }
 
