@@ -5,6 +5,7 @@
 #include "spdlog/spdlog.h"
 #include "stox.h"
 #include "Window.h"
+#include "Cvar.h"
 
 extern "C" uint8_t __osMaxControllers;
 
@@ -186,7 +187,7 @@ namespace Ship {
 
             const char* contName = SDL_GameControllerName(Cont);
             const int isSpecialController = !strcmp("PS5 Controller", contName);
-            const float gyroSensitivity = Game::Settings.controller.gyro_sensitivity;
+            const float gyroSensitivity = CVar_GetFloat("gGyroSensitivity", 1.0f);
 
             if (Game::Settings.controller.gyroDriftX == 0) {
                 Game::Settings.controller.gyroDriftX = gyroData[0];
@@ -331,14 +332,13 @@ namespace Ship {
         }
     }
 
-    void SDLController::WriteToSource(ControllerCallback* controller)
-    {
-        // MERGETODO
-        // if (SDL_GameControllerHasRumble(Cont)) {
-        //     if (controller->rumble > 0) {
-        //         SDL_GameControllerRumble(Cont, 0xFFFF * Game::Settings.controller.rumble_strength, 0xFFFF * Game::Settings.controller.rumble_strength, 1);
-        //     }
-        // }
+    void SDLController::WriteToSource(ControllerCallback* controller) {
+        /*if (SDL_GameControllerHasRumble(Cont)) {
+            if (controller->rumble > 0) {
+                float rumbleStrength = CVar_GetFloat("", 1.0f);
+                SDL_GameControllerRumble(Cont, 0xFFFF * rumbleStrength, 0xFFFF * rumbleStrength, 1);
+            }
+        }*/
 
         //  /* Uncomment me if you want to build for Ubuntu 20.04 and probably lower !
         if (SDL_GameControllerHasLED(Cont)) {

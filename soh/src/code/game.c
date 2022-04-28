@@ -9,22 +9,6 @@ ViMode sViMode;
 FaultClient sGameFaultClient;
 u16 sLastButtonPressed;
 
-void UpdateLanguages() {
-    if (CVar_GetS32("gSetENG", 0) !=0) {
-        gSaveContext.language = LANGUAGE_ENG;
-        CVar_SetS32("gSetFRA", 0);
-        CVar_SetS32("gSetGER", 0);
-    } else if (CVar_GetS32("gSetFRA", 0) !=0) {
-        gSaveContext.language = LANGUAGE_FRA;
-        CVar_SetS32("gSetENG", 0);
-        CVar_SetS32("gSetGER", 0);
-    } else if (CVar_GetS32("gSetGER", 0) !=0) {
-        gSaveContext.language = LANGUAGE_GER;
-        CVar_SetS32("gSetENG", 0);
-        CVar_SetS32("gSetFRA", 0);
-    }
-}
-
 void GameState_FaultPrint(void) {
     static char sBtnChars[] = "ABZSuldr*+LRudlr";
     s32 i;
@@ -255,7 +239,6 @@ int fbTest = -1;
 
 void GameState_Update(GameState* gameState) {
     GraphicsContext* gfxCtx = gameState->gfxCtx;
-    UpdateLanguages();
     if (fbTest == -1)
     {
         fbTest = gfx_create_framebuffer(64, 112);
@@ -437,6 +420,15 @@ void GameState_Update(GameState* gameState) {
 
         int32_t prevTime = CVar_GetS32("gPrevTime", gSaveContext.dayTime);
         gSaveContext.dayTime = prevTime;
+    }
+
+    //I added this check here to allow Player to switch languages on runtime
+    if (CVar_GetS32("gLanguages", 0) == 0) { 
+        gSaveContext.language = LANGUAGE_ENG;
+    } else if (CVar_GetS32("gLanguages", 0) == 1) {
+        gSaveContext.language = LANGUAGE_GER;
+    } else if (CVar_GetS32("gLanguages", 0) == 2) {
+        gSaveContext.language = LANGUAGE_FRA;
     }
 
     gameState->frames++;

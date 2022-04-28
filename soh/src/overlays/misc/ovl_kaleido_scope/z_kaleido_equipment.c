@@ -577,10 +577,12 @@ void KaleidoScope_DrawEquipment(GlobalContext* globalCtx) {
             } else if (gBitFlags[bit] & gSaveContext.inventory.equipment) {
                 int itemId = ITEM_SWORD_KOKIRI + temp;
                 bool not_acquired = (gItemAgeReqs[itemId] != 9) && (gItemAgeReqs[itemId] != gSaveContext.linkAge);
-                if (not_acquired)
-                    gsSPSetGfxEffect(POLY_KAL_DISP++, GRAYOUT);
+                if (not_acquired) {
+                    gsDPSetGrayscaleColor(POLY_KAL_DISP++, 100, 100, 100, 255);
+                    gsSPGrayscale(POLY_KAL_DISP++, true);
+                }
                 KaleidoScope_DrawQuadTextureRGBA32(globalCtx->state.gfxCtx, gItemIcons[itemId], 32, 32, point);
-                gsSPSetGfxEffect(POLY_KAL_DISP++, NONE);
+                gsSPGrayscale(POLY_KAL_DISP++, false);
                 //KaleidoScope_DrawQuadTextureRGBA32(globalCtx->state.gfxCtx, gItemIcons[ITEM_SWORD_KOKIRI + temp], 32, 32, point);
             }
         }

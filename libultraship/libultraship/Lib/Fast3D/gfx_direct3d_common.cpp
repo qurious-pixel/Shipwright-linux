@@ -138,6 +138,10 @@ void gfx_direct3d_common_build_shader(char buf[4096], size_t& len, size_t& num_f
         append_line(buf, &len, "    float4 fog : FOG;");
         num_floats += 4;
     }
+    if (cc_features.opt_grayscale) {
+        append_line(buf, &len, "    float4 grayscale : GRAYSCALE;");
+        num_floats += 4;
+    }
     for (int i = 0; i < cc_features.num_inputs; i++) {
         len += sprintf(buf + len, "    float%d input%d : INPUT%d;\r\n", cc_features.opt_alpha ? 4 : 3, i + 1, i);
         num_floats += cc_features.opt_alpha ? 4 : 3;
@@ -208,6 +212,9 @@ void gfx_direct3d_common_build_shader(char buf[4096], size_t& len, size_t& num_f
     if (cc_features.opt_fog) {
         append_str(buf, &len, ", float4 fog : FOG");
     }
+    if (cc_features.opt_grayscale) {
+        append_str(buf, &len, ", float4 grayscale : GRAYSCALE");
+    }
     for (int i = 0; i < cc_features.num_inputs; i++) {
         len += sprintf(buf + len, ", float%d input%d : INPUT%d", cc_features.opt_alpha ? 4 : 3, i + 1, i);
     }
@@ -227,6 +234,9 @@ void gfx_direct3d_common_build_shader(char buf[4096], size_t& len, size_t& num_f
 
     if (cc_features.opt_fog) {
         append_line(buf, &len, "    result.fog = fog;");
+    }
+    if (cc_features.opt_grayscale) {
+        append_line(buf, &len, "    result.grayscale = grayscale;");
     }
     for (int i = 0; i < cc_features.num_inputs; i++) {
         len += sprintf(buf + len, "    result.input%d = input%d;\r\n", i + 1, i + 1);
@@ -301,6 +311,11 @@ void gfx_direct3d_common_build_shader(char buf[4096], size_t& len, size_t& num_f
     if (cc_features.opt_alpha && cc_features.opt_noise) {
         append_line(buf, &len, "    float2 coords = screenSpace.xy * noise_scale;");
         append_line(buf, &len, "    texel.a *= round(saturate(random(float3(floor(coords), noise_frame)) + texel.a - 0.5));");
+    }
+
+    if (cc_features.opt_grayscale) {
+        append_line(buf, &len, "float intensity = (texel.r + texel.g + texel.b) / 3.0;");
+        append_line(buf, &len, "texel.rgb = input.grayscale.rgb * intensity;");
     }
 
     if (cc_features.opt_alpha) {
