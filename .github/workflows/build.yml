@@ -74,7 +74,7 @@ jobs:
         git clone https://github.com/Perlmint/glew-cmake.git 
         cmake glew-cmake 
         make -j$(nproc) 
-        make install ARCH64=false
+        sudo make install ARCH64=false
     - name: Build SDL2:i386
       run: |
         SDL2VER=2.0.22
