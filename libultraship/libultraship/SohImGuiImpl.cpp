@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <utility>
-
 #include "Archive.h"
 #include "Environment.h"
 #include "GameSettings.h"

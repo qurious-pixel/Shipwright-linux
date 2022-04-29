@@ -6,7 +6,6 @@
 #include <PR/ultra64/sptask.h>
 #include <PR/ultra64/pi.h>
 #include <PR/ultra64/message.h>
-
 #include "ConfigFile.h"
 #include "Cvar.h"
 #include "GlobalCtx2.h"
