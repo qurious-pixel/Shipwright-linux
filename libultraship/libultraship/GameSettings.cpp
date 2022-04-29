@@ -14,7 +14,6 @@
 #include "../../soh/include/z64audio.h"
 #include <string>
 #include "SohHooks.h"
-#include "../../soh/soh/Enhancements/debugconsole.h"
 
 #define ABS(var) var < 0 ? -(var) : var
 
@@ -61,7 +60,6 @@ namespace Game {
         Conf[ConfSection]["soh_debug"] = std::to_string(Settings.debug.soh);
 
         Conf.Save();
-        DebugConsole_SaveCVars();
     }
 
     void InitSettings() {

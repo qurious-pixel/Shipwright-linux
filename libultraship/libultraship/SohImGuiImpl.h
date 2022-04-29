@@ -46,8 +46,8 @@ namespace SohImGui {
             void* event;
         } sdl;
     } EventImpl;
-    extern "C" void DebugConsole_SaveCVars();
     extern Console* console;
+    void SaveCVars();
     void Init(WindowImpl window_impl);
     void Update(EventImpl event);
     void EnhancementColorEdit3(std::string text, std::string cvarName, float ColorRGB[3]);
