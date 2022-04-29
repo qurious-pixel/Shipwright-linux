@@ -174,7 +174,24 @@ namespace SohImGui {
             return false;
         }
     }*/
+	void SaveCVars() {
+		std::string output;
+		std::ofstream cvarfile;
+		cvarfile.open("cvars.cfg");
+		for (const auto &cvar : cvars) {
+		    if (cvar.second->type == CVAR_TYPE_STRING)
+		        output += StringHelper::Sprintf("set %s %s\n", cvar.first.c_str(), cvar.second->value.valueStr);
+		    else if (cvar.second->type == CVAR_TYPE_S32)
+		        output += StringHelper::Sprintf("set %s %i\n", cvar.first.c_str(), cvar.second->value.valueS32);
+		    else if (cvar.second->type == CVAR_TYPE_FLOAT)
+		        output += StringHelper::Sprintf("set %s %f\n", cvar.first.c_str(), cvar.second->value.valueFloat);
+		}
 
+		//File::WriteAllText("cvars.cfg", output);
+		cvarfile << output.c_str();
+		cvarfile.close();
+	}
+	
     bool UseViewports() {
         switch (impl.backend) {
         case Backend::DX11:
@@ -342,7 +359,7 @@ namespace SohImGui {
     void Update(EventImpl event) {
         if (needs_save) {
             Game::SaveSettings();
-            DebugConsole_SaveCVars();
+            SaveCVars();
             needs_save = false;
         }
         ImGuiProcessEvent(event);
