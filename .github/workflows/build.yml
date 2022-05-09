@@ -124,7 +124,7 @@ jobs:
       run: |
         mkdir artifacts
         cp soh/soh.elf artifacts
-        cp OTRGui/OTRGui artifacts
+        cp OTRGui/build/OTRGui artifacts
         cp -r soh/assets artifacts
     - uses: actions/upload-artifact@v3
       with:
