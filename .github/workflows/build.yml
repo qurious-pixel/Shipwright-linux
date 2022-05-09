@@ -126,7 +126,7 @@ jobs:
         cp soh/soh.elf artifacts
         cp OTRGui/build/OTRGui artifacts
         rsync -av --exclude='*.gitignore' OTRGui/build/assets artifacts/assets
-        cp ZAPDTR/build/ZAPD/ZAPD.out artifacts
+        cp ZAPDTR/ZAPD.out artifacts/assets/extractor/
     - uses: actions/upload-artifact@v3
       with:
           name: SOH-Linux
