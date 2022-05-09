@@ -110,6 +110,11 @@ jobs:
     - name: Build ZAPDTR
       run: make -C ZAPDTR -j$(nproc)
 
+    - name: Build OTRGui
+      run: |
+        cmake -B OTRGui/build
+        cmake --build OTRGui/build
+      
     - name: Build SOH
       run: |
         make setup -C soh -j$(nproc) 
