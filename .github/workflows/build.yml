@@ -125,7 +125,8 @@ jobs:
         mkdir artifacts
         cp soh/soh.elf artifacts
         cp OTRGui/build/OTRGui artifacts
-        cp -r soh/assets artifacts
+        rsync -av --exclude='*.gitignore' OTRGui/build/assets artifacts/assets
+        cp ZAPDTR/build/ZAPD/ZAPD.out artifacts
     - uses: actions/upload-artifact@v3
       with:
           name: SOH-Linux
