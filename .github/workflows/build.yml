@@ -112,7 +112,7 @@ jobs:
 
     - name: Build OTRGui
       run: |
-        cmake -B OTRGui/build
+        cmake -B OTRGui/build -S OTRGui
         cmake --build OTRGui/build
       
     - name: Build SOH
