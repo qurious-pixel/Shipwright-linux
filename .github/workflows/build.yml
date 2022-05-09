@@ -27,11 +27,12 @@ jobs:
     - name: cache
       uses: actions/cache@v3
       with:
-        path: ${{github.workspace}}/soh/ROM
+        path: |
+          ${{github.workspace}}/soh/ROM
+          ~/.ccache
         key: build-${{github.run_id}}
         restore-keys: |
           build
-          ~/.ccache
             
     - name: Prepare Build
       run: |
@@ -125,7 +126,7 @@ jobs:
         mkdir artifacts
         cp soh/soh.elf artifacts
         cp OTRGui/build/OTRGui artifacts
-        rsync -av --exclude='*.gitignore' OTRGui/build/assets artifacts/assets
+        rsync -av --exclude='*.gitignore' OTRGui/build/assets artifacts/
         cp ZAPDTR/ZAPD.out artifacts/assets/extractor/
     - uses: actions/upload-artifact@v3
       with:
