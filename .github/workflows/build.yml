@@ -119,7 +119,14 @@ jobs:
       run: |
         make setup -C soh -j$(nproc) 
         make -C soh -j$(nproc)
+        
+    - name: Prepare Artifact
+      run: |
+        mkdir artifacts
+        cp soh/soh.elf artifacts
+        cp OTRGui/OTRGui artifacts
+        cp -r soh/assets artifacts
     - uses: actions/upload-artifact@v3
       with:
           name: SOH-Linux
-          path: soh/soh.elf
+          path: artifacts
