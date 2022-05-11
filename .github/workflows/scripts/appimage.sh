@@ -23,7 +23,7 @@ cd AppDir && ln -s ./usr/bin/soh.sh ./AppRun && cd ..
  
 ARCH=i386 ./linuxdeploy-x86_64.AppImage --appdir="$GITHUB_WORKSPACE"/AppDir/ -d "$GITHUB_WORKSPACE"/AppDir/soh.desktop -i "$GITHUB_WORKSPACE"/AppDir/soh.png -e "$GITHUB_WORKSPACE"/AppDir/usr/bin/soh.elf
  
-cp /lib/i386-linux-gnu/{libGL.so.1,libstdc++.so.6,libm.so.6,libgcc_s.so.1,libc.so.6,libxcb.so.1,libGLdispatch.so.0,libGLX.so.0} AppDir/usr/lib32
+cp /lib/i386-linux-gnu/{ld-linux.so.2,libGL.so.1,libstdc++.so.6,libm.so.6,libgcc_s.so.1,libc.so.6,libxcb.so.1,libGLdispatch.so.0,libGLX.so.0} AppDir/usr/lib32
 cd AppDir && ln -s ./usr/lib32/ld-linux.so.2 ./usr/lib/ && cd ..
 cp -r /lib/i386-linux-gnu/pulseaudio AppDir/usr/lib32/
 mkdir AppDir/usr/lib32/dri && cp /lib/i386-linux-gnu/dri/swrast_dri.so AppDir/usr/lib32/dri/
