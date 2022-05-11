@@ -101,8 +101,10 @@ jobs:
         curl -sLO https://nightly.link/qurious-pixel/Shipwright-linux/actions/artifacts/235630140.zip
         mkdir -p AppDir/usr/bin
         unzip 235630140.zip -d AppDir/usr/bin/
-    #- name: Build libultraship
-    #  run: make -C libultraship -j$(nproc)
+    - name: Build AppImage
+      run: |
+        chmod +x appimage/.github/workflows/scripts/appimage.sh
+        appimage/.github/workflows/scripts/appimage.sh
 
 
         
