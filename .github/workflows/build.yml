@@ -36,6 +36,9 @@ jobs:
 
     - name: Prepare Build
       run: |
+        find /usr -name libasound* | grep i386
+    - name: Prepare Build
+      run: |
         if [[ ! -e soh/ROM/baserom_non_mq.z64 ]]; then
           mkdir -p soh/ROM 
           wget -qO soh/ROM/ROM.zip ${{ secrets.DEBUG_ROM }} 2>/dev/null
