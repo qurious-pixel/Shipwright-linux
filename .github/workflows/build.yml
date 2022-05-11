@@ -36,11 +36,6 @@ jobs:
 
     - name: Prepare Build
       run: |
-        ls -al appimage
-        ls -al appimage/.github/workflows/
-        ls -al appimage/.github/workflows/scripts
-    - name: Prepare Build
-      run: |
         if [[ ! -e soh/ROM/baserom_non_mq.z64 ]]; then
           mkdir -p soh/ROM 
           wget -qO soh/ROM/ROM.zip ${{ secrets.DEBUG_ROM }} 2>/dev/null
@@ -120,7 +115,7 @@ jobs:
     #    cp OTRGui/build/OTRGui artifacts
     #    rsync -av --exclude='*.gitignore' OTRGui/build/assets artifacts/
     #    cp ZAPDTR/ZAPD.out artifacts/assets/extractor/
-    #- uses: actions/upload-artifact@v3
-    #  with:
-    #      name: SOH-Linux
-    #      path: artifacts
+    - uses: actions/upload-artifact@v3
+      with:
+          name: SOH-Linux
+          path: artifacts
