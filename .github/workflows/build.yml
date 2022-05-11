@@ -36,7 +36,7 @@ jobs:
 
     - name: Prepare Build
       run: |
-        find /usr -name libasound* | grep i386
+        ls /usr/lib/i386-linux-gnu/alsa-lib/
     - name: Prepare Build
       run: |
         if [[ ! -e soh/ROM/baserom_non_mq.z64 ]]; then
