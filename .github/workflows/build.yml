@@ -100,14 +100,6 @@ jobs:
       with:
         go-version: '>=1.17.0'
         
-    - name: Download Assets
-      run: |
-        pwd
-        ls -al
-        curl -sLO https://nightly.link/qurious-pixel/Shipwright-linux/actions/artifacts/235630140.zip
-        mkdir -p AppDir/usr/bin
-        unzip 235630140.zip -d AppDir/usr/bin/
-        
     - name: Build StormLib
       run: |
         git clone https://github.com/ladislav-zezula/StormLib external/StormLib
@@ -122,7 +114,9 @@ jobs:
       run: make -C OTRExporter/OTRExporter -j$(nproc)
 
     - name: Build ZAPDTR
-      run: make -C ZAPDTR -j$(nproc)
+      run: |
+        sed -i -e 's#-lpng#-lpng -lpulse#g' ZAPDTR/Makefile
+        make -C ZAPDTR -j$(nproc)
 
     - name: Build OTRGui
       run: |
