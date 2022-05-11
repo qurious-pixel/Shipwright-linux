@@ -2,8 +2,9 @@ name: Build
 
 on: 
   push:
-  #  branches: 
-  #    - main
+  pull_request:
+    branches: 
+      - main
   workflow_dispatch:
   
 jobs:
@@ -16,7 +17,7 @@ jobs:
       with:
         repository: Baoulettes/Shipwright-linux
         ref: main
-        #path: .
+
     - name: Checkout AppImage Repo
       uses: actions/checkout@v3
       with:
@@ -26,7 +27,9 @@ jobs:
     - name: cache
       uses: actions/cache@v3
       with:
-        path: ${{github.workspace}}/soh/ROM
+        path: |
+          ${{github.workspace}}/soh/ROM
+          ~/.ccache
         key: build-${{github.run_id}}
         restore-keys: |
           build
@@ -39,42 +42,78 @@ jobs:
           7za e soh/ROM/ROM.zip -so > soh/ROM/baserom_non_mq.z64
         fi
         cp soh/ROM/baserom_non_mq.z64 soh
-        
-    - name: Prepare Dockerfile (Ubuntu 20.04)
+    - name: Remove Microsft Source List
       run: |
+        sudo rm -f /etc/apt/sources.list.d/microsoft-prod.list
+        sudo apt-get update -qq
+        sudo apt-get install -yqq --allow-downgrades libpcre2-8-0/focal libpcre2-16-0/focal libpcre2-32-0/focal libpcre2-posix2/focal
+  
+    - name: Install Dependencies
+      run: |
+        sudo dpkg --add-architecture i386
+        sudo apt-get update
+        sudo apt-get upgrade -y
+        sudo apt-get install -y \
+            libc6-dev:i386 \
+            binutils:i386 \
+            gcc-10:i386 \
+            g++-10:i386 \
+            python \
+            cmake \
+            lld \
+            libsdl2-dev:i386 \
+            zlib1g-dev:i386 \
+            libbz2-dev:i386 \
+            libpng-dev:i386 \
+            libgles2-mesa-dev
+        sudo ln -s /usr/bin/gcc-10 /usr/bin/gcc
+        sudo ln -s /usr/bin/gcc-10 /usr/bin/cc
+        sudo ln -s /usr/bin/g++-10 /usr/bin/g++
+        sudo ln -s /usr/bin/g++-10 /usr/bin/c++
+    - name: Build glew:i386
+      run: |
+        git clone https://github.com/Perlmint/glew-cmake.git 
+        cmake glew-cmake 
+        make -j$(nproc) 
+        sudo make install ARCH64=false
+    - name: Build SDL2:i386
+      run: |
+        SDL2VER=2.0.22
+        if [[ ! -e ~/.ccache ]]; then
+          mkdir ~/.ccache
+        fi  
+        cd ~/.ccache
+        if [[ ! -e SDL2-${SDL2VER} ]]; then
+          curl -sLO https://libsdl.org/release/SDL2-${SDL2VER}.tar.gz
+          tar -xzf SDL2-${SDL2VER}.tar.gz
+          cd SDL2-${SDL2VER}
+          ./configure --build=i386-linux-gnu --prefix=/usr
+          make && cd ../
+          rm SDL2-${SDL2VER}.tar.gz
+        fi
+        sudo make -C SDL2-${SDL2VER} install
+        sudo cp -av /lib/libSDL* /lib/i386-linux-gnu/
+        
+    - name: Download Assets
+      run: |
+        pwd
         ls -al
-        ls -al appimage/.github/workflows
-        cp -av appimage/.github/workflows/Dockerfile .
+        curl -sLO https://nightly.link/qurious-pixel/Shipwright-linux/actions/artifacts/235630140.zip
+        mkdir -p AppDir/usr/bin
+        unzip 235630140.zip -d AppDir/usr/bin/
+    #- name: Build libultraship
+    #  run: make -C libultraship -j$(nproc)
+
+
         
-    - name: Build Docker Image
-      run: sudo docker build . -t soh --no-cache
-
-    - name: Build StormLib
-      run: |
-        sudo docker run --rm -v $(pwd):/soh soh /bin/bash -c "
-        git clone https://github.com/ladislav-zezula/StormLib external/StormLib &&
-        cmake -B external/StormLib/build -S external/StormLib &&
-        cmake --build external/StormLib/build &&
-        cp external/StormLib/build/libstorm.a external &&
-        cp /usr/local/lib/libGLEW.a external"
-    - name: Build libultraship
-      run: sudo docker run --rm -v $(pwd):/soh soh /bin/bash -c "make -C libultraship -j$(nproc)"
-
-    - name: Build OTRExporter
-      run: sudo docker run --rm -v $(pwd):/soh soh /bin/bash -c "make -C OTRExporter/OTRExporter -j$(nproc)"
-
-    - name: Build ZAPDTR
-      run: |
-        sudo docker run --rm -v $(pwd):/soh soh /bin/bash -c "
-        git config --global --add safe.directory /soh &&
-        make -C ZAPDTR -j$(nproc)"
-    - name: Build SOH
-      run: |
-        sudo docker run --rm -v $(pwd):/soh soh /bin/bash -c "
-        git config --global --add safe.directory /soh &&
-        make setup -C soh -j$(nproc) &&
-        make -C soh -j$(nproc)"
-    - uses: actions/upload-artifact@v3
-      with:
-          name: SOH-Linux
-          path: soh/soh.elf
+    #- name: Prepare Artifact
+    #  run: |
+    #    mkdir artifacts
+    #    cp soh/soh.elf artifacts
+    #    cp OTRGui/build/OTRGui artifacts
+    #    rsync -av --exclude='*.gitignore' OTRGui/build/assets artifacts/
+    #    cp ZAPDTR/ZAPD.out artifacts/assets/extractor/
+    #- uses: actions/upload-artifact@v3
+    #  with:
+    #      name: SOH-Linux
+    #      path: artifacts
