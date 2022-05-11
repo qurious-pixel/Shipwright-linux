@@ -13,9 +13,9 @@ mkdir -p AppDir/usr/share/applications
 mkdir -p AppDir/usr/share/icons/hicolor/scalable/apps
 mkdir -p AppDir/usr/{lib,lib32}
 
-cp -r /usr/lib/i386-linux-gnu/alsa-lib AppDir/usr/lib32/
-mkdir -p AppDir/usr/share/alsa
-cp /usr/share/alsa/alsa.conf AppDir/usr/share/alsa/
+#cp -r /usr/lib/i386-linux-gnu/alsa-lib AppDir/usr/lib32/
+#mkdir -p AppDir/usr/share/alsa
+#cp /usr/share/alsa/alsa.conf AppDir/usr/share/alsa/
 
 mv AppDir/soh.sh AppDir/usr/bin
 cp -r Release/* AppDir/usr/bin
@@ -32,7 +32,7 @@ cd AppDir && ln -s ./usr/lib32/ld-linux.so.2 ./usr/lib/ && cd ..
 cp -r /lib/i386-linux-gnu/pulseaudio AppDir/usr/lib32/
 cp -r /lib/i386-linux-gnu/dri/ AppDir/usr/lib32/
  
-./appimagetool-x86_64.AppImage "$GITHUB_WORKSPACE"/AppDir "SOH-Linux.AppImage"
+./appimagetool-x86_64.AppImage "$GITHUB_WORKSPACE"/AppDir "SOH-Linux.AppImage" -u "gh-releases-zsync|qurious-pixel|Shipwright-linux|continuous|SOH-Linux.AppImage.zsync"
 
 mkdir -p "$GITHUB_WORKSPACE"/artifacts/ 
 mv SOH-Linux.AppImage* "$GITHUB_WORKSPACE"/artifacts/
