@@ -12,7 +12,7 @@ export LADSPA_PATH="$HERE/usr/lib32/ladspa":$LADSPA_PATH
 export AO_PLUGIN_PATH="$HERE/usr/lib32/ao/plugins-4":$AO_PLUGIN_PATH
 
 export PATH=$HERE/bin:$HERE/usr/bin:$PATH
-export LIBGL_DRIVERS_PATH="$HERE/usr/lib32/:"$HERE/usr/lib32/dri":$LIBGL_DRIVERS_PATH
+export LIBGL_DRIVERS_PATH="$HERE/usr/lib32":"$HERE/usr/lib32/dri":$LIBGL_DRIVERS_PATH
 export MAIN32LDLIBRARY="$HERE/usr/lib32/ld-linux.so.2"
 
 if [[ ! -e $PWD/oot.otr ]]; then 
