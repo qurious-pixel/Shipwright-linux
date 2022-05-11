@@ -7,10 +7,15 @@ mkdir -p AppDir/usr/bin
 mkdir -p AppDir/etc/ld.so.conf.d/
 echo "/usr/lib32" > AppDir/etc/ld.so.conf.d/lib32-glibc.conf
 cp appimage/.github/workflows/scripts/{soh.desktop,soh.png,soh.sh} AppDir/
- 
+curl -sSfL https://raw.githubusercontent.com/gabomdq/SDL_GameControllerDB/master/gamecontrollerdb.txt -o AppDir/usr/bin/gamecontrollerdb.txt
+
 mkdir -p AppDir/usr/share/applications 
 mkdir -p AppDir/usr/share/icons/hicolor/scalable/apps
 mkdir -p AppDir/usr/{lib,lib32}
+
+cp -r /usr/lib/i386-linux-gnu/alsa-lib AppDir/usr/lib32/
+mkdir -p AppDir/usr/share/alsa
+cp /usr/share/alsa/alsa.conf AppDir/usr/share/alsa/
 
 mv AppDir/soh.sh AppDir/usr/bin
 #cp soh.elf
