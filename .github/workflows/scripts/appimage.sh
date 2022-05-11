@@ -6,7 +6,7 @@ chmod a+x appimagetool*.AppImage
 mkdir -p AppDir/usr/bin
 mkdir -p AppDir/etc/ld.so.conf.d/
 echo "/usr/lib32" > AppDir/etc/ld.so.conf.d/lib32-glibc.conf
-cp appimage/.github/workflows/scripts/{soh.desktop.soh.png,soh.sh} AppDir/
+cp appimage/.github/workflows/scripts/{soh.desktop,soh.png,soh.sh} AppDir/
  
 mkdir -p AppDir/usr/share/applications 
 mkdir -p AppDir/usr/share/icons/hicolor/scalable/apps
@@ -17,7 +17,7 @@ mv AppDir/soh.sh AppDir/usr/bin
 #cp OTRGui
 #cp assets
 #cp assets/extractor/ZAPD.out
-chmod +x AppDir/usr/bin/{soh.elf.OTRGui,soh.sh}
+chmod +x AppDir/usr/bin/{soh.elf,OTRGui,soh.sh}
  
 cd AppDir && ln -s ./usr/bin/soh.sh ./AppRun && cd ..
  
