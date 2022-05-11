@@ -15,8 +15,8 @@ jobs:
     - name: Checkout Upstream Repo
       uses: actions/checkout@v3
       with:
-        repository: HarbourMasters/Shipwright
-        ref: develop
+        repository: Random06457/Shipwright
+        ref: linux
 
     - name: Checkout AppImage Repo
       uses: actions/checkout@v3
