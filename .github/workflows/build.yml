@@ -33,7 +33,12 @@ jobs:
         key: build-${{github.run_id}}
         restore-keys: |
           build
-            
+
+    - name: Prepare Build
+      run: |
+        ls -al appimage
+        ls -al appimage/.github/workflows/
+        ls -al appimage/.github/workflows/scripts
     - name: Prepare Build
       run: |
         if [[ ! -e soh/ROM/baserom_non_mq.z64 ]]; then
