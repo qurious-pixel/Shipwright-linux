@@ -15,8 +15,8 @@ jobs:
     - name: Checkout Upstream Repo
       uses: actions/checkout@v3
       with:
-        repository: Baoulettes/Shipwright-linux
-        ref: main
+        repository: Random06457/Shipwright
+        ref: linux
 
     - name: Checkout AppImage Repo
       uses: actions/checkout@v3
@@ -61,7 +61,6 @@ jobs:
             binutils:i386 \
             gcc-10:i386 \
             g++-10:i386 \
-            python \
             cmake \
             lld \
             libsdl2-dev:i386 \
@@ -96,6 +95,13 @@ jobs:
         fi
         sudo make -C SDL2-${SDL2VER} install
         sudo cp -av /lib/libSDL* /lib/i386-linux-gnu/
+
+    - uses: actions/setup-python@v3
+      with:
+        python-version: '3.10'
+    - uses: actions/setup-go@v3
+      with:
+        go-version: '>=1.17.0'
         
     - name: Download Assets
       run: |
@@ -104,21 +110,52 @@ jobs:
         curl -sLO https://nightly.link/qurious-pixel/Shipwright-linux/actions/artifacts/235630140.zip
         mkdir -p AppDir/usr/bin
         unzip 235630140.zip -d AppDir/usr/bin/
+        
+    - name: Build StormLib
+      run: |
+        git clone https://github.com/ladislav-zezula/StormLib external/StormLib
+        cmake -B external/StormLib/build -S external/StormLib
+        cmake --build external/StormLib/build
+        cp external/StormLib/build/libstorm.a external
+        cp /usr/local/lib/libGLEW.a external
+    - name: Build libultraship
+      run: make -C libultraship -j$(nproc)
+
+    - name: Build OTRExporter
+      run: make -C OTRExporter/OTRExporter -j$(nproc)
+
+    - name: Build ZAPDTR
+      run: make -C ZAPDTR -j$(nproc)
+
+    - name: Build OTRGui
+      run: |
+        sed -i -e 's#(fs::exists("soh.exe")#(fs::exists("soh.exe") || fs::exists("soh.elf")#g' OTRGui/src/game/game.cpp
+        cmake -B OTRGui/build -S OTRGui
+        cmake --build OTRGui/build
+      
+    - name: Build SOH
+      run: |
+        make setup -C soh -j$(nproc) 
+        make -C soh -j$(nproc)        
+
+    - name: Prepare Artifact
+      run: |
+        mkdir Release
+        cp soh/soh.elf Release
+        cp OTRGui/build/OTRGui Release
+        rsync -av --exclude='*.gitignore' OTRGui/build/assets Release/
+        cp ZAPDTR/ZAPD.out Release/assets/extractor/
+    - uses: actions/upload-artifact@v3
+      with:
+          name: SOH-Linux
+          path: Release
+
     - name: Build AppImage
       run: |
         chmod +x appimage/.github/workflows/scripts/appimage.sh
         appimage/.github/workflows/scripts/appimage.sh
-
-
         
-    #- name: Prepare Artifact
-    #  run: |
-    #    mkdir artifacts
-    #    cp soh/soh.elf artifacts
-    #    cp OTRGui/build/OTRGui artifacts
-    #    rsync -av --exclude='*.gitignore' OTRGui/build/assets artifacts/
-    #    cp ZAPDTR/ZAPD.out artifacts/assets/extractor/
-    - uses: actions/upload-artifact@v3
-      with:
-          name: SOH-Linux
-          path: artifacts
+    - name: Publish Release
+      run: |
+        go install github.com/tcnksm/ghr@latest
+        ghr -u qurious-pixel -r Shipwright-linux -recreate -n "AppImage build" -t "${{ secrets.GITHUB_TOKEN }}" continuous artifacts
