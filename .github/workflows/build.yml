@@ -15,8 +15,8 @@ jobs:
     - name: Checkout Upstream Repo
       uses: actions/checkout@v3
       with:
-        repository: Random06457/Shipwright
-        ref: linux
+        repository: HarbourMasters/Shipwright
+        ref: develop
 
     - name: Checkout AppImage Repo
       uses: actions/checkout@v3
@@ -115,12 +115,10 @@ jobs:
 
     - name: Build ZAPDTR
       run: |
-        sed -i -e 's#-lpng#-lpng -lpulse#g' ZAPDTR/Makefile
         make -C ZAPDTR -j$(nproc)
 
     - name: Build OTRGui
       run: |
-        sed -i -e 's#(fs::exists("soh.exe")#(fs::exists("soh.exe") || fs::exists("soh.elf")#g' OTRGui/src/game/game.cpp
         cmake -B OTRGui/build -S OTRGui
         cmake --build OTRGui/build
       
