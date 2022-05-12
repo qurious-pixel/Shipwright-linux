@@ -102,7 +102,7 @@ jobs:
     - name: Build OTRExporter
       run: |
         sed "s%../ZAPDTR/ZAPD.out%build-cmake/ZAPD/ZAPD%" < OTRExporter/extract_assets.py > OTRExporter/extract_assets_cmake.py
-        chmod +x extract_assets_cmake.py
+        chmod +x OTRExporter/extract_assets_cmake.py
         cmake -S OTRExporter -B OTRExporter/build-cmake  
         cmake --build OTRExporter/build-cmake 
         OTRExporter/extract_assets_cmake.py
