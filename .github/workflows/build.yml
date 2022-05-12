@@ -11,9 +11,6 @@ jobs:
   linux_gcc:
     name: Build Linux GCC
     runs-on: ubuntu-20.04
-    env:
-      GCC: -DCMAKE_C_COMPILER=/usr/lib/ccache/gcc   
-      GPP: -DCMAKE_CXX_COMPILER=/usr/lib/ccache/g++
     steps:
     - name: Checkout Upstream Repo
       uses: actions/checkout@v3
@@ -108,14 +105,14 @@ jobs:
         cd OTRExporter
         sed "s%../ZAPDTR/ZAPD.out%build-cmake/ZAPD/ZAPD%" < extract_assets.py > extract_assets_cmake.py
         chmod +x extract_assets_cmake.py
-        cmake -S . -B build-cmake  
-        cmake --build build-cmake ${{ env.GCC }} ${{ env.GPP }}
-        #ccache -s
-        #extract_assets_cmake.py
-    #- name: Build SOH
-    #  run: |
-    #    cd soh 
-    #    cmake -S . -B build-cmake -DCMAKE_TOOLCHAIN_FILE=CMake/Linux32bit-toolchain.cmake
-    #    cmake --build build-cmake 
+        cmake -S . -B build-cmake
+        cmake --build build-cmake
+        ccache -s
+        python3 extract_assets_cmake.py
+    - name: Build SOH
+      run: |
+        cd soh 
+        cmake -S . -B build-cmake -DCMAKE_TOOLCHAIN_FILE=CMake/Linux32bit-toolchain.cmake
+        cmake --build build-cmake 
         
 
