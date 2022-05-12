@@ -93,14 +93,20 @@ jobs:
         fi
         sudo make -C SDL2-${SDL2VER} install
         sudo cp -av /lib/libSDL* /lib/i386-linux-gnu/
-        
-    #- name: Build OTRExporter
-    #  run: |
-    #    sed "s%../ZAPDTR/ZAPD.out%build-cmake/ZAPD/ZAPD%" < OTRExporter/extract_assets.py > OTRExporter/extract_assets_cmake.py        chmod +x extract_assets_cmake.py
-    #    cmake -S OTRExporter -B OTRExporter/build-cmake  
-    #    cmake --build OTRExporter/build-cmake 
-    #    OTRExporter/extract_assets_cmake.py
-    
+
+    - name: Ubuntu 20.04 fixes
+      run: |
+        cp ci/OTRExporter_CMakeLists.txt OTRExporter/CMakeLists.txt
+        cp ci/ZAPD_CMakeLists.txt ZAPDTR/ZAPD/CMakeLists.txt
+        #cp ci/soh_CMakeLists.txt soh/CMakeLists.txt
+    - name: Build OTRExporter
+      run: |
+        sed "s%../ZAPDTR/ZAPD.out%build-cmake/ZAPD/ZAPD%" < OTRExporter/extract_assets.py > OTRExporter/extract_assets_cmake.py
+        chmod +x extract_assets_cmake.py
+        cmake -S OTRExporter -B OTRExporter/build-cmake  
+        cmake --build OTRExporter/build-cmake 
+        OTRExporter/extract_assets_cmake.py
+        ccache -s
     #- name: Build SOH
     #  run: |
     #    cmake -S soh -B soh/build-cmake -DCMAKE_TOOLCHAIN_FILE=CMake/Linux32bit-toolchain.cmake
