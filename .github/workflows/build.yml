@@ -101,15 +101,17 @@ jobs:
         #cp ci/soh_CMakeLists.txt soh/CMakeLists.txt
     - name: Build OTRExporter
       run: |
-        sed "s%../ZAPDTR/ZAPD.out%build-cmake/ZAPD/ZAPD%" < OTRExporter/extract_assets.py > OTRExporter/extract_assets_cmake.py
-        chmod +x OTRExporter/extract_assets_cmake.py
-        cmake -S OTRExporter -B OTRExporter/build-cmake  
-        cmake --build OTRExporter/build-cmake 
-        OTRExporter/extract_assets_cmake.py
+        cd OTRExporter
+        sed "s%../ZAPDTR/ZAPD.out%build-cmake/ZAPD/ZAPD%" < extract_assets.py > extract_assets_cmake.py
+        chmod +x extract_assets_cmake.py
+        cmake -S . -B build-cmake  
+        cmake --build build-cmake 
+        extract_assets_cmake.py
         ccache -s
     #- name: Build SOH
     #  run: |
-    #    cmake -S soh -B soh/build-cmake -DCMAKE_TOOLCHAIN_FILE=CMake/Linux32bit-toolchain.cmake
-    #    cmake --build soh/build-cmake 
+    #    cd soh 
+    #    cmake -S . -B build-cmake -DCMAKE_TOOLCHAIN_FILE=CMake/Linux32bit-toolchain.cmake
+    #    cmake --build build-cmake 
         
 
