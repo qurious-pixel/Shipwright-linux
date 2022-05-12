@@ -97,7 +97,8 @@ jobs:
     - name: Ubuntu 20.04 fixes
       run: |
         cp ci/OTRExporter_CMakeLists.txt OTRExporter/CMakeLists.txt
-        cp ci/ZAPD_CMakeLists.txt ZAPDTR/ZAPD/CMakeLists.txt
+        #cp ci/ZAPD_CMakeLists.txt ZAPDTR/ZAPD/CMakeLists.txt
+        cat ZAPDTR/ZAPD/CMakeLists.txt
         #cp ci/soh_CMakeLists.txt soh/CMakeLists.txt
     - name: Build OTRExporter
       run: |
@@ -106,8 +107,8 @@ jobs:
         chmod +x extract_assets_cmake.py
         cmake -S . -B build-cmake  
         cmake --build build-cmake 
-        extract_assets_cmake.py
         ccache -s
+        #extract_assets_cmake.py
     #- name: Build SOH
     #  run: |
     #    cd soh 
