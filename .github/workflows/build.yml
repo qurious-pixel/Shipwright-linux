@@ -41,7 +41,7 @@ jobs:
           wget -qO soh/ROM/ROM.zip ${{ secrets.DEBUG_ROM }} 2>/dev/null
           7za e soh/ROM/ROM.zip -so > soh/ROM/baserom_non_mq.z64
         fi
-        cp soh/ROM/baserom_non_mq.z64 soh
+        cp soh/ROM/baserom_non_mq.z64 OTRExporter
 
     - name: Remove Microsft Source List
       run: |
