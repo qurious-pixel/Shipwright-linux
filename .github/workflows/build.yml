@@ -109,7 +109,7 @@ jobs:
         sed "s%../ZAPDTR/ZAPD.out%build-cmake/ZAPD/ZAPD%" < extract_assets.py > extract_assets_cmake.py
         chmod +x extract_assets_cmake.py
         cmake -S . -B build-cmake  
-        cmake ${{ env.GCC }} ${{ env.GPP }} --build build-cmake 
+        cmake --build build-cmake ${{ env.GCC }} ${{ env.GPP }}
         #ccache -s
         #extract_assets_cmake.py
     #- name: Build SOH
