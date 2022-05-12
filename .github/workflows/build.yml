@@ -61,6 +61,7 @@ jobs:
             g++-10:i386 \
             python \
             cmake \
+            ccache \
             lld \
             libsdl2-dev:i386 \
             zlib1g-dev:i386 \
@@ -98,8 +99,8 @@ jobs:
       run: |
         cp ci/OTRExporter_CMakeLists.txt OTRExporter/CMakeLists.txt
         #cp ci/ZAPD_CMakeLists.txt ZAPDTR/ZAPD/CMakeLists.txt
-        cat ZAPDTR/ZAPD/CMakeLists.txt
         #cp ci/soh_CMakeLists.txt soh/CMakeLists.txt
+        ccache -h
     - name: Build OTRExporter
       run: |
         cd OTRExporter
