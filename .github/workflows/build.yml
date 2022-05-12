@@ -94,12 +94,12 @@ jobs:
         sudo make -C SDL2-${SDL2VER} install
         sudo cp -av /lib/libSDL* /lib/i386-linux-gnu/
         
-    - name: Build OTRExporter
-      run: |
-        sed "s%../ZAPDTR/ZAPD.out%build-cmake/ZAPD/ZAPD%" < OTRExporter/extract_assets.py > OTRExporter/extract_assets_cmake.py        chmod +x extract_assets_cmake.py
-        cmake -S OTRExporter -B OTRExporter/build-cmake  
-        cmake --build OTRExporter/build-cmake 
-        OTRExporter/extract_assets_cmake.py
+    #- name: Build OTRExporter
+    #  run: |
+    #    sed "s%../ZAPDTR/ZAPD.out%build-cmake/ZAPD/ZAPD%" < OTRExporter/extract_assets.py > OTRExporter/extract_assets_cmake.py        chmod +x extract_assets_cmake.py
+    #    cmake -S OTRExporter -B OTRExporter/build-cmake  
+    #    cmake --build OTRExporter/build-cmake 
+    #    OTRExporter/extract_assets_cmake.py
     
     #- name: Build SOH
     #  run: |
