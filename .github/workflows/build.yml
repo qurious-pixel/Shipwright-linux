@@ -15,14 +15,14 @@ jobs:
     - name: Checkout Upstream Repo
       uses: actions/checkout@v3
       with:
-        repository: Baoulettes/Shipwright-linux
-        ref: main
+        repository: th-2021/Shipwright-cmake
+        ref: develop
 
     - name: Checkout AppImage Repo
       uses: actions/checkout@v3
       with:
           clean: false
-          path: appimage
+          path: ci
           
     - name: cache
       uses: actions/cache@v3
@@ -71,12 +71,11 @@ jobs:
         sudo ln -s /usr/bin/gcc-10 /usr/bin/cc
         sudo ln -s /usr/bin/g++-10 /usr/bin/g++
         sudo ln -s /usr/bin/g++-10 /usr/bin/c++
-    - name: Build glew:i386
+    - name: Clone External Libs
       run: |
-        git clone https://github.com/Perlmint/glew-cmake.git 
-        cmake glew-cmake 
-        make -j$(nproc) 
-        sudo make install ARCH64=false
+        git clone https://github.com/Perlmint/glew-cmake.git external/glew
+        git clone https://github.com/ladislav-zezula/StormLib external/StormLib 
+
     - name: Build SDL2:i386
       run: |
         SDL2VER=2.0.22
@@ -95,40 +94,16 @@ jobs:
         sudo make -C SDL2-${SDL2VER} install
         sudo cp -av /lib/libSDL* /lib/i386-linux-gnu/
         
-    - name: Build StormLib
-      run: |
-        git clone https://github.com/ladislav-zezula/StormLib external/StormLib
-        cmake -B external/StormLib/build -S external/StormLib
-        cmake --build external/StormLib/build
-        cp external/StormLib/build/libstorm.a external
-        cp /usr/local/lib/libGLEW.a external
-    - name: Build libultraship
-      run: make -C libultraship -j$(nproc)
-
     - name: Build OTRExporter
-      run: make -C OTRExporter/OTRExporter -j$(nproc)
-
-    - name: Build ZAPDTR
-      run: make -C ZAPDTR -j$(nproc)
-
-    - name: Build OTRGui
       run: |
-        cmake -B OTRGui/build -S OTRGui
-        cmake --build OTRGui/build
-      
-    - name: Build SOH
-      run: |
-        make setup -C soh -j$(nproc) 
-        make -C soh -j$(nproc)
+        sed "s%../ZAPDTR/ZAPD.out%build-cmake/ZAPD/ZAPD%" < OTRExporter/extract_assets.py > OTRExporter/extract_assets_cmake.py        chmod +x extract_assets_cmake.py
+        cmake -S OTRExporter -B OTRExporter/build-cmake  
+        cmake --build OTRExporter/build-cmake 
+        OTRExporter/extract_assets_cmake.py
+    
+    #- name: Build SOH
+    #  run: |
+    #    cmake -S soh -B soh/build-cmake -DCMAKE_TOOLCHAIN_FILE=CMake/Linux32bit-toolchain.cmake
+    #    cmake --build soh/build-cmake 
         
-    - name: Prepare Artifact
-      run: |
-        mkdir artifacts
-        cp soh/soh.elf artifacts
-        cp OTRGui/build/OTRGui artifacts
-        rsync -av --exclude='*.gitignore' OTRGui/build/assets artifacts/
-        cp ZAPDTR/ZAPD.out artifacts/assets/extractor/
-    - uses: actions/upload-artifact@v3
-      with:
-          name: SOH-Linux
-          path: artifacts
+
