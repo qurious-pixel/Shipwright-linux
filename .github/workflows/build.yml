@@ -96,6 +96,13 @@ jobs:
         sudo make -C SDL2-${SDL2VER} install
         sudo cp -av /lib/libSDL* /lib/i386-linux-gnu/
 
+    - uses: actions/setup-python@v3
+      with:
+        python-version: '3.10'
+    - uses: actions/setup-go@v3
+      with:
+        go-version: '>=1.17.0'
+
     - name: Ubuntu 20.04 fixes
       run: |
         cp ci/OTRExporter_CMakeLists.txt OTRExporter/CMakeLists.txt
@@ -117,4 +124,24 @@ jobs:
         cmake -S . -B build-cmake -DCMAKE_TOOLCHAIN_FILE=CMake/Linux32bit-toolchain.cmake -G Ninja
         cmake --build build-cmake 
         ccache -s
+    - name: Build OTRGui
+      run: |
+        cmake -B OTRGui/build -S OTRGui
+        cmake --build OTRGui/build
 
+    - name: Prepare Artifact
+      run: |
+        mkdir Release
+        cp soh/build-cmake/soh.elf Release
+        cp OTRGui/build/OTRGui Release
+        rsync -av --exclude='*.gitignore' OTRGui/build/assets Release/
+        cp OTRExporter/build-cmake/ZAPD Release/assets/extractor/
+    - uses: actions/upload-artifact@v3
+      with:
+          name: SOH-Linux-cmake
+          path: Release
+
+    - name: Publish Release
+      run: |
+        go install github.com/tcnksm/ghr@latest
+        ghr -u qurious-pixel -r Shipwright-linux -recreate -n "Cmake build" -t "${{ secrets.GITHUB_TOKEN }}" cmake Release
