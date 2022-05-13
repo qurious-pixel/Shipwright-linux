@@ -1691,7 +1691,7 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
 		)
 	endif()
 else()
-    	find_package(SDL2)
+    	find_package(SDL2 CONFIG REQUIRED)
     	find_package(PulseAudio)
  	set(ADDITIONAL_LIBRARY_DEPENDENCIES
         "libultraship;"
