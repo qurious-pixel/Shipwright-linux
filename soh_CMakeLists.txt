@@ -1691,19 +1691,19 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
 		)
 	endif()
 else()
-    	find_package(SDL2 CONFIG REQUIRED)
+    	find_package(SDL2)
     	find_package(PulseAudio)
  	set(ADDITIONAL_LIBRARY_DEPENDENCIES
         "libultraship;"
         "ZAPDUtils;"
     	"storm;"
+        SDL2::SDL2
 	dl
 	pthread
 	${PULSEAUDIO_LIBRARY}
 	glew_s
 	${OPENGL_glx_LIBRARY}
 	${OPENGL_opengl_LIBRARY}
-	SDL2::SDL2
 	)
 endif()
 
