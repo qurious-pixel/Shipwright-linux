@@ -135,7 +135,7 @@ jobs:
         cp soh/build-cmake/soh.elf Release
         cp OTRGui/build/OTRGui Release
         rsync -av --exclude='*.gitignore' OTRGui/build/assets Release/
-        cp OTRExporter/build-cmake/ZAPD Release/assets/extractor/
+        cp OTRExporter/build-cmake/ZAPD/ZAPD Release/assets/extractor/
     - uses: actions/upload-artifact@v3
       with:
           name: SOH-Linux-cmake
