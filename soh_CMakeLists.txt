@@ -1492,7 +1492,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE assets
 	${PROJECT_SOURCE_DIR}/../libultraship/libultraship/
 	${PROJECT_SOURCE_DIR}/assets/
 	.
-	$(IncludePath)
+	(IncludePath)
 )
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
