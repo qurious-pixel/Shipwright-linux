@@ -1703,7 +1703,7 @@ else()
 	glew_s
 	${OPENGL_glx_LIBRARY}
 	${OPENGL_opengl_LIBRARY}
-	SDL2
+	SDL2::SDL2
 	)
 endif()
 
