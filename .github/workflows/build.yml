@@ -1,7 +1,7 @@
 name: Build
 
 on: 
-  push:
+  #push:
   pull_request:
     branches: 
       - main
@@ -98,7 +98,8 @@ jobs:
     - name: Ubuntu 20.04 fixes
       run: |
         cp ci/OTRExporter_CMakeLists.txt OTRExporter/CMakeLists.txt
-        #cp ci/ZAPD_CMakeLists.txt ZAPDTR/ZAPD/CMakeLists.txt
+        cp ci/ZAPD_CMakeLists.txt ZAPDTR/ZAPD/CMakeLists.txt
+        cp ci/libultraship_CMakeLists.txt libultraship/libultraship/CMakeLists.txt
         cp ci/soh_CMakeLists.txt soh/CMakeLists.txt
     - name: Build OTRExporter
       run: |
