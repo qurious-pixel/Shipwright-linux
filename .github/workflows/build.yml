@@ -111,10 +111,10 @@ jobs:
         cmake --build build-cmake
         ccache -s
         python3 extract_assets_cmake.py
-    - name: Build SOH
-      run: |
-        cd soh 
-        cmake -S . -B build-cmake -DCMAKE_TOOLCHAIN_FILE=CMake/Linux32bit-toolchain.cmake -G Ninja
-        cmake --build build-cmake 
-        ccache -s
+    #- name: Build SOH
+    #  run: |
+    #    cd soh 
+    #    cmake -S . -B build-cmake -DCMAKE_TOOLCHAIN_FILE=CMake/Linux32bit-toolchain.cmake -G Ninja
+    #    cmake --build build-cmake 
+    #    ccache -s
 
