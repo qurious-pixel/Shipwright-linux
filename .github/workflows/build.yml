@@ -63,6 +63,7 @@ jobs:
             cmake \
             ccache \
             lld \
+            ninja-build \
             libsdl2-dev:i386 \
             zlib1g-dev:i386 \
             libbz2-dev:i386 \
