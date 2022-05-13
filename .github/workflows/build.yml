@@ -94,7 +94,7 @@ jobs:
           rm SDL2-${SDL2VER}.tar.gz
         fi
         sudo make -C SDL2-${SDL2VER} install
-        sudo cp -av /lib/libSDL* ${{github.workspace}}/soh/
+        sudo cp -av /lib/libSDL* /lib/i386-linux-gnu/
 
     - uses: actions/setup-python@v3
       with:
