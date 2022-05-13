@@ -109,7 +109,7 @@ jobs:
         cp ci/ZAPD_CMakeLists.txt ZAPDTR/ZAPD/CMakeLists.txt
         cp ci/libultraship_CMakeLists.txt libultraship/libultraship/CMakeLists.txt
         #cp ci/soh_CMakeLists.txt soh/CMakeLists.txt
-        cp ci/FindSDL2.cmake soh/CMake/
+        #cp ci/FindSDL2.cmake soh/CMake/
     - name: Build OTRExporter
       run: |
         cd OTRExporter
@@ -122,6 +122,7 @@ jobs:
     - name: Build SOH
       run: |
         cd soh 
+        export SDL2_DIR=/usr/lib/cmake/SDL2/sdl2-config.cmake
         cmake -S . -B build-cmake -DCMAKE_TOOLCHAIN_FILE=CMake/Linux32bit-toolchain.cmake -G Ninja
         cmake --build build-cmake 
         ccache -s
