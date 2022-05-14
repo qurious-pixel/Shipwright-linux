@@ -122,8 +122,7 @@ jobs:
     - name: Build SOH
       run: |
         cd soh 
-        #export SDL2_DIR=/usr/lib/cmake/SDL2/sdl2-config.cmake
-        cmake -S . -B build-cmake -DCMAKE_TOOLCHAIN_FILE=CMake/Linux32bit-toolchain.cmake -DCMAKE_CXX_STANDARD_LIBRARIES="-lSDL2" -G Ninja
+        cmake -S . -B build-cmake -DCMAKE_TOOLCHAIN_FILE=CMake/Linux32bit-toolchain.cmake -DSDL2_DIR=/usr/lib/cmake/SDL2/ -G Ninja
         cmake --build build-cmake 
         ccache -s
     #- name: Build OTRGui
