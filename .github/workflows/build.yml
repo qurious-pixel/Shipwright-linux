@@ -1,7 +1,7 @@
 name: Build
 
 on: 
-  push:
+  #push:
   pull_request:
     branches: 
       - main
@@ -106,9 +106,9 @@ jobs:
     - name: Ubuntu 20.04 fixes
       run: |
         cp ci/OTRExporter_CMakeLists.txt OTRExporter/CMakeLists.txt
-        cp ci/ZAPD_CMakeLists.txt ZAPDTR/ZAPD/CMakeLists.txt
-        cp ci/libultraship_CMakeLists.txt libultraship/libultraship/CMakeLists.txt
-        #cp ci/soh_CMakeLists.txt soh/CMakeLists.txt
+        #cp ci/ZAPD_CMakeLists.txt ZAPDTR/ZAPD/CMakeLists.txt
+        #cp ci/libultraship_CMakeLists.txt libultraship/libultraship/CMakeLists.txt
+        cp ci/soh_CMakeLists.txt soh/CMakeLists.txt
         #cp ci/FindSDL2.cmake soh/CMake/
     #- name: Build OTRExporter
     #  run: |
@@ -131,19 +131,19 @@ jobs:
     #    cmake -B OTRGui/build -S OTRGui
     #    cmake --build OTRGui/build
 
-    - name: Prepare Artifact
-      run: |
-        mkdir Release
-        cp soh/build-cmake/soh.elf Release
-        cp OTRGui/build/OTRGui Release
-        rsync -av --exclude='*.gitignore' OTRGui/build/assets Release/
-        cp OTRExporter/build-cmake/ZAPD/ZAPD Release/assets/extractor/
-    - uses: actions/upload-artifact@v3
-      with:
-          name: SOH-Linux-cmake
-          path: Release
+    #- name: Prepare Artifact
+    #  run: |
+    #    mkdir Release
+    #    cp soh/build-cmake/soh.elf Release
+    #    cp OTRGui/build/OTRGui Release
+    #    rsync -av --exclude='*.gitignore' OTRGui/build/assets Release/
+    #    cp OTRExporter/build-cmake/ZAPD/ZAPD Release/assets/extractor/
+    #- uses: actions/upload-artifact@v3
+    #  with:
+    #      name: SOH-Linux-cmake
+    #      path: Release
 
-    - name: Publish Release
-      run: |
-        go install github.com/tcnksm/ghr@latest
-        ghr -u qurious-pixel -r Shipwright-linux -recreate -n "Cmake build" -t "${{ secrets.GITHUB_TOKEN }}" cmake Release
+    #- name: Publish Release
+    #  run: |
+    #    go install github.com/tcnksm/ghr@latest
+    #    ghr -u qurious-pixel -r Shipwright-linux -recreate -n "Cmake build" -t "${{ secrets.GITHUB_TOKEN }}" cmake Release
