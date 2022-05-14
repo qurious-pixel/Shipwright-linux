@@ -103,28 +103,29 @@ jobs:
       with:
         go-version: '>=1.17.0'
 
-    - name: Ubuntu 20.04 fixes
-      run: |
-        cp ci/OTRExporter_CMakeLists.txt OTRExporter/CMakeLists.txt
+    #- name: Ubuntu 20.04 fixes
+    #  run: |
+        #cp ci/OTRExporter_CMakeLists.txt OTRExporter/CMakeLists.txt
         #cp ci/ZAPD_CMakeLists.txt ZAPDTR/ZAPD/CMakeLists.txt
         #cp ci/libultraship_CMakeLists.txt libultraship/libultraship/CMakeLists.txt
-        cp ci/soh_CMakeLists.txt soh/CMakeLists.txt
+        #cp ci/soh_CMakeLists.txt soh/CMakeLists.txt
         #cp ci/FindSDL2.cmake soh/CMake/
     - name: Build OTRExporter
       run: |
         cd OTRExporter
         sed "s%../ZAPDTR/ZAPD.out%build-cmake/ZAPD/ZAPD%" < extract_assets.py > extract_assets_cmake.py
         chmod +x extract_assets_cmake.py
-        cmake -S . -B build-cmake -G Ninja
+        cmake -S . -B build-cmake -G Ninja \
+            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
         cmake --build build-cmake
         ccache -s
         python3 extract_assets_cmake.py
-    - name: Build SOH
-      run: |
-        cd soh 
-        cmake -S . -B build-cmake -DCMAKE_TOOLCHAIN_FILE=CMake/Linux32bit-toolchain.cmake -DSDL2_DIR=/usr/lib/cmake/SDL2/ -G Ninja
-        cmake --build build-cmake 
-        ccache -s
+    #- name: Build SOH
+    #  run: |
+    #    cd soh 
+    #    cmake -S . -B build-cmake -DCMAKE_TOOLCHAIN_FILE=CMake/Linux32bit-toolchain.cmake -DSDL2_DIR=/usr/lib/cmake/SDL2/ -G Ninja
+    #    cmake --build build-cmake 
+    #    ccache -s
     - name: Build OTRGui
       run: |
         cmake -B OTRGui/build -S OTRGui
