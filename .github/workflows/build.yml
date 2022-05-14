@@ -113,19 +113,26 @@ jobs:
     - name: Build OTRExporter
       run: |
         cd OTRExporter
-        sed "s%../ZAPDTR/ZAPD.out%build-cmake/ZAPD/ZAPD%" < extract_assets.py > extract_assets_cmake.py
-        chmod +x extract_assets_cmake.py
+        sed "s%../ZAPDTR/ZAPD.out%build-cmake/ZAPD/ZAPD%" < extract_assets.py > extract_assets_cmake.py  
         cmake -S . -B build-cmake -G Ninja \
             -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
         cmake --build build-cmake
-        ccache -s
+        ccache -s    
+    - name: Extract Assets
+      run: |
+        cd OTRExporter
+        chmod +x extract_assets_cmake.py
         python3 extract_assets_cmake.py
-    #- name: Build SOH
-    #  run: |
-    #    cd soh 
-    #    cmake -S . -B build-cmake -DCMAKE_TOOLCHAIN_FILE=CMake/Linux32bit-toolchain.cmake -DSDL2_DIR=/usr/lib/cmake/SDL2/ -G Ninja
-    #    cmake --build build-cmake 
-    #    ccache -s
+    - name: Build SOH
+      run: |
+        cd soh 
+        cmake -S . -B build-cmake \
+           -DCMAKE_TOOLCHAIN_FILE=CMake/Linux32bit-toolchain.cmake \
+           -DSDL2_DIR=/usr/lib/cmake/SDL2/ \
+           -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+           -G Ninja
+        cmake --build build-cmake 
+        ccache -s
     - name: Build OTRGui
       run: |
         cmake -B OTRGui/build -S OTRGui
