@@ -120,17 +120,23 @@ jobs:
     - name: Build ZAPDTR
       run: |
         make -C ZAPDTR -j$(nproc)
-
+      env:
+        CC: ccache gcc
+        CXX: ccache g++
     - name: Build OTRGui
       run: |
         cmake -B OTRGui/build -S OTRGui
         cmake --build OTRGui/build
-      
+       env:
+        CC: ccache gcc
+        CXX: ccache g++     
     - name: Build SOH
       run: |
         make setup -C soh -j$(nproc) 
         make -C soh -j$(nproc)        
-
+      env:
+        CC: ccache gcc
+        CXX: ccache g++
     - name: Prepare Artifact
       run: |
         mkdir Release
