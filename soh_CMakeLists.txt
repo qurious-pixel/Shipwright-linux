@@ -162,6 +162,8 @@ set(Header_Files__soh__Enhancements
     #"soh/Enhancements/cvar.h"
     "soh/Enhancements/debugconsole.h"
     "soh/Enhancements/gameconsole.h"
+	"soh/Enhancements/savestates.h"
+	"soh/Enhancements/savestates_extern.inc"
 )
 source_group("Header Files\\soh\\Enhancements" FILES ${Header_Files__soh__Enhancements})
 
@@ -184,6 +186,7 @@ set(Source_Files__soh
     "soh/z_message_OTR.cpp"
     "soh/z_play_otr.cpp"
     "soh/z_scene_otr.cpp"
+	"soh/OTRAudio.h"
 )
 source_group("Source Files\\soh" FILES ${Source_Files__soh})
 
@@ -191,6 +194,7 @@ set(Source_Files__soh__Enhancements
     "soh/Enhancements/bootcommands.c"
     "soh/Enhancements/debugconsole.cpp"
     "soh/Enhancements/gameconsole.c"
+	"soh/Enhancements/savestates.cpp"
 )
 source_group("Source Files\\soh\\Enhancements" FILES ${Source_Files__soh__Enhancements})
 
@@ -352,7 +356,7 @@ set(Source_Files__src__code
     "src/code/z_msgevent.c"
     "src/code/z_olib.c"
     "src/code/z_onepointdemo.c"
-    "src/code/z_onepointdemo_data.c"
+    "src/code/z_onepointdemo_data.inc"
     "src/code/z_parameter.c"
     "src/code/z_path.c"
     "src/code/z_play.c"
@@ -1492,7 +1496,6 @@ target_include_directories(${PROJECT_NAME} PRIVATE assets
 	${PROJECT_SOURCE_DIR}/../libultraship/libultraship/
 	${PROJECT_SOURCE_DIR}/assets/
 	.
-	(IncludePath)
 )
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
@@ -1622,14 +1625,20 @@ endif()
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 	target_compile_options(${PROJECT_NAME} PRIVATE
 		-Wall -Wextra -Wno-error
-        -Wno-unused-parameter
-        -Wno-unused-function
-        -Wno-unused-variable
+        	-Wno-unused-parameter
+        	-Wno-unused-function
+        	-Wno-unused-variable
 		-Wno-missing-field-initializers
-        -Wno-parentheses
-        -Wno-narrowing
-        $<$<COMPILE_LANGUAGE:CXX>:-Wno-deprecated-enum-enum-conversion>
+        	-Wno-parentheses
+        	-Wno-narrowing
+        	$<$<COMPILE_LANGUAGE:CXX>:-Wno-deprecated-enum-enum-conversion>
+                -pthread
 	)
+
+       target_link_options(${PROJECT_NAME} PRIVATE
+                -pthread
+                -Wl,-export-dynamic
+        )
 endif()
 ################################################################################
 # Pre build events
@@ -1691,19 +1700,20 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
 		)
 	endif()
 else()
-    	find_package(SDL2)
-    	find_package(PulseAudio)
+    find_package(SDL2 CONFIG)
+    find_package(PulseAudio)
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+        find_package(Threads REQUIRED)
  	set(ADDITIONAL_LIBRARY_DEPENDENCIES
         "libultraship;"
         "ZAPDUtils;"
     	"storm;"
-        SDL2::SDL2
-	dl
-	pthread
-	${PULSEAUDIO_LIBRARY}
-	glew_s
-	${OPENGL_glx_LIBRARY}
-	${OPENGL_opengl_LIBRARY}
+		SDL2::SDL2
+		${PULSEAUDIO_LIBRARY}
+		glew_s
+		${OPENGL_glx_LIBRARY}
+		${OPENGL_opengl_LIBRARY}
+		Threads::Threads
 	)
 endif()
 
@@ -1738,4 +1748,3 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
 endif()
 
 target_link_libraries(${PROJECT_NAME} PRIVATE "${ADDITIONAL_LIBRARY_DEPENDENCIES}")
-
