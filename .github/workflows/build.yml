@@ -127,7 +127,7 @@ jobs:
       run: |
         cmake -B OTRGui/build -S OTRGui
         cmake --build OTRGui/build
-       env:
+      env:
         CC: ccache gcc
         CXX: ccache g++     
     - name: Build SOH
