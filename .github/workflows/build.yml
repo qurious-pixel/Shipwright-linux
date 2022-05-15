@@ -43,6 +43,8 @@ jobs:
         fi
         cp soh/ROM/baserom_non_mq.z64 OTRExporter
         echo "/usr/lib/ccache" >> $GITHUB_PATH
+        ccache -h
+        ccache -s
     - name: Remove Microsft Source List
       run: |
         sudo rm -f /etc/apt/sources.list.d/microsoft-prod.list
@@ -125,8 +127,8 @@ jobs:
     
     - name: Build SOH
       run: |
-        make setup -C soh -j$(nproc) 
-        make -C soh -j$(nproc)        
+        make setup -C soh -j$(nproc)
+        make -C soh -j$(nproc)
         ccache -s
         
     - name: Prepare Artifact
