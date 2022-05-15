@@ -11,6 +11,8 @@ jobs:
   linux_gcc:
     name: Build Linux GCC
     runs-on: ubuntu-20.04
+    env:
+      PATH: "/usr/lib/ccache:${PATH}" 
     steps:
     - name: Checkout Upstream Repo
       uses: actions/checkout@v3
@@ -109,31 +111,25 @@ jobs:
         cp /usr/local/lib/libGLEW.a external
     - name: Build libultraship
       run: make -C libultraship -j$(nproc)
-      env:
-        CC: ccache gcc
-        CXX: ccache g++
+
     - name: Build OTRExporter
       run: make -C OTRExporter/OTRExporter -j$(nproc)
-      env:
-        CC: ccache gcc
-        CXX: ccache g++
+
     - name: Build ZAPDTR
       run: |
-        PATH="/usr/lib/ccache:${PATH}" make -C ZAPDTR -j$(nproc)
+        make -C ZAPDTR -j$(nproc)
+
     - name: Build OTRGui
       run: |
         cmake -B OTRGui/build -S OTRGui
         cmake --build OTRGui/build
-      env:
-        CC: ccache gcc
-        CXX: ccache g++     
+    
     - name: Build SOH
       run: |
         make setup -C soh -j$(nproc) 
         make -C soh -j$(nproc)        
-      env:
-        CC: ccache gcc
-        CXX: ccache g++
+        ccache -s
+        
     - name: Prepare Artifact
       run: |
         mkdir Release
