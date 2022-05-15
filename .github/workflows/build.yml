@@ -11,8 +11,6 @@ jobs:
   linux_gcc:
     name: Build Linux GCC
     runs-on: ubuntu-20.04
-    env:
-      PATH: "/usr/lib/ccache:$PATH" 
     steps:
     - name: Checkout Upstream Repo
       uses: actions/checkout@v3
@@ -44,6 +42,7 @@ jobs:
           7za e soh/ROM/ROM.zip -so > soh/ROM/baserom_non_mq.z64
         fi
         cp soh/ROM/baserom_non_mq.z64 OTRExporter
+        echo "/usr/lib/ccache" >> $GITHUB_PATH
     - name: Remove Microsft Source List
       run: |
         sudo rm -f /etc/apt/sources.list.d/microsoft-prod.list
