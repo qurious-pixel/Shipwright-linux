@@ -43,8 +43,7 @@ jobs:
         fi
         cp soh/ROM/baserom_non_mq.z64 OTRExporter
         echo "/usr/lib/ccache" >> $GITHUB_PATH
-        ccache -h
-        ccache -s
+
     - name: Remove Microsft Source List
       run: |
         sudo rm -f /etc/apt/sources.list.d/microsoft-prod.list
@@ -61,6 +60,7 @@ jobs:
             binutils:i386 \
             gcc-10:i386 \
             g++-10:i386 \
+            ccache \
             cmake \
             lld \
             libsdl2-dev:i386 \
@@ -72,6 +72,11 @@ jobs:
         sudo ln -s /usr/bin/gcc-10 /usr/bin/cc
         sudo ln -s /usr/bin/g++-10 /usr/bin/g++
         sudo ln -s /usr/bin/g++-10 /usr/bin/c++
+        
+    - name: CCACHE check
+      run: |
+        ccache -h
+        ccache -s 
     - name: Build glew:i386
       run: |
         git clone https://github.com/Perlmint/glew-cmake.git 
