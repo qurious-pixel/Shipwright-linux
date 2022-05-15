@@ -149,12 +149,12 @@ jobs:
           name: SOH-Linux
           path: Release
 
-    #- name: Build AppImage
-    #  run: |
-    #    chmod +x appimage/.github/workflows/scripts/appimage.sh
-    #    appimage/.github/workflows/scripts/appimage.sh
+    - name: Build AppImage
+      run: |
+        chmod +x appimage/.github/workflows/scripts/appimage.sh
+        appimage/.github/workflows/scripts/appimage.sh
         
-    #- name: Publish Release
-    #  run: |
-    #    go install github.com/tcnksm/ghr@latest
-    #    ghr -u qurious-pixel -r Shipwright-linux -recreate -n "AppImage build" -t "${{ secrets.GITHUB_TOKEN }}" continuous artifacts
+    - name: Publish Release
+      run: |
+        go install github.com/tcnksm/ghr@latest
+        ghr -u qurious-pixel -r Shipwright-linux -recreate -n "AppImage build" -t "${{ secrets.GITHUB_TOKEN }}" continuous artifacts
