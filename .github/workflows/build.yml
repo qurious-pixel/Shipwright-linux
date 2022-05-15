@@ -119,10 +119,7 @@ jobs:
         CXX: ccache g++
     - name: Build ZAPDTR
       run: |
-        make -C ZAPDTR -j$(nproc)
-      env:
-        CC: ccache gcc
-        CXX: ccache g++
+        PATH="/usr/lib/ccache:${PATH}" make -C ZAPDTR -j$(nproc)
     - name: Build OTRGui
       run: |
         cmake -B OTRGui/build -S OTRGui
