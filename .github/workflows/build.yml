@@ -132,8 +132,8 @@ jobs:
     
     - name: Build SOH
       run: |
-        make setup -C soh -j$(nproc)
-        make -C soh -j$(nproc)
+        make setup -j$(nproc) OPTFLAGS=-O3 DEBUG=0
+        make -j $(nproc) OPTFLAGS=-O3 DEBUG=0
         ccache -s
         
     - name: Prepare Artifact
