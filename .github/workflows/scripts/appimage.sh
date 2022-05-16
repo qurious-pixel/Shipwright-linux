@@ -28,7 +28,7 @@ export UPD_INFO="gh-releases-zsync|qurious-pixel|Shipwright-linux|continuous|SOH
 ARCH=i386 ./linuxdeploy-x86_64.AppImage --appdir="$GITHUB_WORKSPACE"/AppDir/ -d "$GITHUB_WORKSPACE"/AppDir/soh.desktop -i "$GITHUB_WORKSPACE"/AppDir/soh.png -e "$GITHUB_WORKSPACE"/AppDir/usr/bin/soh.elf
  
 cp /lib/i386-linux-gnu/{ld-linux.so.2,libGL.so.1,libstdc++.so.6,libm.so.6,libgcc_s.so.1,libc.so.6,libxcb.so.1,libGLdispatch.so.0,libGLX.so.0} AppDir/usr/lib32
-#cp /lib/i386-linux-gnu/{libpthread.so.0,libdl.so.2,libz.so.1,libXau.so.6,libXdmcp.so.6,libXext.so.6,librt.so.1,libbsd.so.0,libresolv.so.2,libgpg-error.so.0,libX11.so.6} AppDir/usr/lib32
+cp /lib/i386-linux-gnu/{libpthread.so.0,libdl.so.2,libz.so.1,libXau.so.6,libXdmcp.so.6,libXext.so.6,librt.so.1,libbsd.so.0,libresolv.so.2,libgpg-error.so.0,libX11.so.6} AppDir/usr/lib32
 cd AppDir && ln -s ./usr/lib32/ld-linux.so.2 ./usr/lib/ && cd ..
 cp -r /lib/i386-linux-gnu/pulseaudio AppDir/usr/lib32/
 mkdir AppDir/usr/lib32/dri && cp /lib/i386-linux-gnu/dri/swrast_dri.so AppDir/usr/lib32/dri/
