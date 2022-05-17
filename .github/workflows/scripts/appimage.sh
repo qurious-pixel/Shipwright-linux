@@ -21,10 +21,11 @@ mv AppDir/soh.sh AppDir/usr/bin
 cp -r Release/* AppDir/usr/bin
 
 chmod +x AppDir/usr/bin/{soh.elf,OTRGui,soh.sh}
+chmod +x AppDir/usr/bin/assets/extractor/ZAPD.out
  
 cd AppDir && ln -s ./usr/bin/soh.sh ./AppRun && cd ..
 
-export UPD_INFO="gh-releases-zsync|qurious-pixel|Shipwright-linux|continuous|SOH-Linux.AppImage.zsync"
+export UPD_INFO="gh-releases-zsync|qurious-pixel|Shipwright-linux|test|SOH-Linux.AppImage.zsync"
 ARCH=i386 ./linuxdeploy-x86_64.AppImage --appdir="$GITHUB_WORKSPACE"/AppDir/ -d "$GITHUB_WORKSPACE"/AppDir/soh.desktop -i "$GITHUB_WORKSPACE"/AppDir/soh.png -e "$GITHUB_WORKSPACE"/AppDir/usr/bin/soh.elf
  
 cp /lib/i386-linux-gnu/{ld-linux.so.2,libGL.so.1,libstdc++.so.6,libm.so.6,libgcc_s.so.1,libc.so.6,libxcb.so.1,libGLdispatch.so.0,libGLX.so.0} AppDir/usr/lib32
