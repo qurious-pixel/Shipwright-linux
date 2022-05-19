@@ -121,14 +121,14 @@ jobs:
         cp /usr/local/lib/libGLEW.a external
         
     - name: Build libultraship
-      run: make -C libultraship -j$(nproc) OPTFLAGS=-O3 DEBUG=0 CC="ccache gcc"
+      run: make -C libultraship -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc"
 
     - name: Build OTRExporter
-      run: make -C OTRExporter/OTRExporter -j$(nproc) OPTFLAGS=-O3 DEBUG=0 CC="ccache gcc"
+      run: make -C OTRExporter/OTRExporter -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc"
       
     - name: Build ZAPDTR
       run: |
-        make -C ZAPDTR -j$(nproc) OPTFLAGS=-O3 DEBUG=0 CC="ccache gcc"
+        make -C ZAPDTR -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc"
 
     - name: Build OTRGui
       run: |
@@ -137,8 +137,8 @@ jobs:
     
     - name: Build SOH
       run: |
-        make setup -C soh -j$(nproc) OPTFLAGS=-O3 DEBUG=0 CC="ccache gcc"
-        make -C soh -j$(nproc) OPTFLAGS=-O3 DEBUG=0 CC="ccache gcc"
+        make setup -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc"
+        make -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc"
         
     - name: CCache size
       run: ccache -s 
