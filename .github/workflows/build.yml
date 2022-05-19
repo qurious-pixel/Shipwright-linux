@@ -121,7 +121,7 @@ jobs:
         cp /usr/local/lib/libGLEW.a external
         
     - name: Build libultraship
-      run: make -C libultraship -j$(nproc) OPTFLAGS=-O3 DEBUG=0 CC=ccache
+      run: make -C libultraship -j$(nproc) OPTFLAGS=-O3 DEBUG=0 CC="ccache gcc"
 
     - name: Build OTRExporter
       run: make -C OTRExporter/OTRExporter -j$(nproc) OPTFLAGS=-O3 DEBUG=0 CC=ccache
