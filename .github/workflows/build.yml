@@ -124,11 +124,11 @@ jobs:
       run: make -C libultraship -j$(nproc) OPTFLAGS=-O3 DEBUG=0 CC="ccache gcc"
 
     - name: Build OTRExporter
-      run: make -C OTRExporter/OTRExporter -j$(nproc) OPTFLAGS=-O3 DEBUG=0 CC=ccache
-
+      run: make -C OTRExporter/OTRExporter -j$(nproc) OPTFLAGS=-O3 DEBUG=0 CC="ccache gcc"
+      
     - name: Build ZAPDTR
       run: |
-        make -C ZAPDTR -j$(nproc) OPTFLAGS=-O3 DEBUG=0 CC=ccache
+        make -C ZAPDTR -j$(nproc) OPTFLAGS=-O3 DEBUG=0 CC="ccache gcc"
 
     - name: Build OTRGui
       run: |
@@ -137,8 +137,8 @@ jobs:
     
     - name: Build SOH
       run: |
-        make setup -C soh -j$(nproc) OPTFLAGS=-O3 DEBUG=0 CC=ccache
-        make -C soh -j$(nproc) OPTFLAGS=-O3 DEBUG=0 CC=ccache
+        make setup -C soh -j$(nproc) OPTFLAGS=-O3 DEBUG=0 CC="ccache gcc"
+        make -C soh -j$(nproc) OPTFLAGS=-O3 DEBUG=0 CC="ccache gcc"
         
     - name: CCache size
       run: ccache -s 
