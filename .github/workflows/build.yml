@@ -73,10 +73,6 @@ jobs:
         sudo ln -s /usr/bin/g++-10 /usr/bin/g++
         sudo ln -s /usr/bin/g++-10 /usr/bin/c++
         
-    - name: CCACHE check
-      run: |
-        ccache -h
-        ccache -s 
     - name: Build glew:i386
       run: |
         git clone https://github.com/Perlmint/glew-cmake.git 
@@ -125,14 +121,14 @@ jobs:
         cp /usr/local/lib/libGLEW.a external
         
     - name: Build libultraship
-      run: make -C libultraship -j$(nproc) OPTFLAGS=-O3 DEBUG=0
+      run: make -C libultraship -j$(nproc) OPTFLAGS=-O3 DEBUG=0 CC=ccache
 
     - name: Build OTRExporter
-      run: make -C OTRExporter/OTRExporter -j$(nproc) OPTFLAGS=-O3 DEBUG=0
+      run: make -C OTRExporter/OTRExporter -j$(nproc) OPTFLAGS=-O3 DEBUG=0 CC=ccache
 
     - name: Build ZAPDTR
       run: |
-        make -C ZAPDTR -j$(nproc) OPTFLAGS=-O3 DEBUG=0
+        make -C ZAPDTR -j$(nproc) OPTFLAGS=-O3 DEBUG=0 CC=ccache
 
     - name: Build OTRGui
       run: |
@@ -141,10 +137,12 @@ jobs:
     
     - name: Build SOH
       run: |
-        make setup -C soh -j$(nproc) OPTFLAGS=-O3 DEBUG=0
-        make -C soh -j$(nproc) OPTFLAGS=-O3 DEBUG=0
-        ccache -s
+        make setup -C soh -j$(nproc) OPTFLAGS=-O3 DEBUG=0 CC=ccache
+        make -C soh -j$(nproc) OPTFLAGS=-O3 DEBUG=0 CC=ccache
         
+    - name: CCache size
+      run: ccache -s 
+      
     - name: Prepare Artifact
       run: |
         mkdir Release
