@@ -1,7 +1,7 @@
 name: Build
 
 on: 
-  push:
+  #push:
   pull_request:
     branches: 
       - main
@@ -101,6 +101,14 @@ jobs:
         sudo make -C SDL2-${SDL2VER} install
         sudo cp -av /lib/libSDL* /lib/i386-linux-gnu/
 
+    - name: Update Patchelf
+      run: |
+        PATCHELFVER=0.14.5
+        curl -sL https://github.com/NixOS/patchelf/releases/download/${PATCHELFVER}/patchelf-${PATCHELFVER}-x86_64.tar.gz -o /tmp/patchelf.tar.gz
+        tar -xvf /tmp/patchelf.tar.gz --directory /tmp/ ./bin/patchelf --strip-components=2 
+        sudo mv /tmp/patchelf /usr/bin
+        patchelf --version
+        
     - uses: actions/setup-python@v3
       with:
         python-version: '3.10'
@@ -115,15 +123,16 @@ jobs:
         cmake --build external/StormLib/build
         cp external/StormLib/build/libstorm.a external
         cp /usr/local/lib/libGLEW.a external
+        
     - name: Build libultraship
-      run: make -C libultraship -j$(nproc)
+      run: make -C libultraship -j$(nproc) OPTFLAGS=-O3 DEBUG=0
 
     - name: Build OTRExporter
-      run: make -C OTRExporter/OTRExporter -j$(nproc)
+      run: make -C OTRExporter/OTRExporter -j$(nproc) OPTFLAGS=-O3 DEBUG=0
 
     - name: Build ZAPDTR
       run: |
-        make -C ZAPDTR -j$(nproc)
+        make -C ZAPDTR -j$(nproc) OPTFLAGS=-O3 DEBUG=0
 
     - name: Build OTRGui
       run: |
