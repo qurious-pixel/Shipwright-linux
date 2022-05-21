@@ -103,9 +103,9 @@ jobs:
       with:
         go-version: '>=1.17.0'
 
-    #- name: Ubuntu 20.04 fixes
-    #  run: |
-        #cp ci/OTRExporter_CMakeLists.txt OTRExporter/CMakeLists.txt
+    - name: Ubuntu 20.04 fixes
+      run: |
+        cp ci/{gfx_glx.cpp,gfx_sdl2.cpp} libultraship/libultraship/Lib/Fast3D/
         #cp ci/ZAPD_CMakeLists.txt ZAPDTR/ZAPD/CMakeLists.txt
         #cp ci/libultraship_CMakeLists.txt libultraship/libultraship/CMakeLists.txt
         #cp ci/soh_CMakeLists.txt soh/CMakeLists.txt
