@@ -139,11 +139,6 @@ jobs:
         cmake -B OTRGui/build -S OTRGui
         cmake --build OTRGui/build
 
-    - name: Check soh.elf
-      run: |
-        ls -al Release
-        ldd Release/soh.elf
-
     - name: Prepare Artifact
       run: |
         mkdir Release
@@ -155,6 +150,11 @@ jobs:
       with:
           name: SOH-Linux-cmake
           path: Release
+
+    - name: Check soh.elf
+      run: |
+        ls -al Release
+        ldd Release/soh.elf
 
     - name: Publish Release
       run: |
