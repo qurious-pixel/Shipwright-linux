@@ -113,7 +113,7 @@ jobs:
     - name: Build OTRExporter
       run: |
         cd OTRExporter
-        sed "s%../ZAPDTR/ZAPD.out%build-cmake/ZAPD/ZAPD%" < extract_assets.py > extract_assets_cmake.py  
+        sed "s%../ZAPDTR/ZAPD.out%build-cmake/ZAPD/ZAPD.out%" < extract_assets.py > extract_assets_cmake.py  
         cmake -S . -B build-cmake -G Ninja \
             -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
         cmake --build build-cmake
