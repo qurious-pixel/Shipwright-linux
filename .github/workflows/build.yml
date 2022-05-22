@@ -130,6 +130,7 @@ jobs:
            -DCMAKE_TOOLCHAIN_FILE=CMake/Linux32bit-toolchain.cmake \
            -DSDL2_DIR=/usr/lib/cmake/SDL2/ \
            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+           -DCMAKE_FIND_LIBRARY_SUFFIXES=".a" \
            -G Ninja
         cmake --build build-cmake 
         ccache -s
