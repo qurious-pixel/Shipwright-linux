@@ -16,7 +16,7 @@ jobs:
       uses: actions/checkout@v3
       with:
         repository: qurious-pixel/Shipwright
-        ref: controller-nav
+        ref: controller-nav2
 
     - name: Checkout AppImage Repo
       uses: actions/checkout@v3
@@ -61,6 +61,7 @@ jobs:
             gcc-10:i386 \
             g++-10:i386 \
             python \
+            ccache \
             cmake \
             lld \
             libsdl2-dev:i386 \
