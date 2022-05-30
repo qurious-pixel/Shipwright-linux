@@ -42,6 +42,7 @@ jobs:
           7za e soh/ROM/ROM.zip -so > soh/ROM/baserom_non_mq.z64
         fi
         cp soh/ROM/baserom_non_mq.z64 soh
+        cp soh/ROM/baserom_non_mq.z64 OTRExporter
 
     - name: Remove Microsft Source List
       run: |
