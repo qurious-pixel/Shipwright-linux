@@ -104,13 +104,13 @@ jobs:
         cp external/StormLib/build/libstorm.a external
         cp /usr/local/lib/libGLEW.a external
     - name: Build libultraship
-      run: make -C libultraship -j$(nproc)
+      run: make -C libultraship -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc"
 
     - name: Build OTRExporter
-      run: make -C OTRExporter/OTRExporter -j$(nproc)
+      run: make -C OTRExporter/OTRExporter -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc"
 
     - name: Build ZAPDTR
-      run: make -C ZAPDTR -j$(nproc)
+      run: make -C ZAPDTR -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc"
 
     - name: Build OTRGui
       run: |
@@ -119,8 +119,8 @@ jobs:
       
     - name: Build SOH
       run: |
-        make setup -C soh -j$(nproc) 
-        make -C soh -j$(nproc)
+        make setup -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc"
+        make -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc"
         
     - name: Prepare Artifact
       run: |
