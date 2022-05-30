@@ -15,8 +15,8 @@ jobs:
     - name: Checkout Upstream Repo
       uses: actions/checkout@v3
       with:
-        repository: Baoulettes/Shipwright-linux
-        ref: main
+        repository: qurious-pixel/Shipwright
+        ref: controller-nav
 
     - name: Checkout AppImage Repo
       uses: actions/checkout@v3
