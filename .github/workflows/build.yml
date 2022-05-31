@@ -68,10 +68,7 @@ jobs:
             libbz2-dev \
             libpng-dev \
             libgles2-mesa-dev
-        sudo ln -s /usr/bin/gcc-10 /usr/bin/gcc
-        sudo ln -s /usr/bin/gcc-10 /usr/bin/cc
-        sudo ln -s /usr/bin/g++-10 /usr/bin/g++
-        sudo ln -s /usr/bin/g++-10 /usr/bin/c++
+
     - name: Build glew
       run: |
         git clone https://github.com/Perlmint/glew-cmake.git 
