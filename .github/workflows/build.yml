@@ -15,8 +15,8 @@ jobs:
     - name: Checkout Upstream Repo
       uses: actions/checkout@v3
       with:
-        repository: qurious-pixel/Shipwright
-        ref: controller-nav2
+        repository: HarbourMasters/Shipwright/
+        ref: zelda64
 
     - name: Checkout AppImage Repo
       uses: actions/checkout@v3
@@ -52,34 +52,33 @@ jobs:
   
     - name: Install Dependencies
       run: |
-        sudo dpkg --add-architecture i386
         sudo apt-get update
         sudo apt-get upgrade -y
         sudo apt-get install -y \
-            libc6-dev:i386 \
-            binutils:i386 \
-            gcc-10:i386 \
-            g++-10:i386 \
+            libc6-dev \
+            binutils \
+            gcc-10 \
+            g++-10 \
             python \
             ccache \
             cmake \
             lld \
-            libsdl2-dev:i386 \
-            zlib1g-dev:i386 \
-            libbz2-dev:i386 \
-            libpng-dev:i386 \
+            libsdl2-dev \
+            zlib1g-dev \
+            libbz2-dev \
+            libpng-dev \
             libgles2-mesa-dev
         sudo ln -s /usr/bin/gcc-10 /usr/bin/gcc
         sudo ln -s /usr/bin/gcc-10 /usr/bin/cc
         sudo ln -s /usr/bin/g++-10 /usr/bin/g++
         sudo ln -s /usr/bin/g++-10 /usr/bin/c++
-    - name: Build glew:i386
+    - name: Build glew
       run: |
         git clone https://github.com/Perlmint/glew-cmake.git 
         cmake glew-cmake 
         make -j$(nproc) 
-        sudo make install ARCH64=false
-    - name: Build SDL2:i386
+        sudo make install ARCH64=true
+    - name: Build SDL2
       run: |
         SDL2VER=2.0.22
         if [[ ! -e ~/.ccache ]]; then
@@ -90,12 +89,12 @@ jobs:
           curl -sLO https://libsdl.org/release/SDL2-${SDL2VER}.tar.gz
           tar -xzf SDL2-${SDL2VER}.tar.gz
           cd SDL2-${SDL2VER}
-          ./configure --build=i386-linux-gnu --prefix=/usr
+          ./configure --prefix=/usr
           make && cd ../
           rm SDL2-${SDL2VER}.tar.gz
         fi
         sudo make -C SDL2-${SDL2VER} install
-        sudo cp -av /lib/libSDL* /lib/i386-linux-gnu/
+        sudo cp -av /lib/libSDL* /lib/x86_64-linux-gnu/
         
     - name: Build StormLib
       run: |
