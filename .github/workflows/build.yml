@@ -104,8 +104,8 @@ jobs:
         cmake --build external/StormLib/build
         cp external/StormLib/build/libstorm.a external
         cp /usr/local/lib/libGLEW.a external
-    #- name: Build libultraship
-    #  run: make -C libultraship -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc"
+    - name: Build libultraship
+      run: make -C libultraship -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc"
 
     #- name: Build OTRExporter
     #  run: make -C OTRExporter/OTRExporter -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc"
@@ -115,8 +115,7 @@ jobs:
 
     - name: Build OTRGui
       run: |
-        export OpenGL_GL_PREFERENCE=GLVND
-        cmake -B OTRGui/build -S OTRGui
+        cmake -B OTRGui/build -S OTRGui -DOpenGL_GL_PREFERENCE=GLVND
         cmake --build OTRGui/build
       
     #- name: Build SOH
