@@ -68,8 +68,8 @@ jobs:
             libbz2-dev \
             libpng-dev \
             libgles2-mesa-dev
-        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-${GCCVER} 10
-        sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-${GCCVER} 10
+        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 10
+        sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-10 10
         gcc --version
         g++ --version
 
