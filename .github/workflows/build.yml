@@ -57,7 +57,8 @@ jobs:
         sudo apt-get install -y \
             libc6-dev \
             binutils \
-            g++ \
+            gcc-10
+            g++-10 \
             python \
             ccache \
             cmake \
@@ -67,6 +68,10 @@ jobs:
             libbz2-dev \
             libpng-dev \
             libgles2-mesa-dev
+        update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-${GCCVER} 10
+        update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-${GCCVER} 10
+        gcc --version
+        g++ --version
 
     - name: Build glew
       run: |
@@ -110,6 +115,7 @@ jobs:
 
     - name: Build OTRGui
       run: |
+        export OpenGL_GL_PREFERENCE=GLVND
         cmake -B OTRGui/build -S OTRGui
         cmake --build OTRGui/build
       
