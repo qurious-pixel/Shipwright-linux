@@ -15,7 +15,7 @@ jobs:
     - name: Checkout Upstream Repo
       uses: actions/checkout@v3
       with:
-        repository: HarbourMasters/Shipwright/
+        repository: HarbourMasters/Shipwright
         ref: zelda64
 
     - name: Checkout AppImage Repo
