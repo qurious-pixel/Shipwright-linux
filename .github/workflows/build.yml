@@ -57,8 +57,7 @@ jobs:
         sudo apt-get install -y \
             libc6-dev \
             binutils \
-            gcc-10 \
-            g++-10 \
+            g++ \
             python \
             ccache \
             cmake \
@@ -100,33 +99,33 @@ jobs:
         cmake --build external/StormLib/build
         cp external/StormLib/build/libstorm.a external
         cp /usr/local/lib/libGLEW.a external
-    - name: Build libultraship
-      run: make -C libultraship -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc"
+    #- name: Build libultraship
+    #  run: make -C libultraship -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc"
 
-    - name: Build OTRExporter
-      run: make -C OTRExporter/OTRExporter -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc"
+    #- name: Build OTRExporter
+    #  run: make -C OTRExporter/OTRExporter -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc"
 
-    - name: Build ZAPDTR
-      run: make -C ZAPDTR -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc"
+    #- name: Build ZAPDTR
+    #  run: make -C ZAPDTR -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc"
 
-    - name: Build OTRGui
-      run: |
-        cmake -B OTRGui/build -S OTRGui
-        cmake --build OTRGui/build
+    #- name: Build OTRGui
+    #  run: |
+    #    cmake -B OTRGui/build -S OTRGui
+    #    cmake --build OTRGui/build
       
-    - name: Build SOH
-      run: |
-        make setup -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc"
-        make -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc"
+    #- name: Build SOH
+    #  run: |
+    #    make setup -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc"
+    #    make -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc"
         
-    - name: Prepare Artifact
-      run: |
-        mkdir artifacts
-        cp soh/soh.elf artifacts
-        cp OTRGui/build/OTRGui artifacts
-        rsync -av --exclude='*.gitignore' OTRGui/build/assets artifacts/
-        cp ZAPDTR/ZAPD.out artifacts/assets/extractor/
-    - uses: actions/upload-artifact@v3
-      with:
-          name: SOH-Linux
-          path: artifacts
+    #- name: Prepare Artifact
+    #  run: |
+    #    mkdir artifacts
+    #    cp soh/soh.elf artifacts
+    #    cp OTRGui/build/OTRGui artifacts
+    3    rsync -av --exclude='*.gitignore' OTRGui/build/assets artifacts/
+    #    cp ZAPDTR/ZAPD.out artifacts/assets/extractor/
+    #- uses: actions/upload-artifact@v3
+    #  with:
+    #      name: SOH-Linux-z64
+    #      path: artifacts
