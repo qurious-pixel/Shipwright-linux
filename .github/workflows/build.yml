@@ -123,7 +123,7 @@ jobs:
     #    mkdir artifacts
     #    cp soh/soh.elf artifacts
     #    cp OTRGui/build/OTRGui artifacts
-    3    rsync -av --exclude='*.gitignore' OTRGui/build/assets artifacts/
+    #    rsync -av --exclude='*.gitignore' OTRGui/build/assets artifacts/
     #    cp ZAPDTR/ZAPD.out artifacts/assets/extractor/
     #- uses: actions/upload-artifact@v3
     #  with:
