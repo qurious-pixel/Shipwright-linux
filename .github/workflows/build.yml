@@ -109,6 +109,7 @@ jobs:
     - name: Linux Fixes
       run: |
         sed -i 's/-m32//g' libultraship/Makefile
+        sed -i 's/-m32//g' soh/Makefile
         sed -i '/-Wno-missing-field-initializers/i -Wno-error=stringop-overflow \\' libultraship/Makefile
 
     - name: Build libultraship
@@ -125,19 +126,19 @@ jobs:
         cmake -B OTRGui/build -S OTRGui -DOpenGL_GL_PREFERENCE=GLVND
         cmake --build OTRGui/build
 
-    #- name: Build SOH
-    #  run: |
-    #    make setup -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc"
-    #    make -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc"
+    - name: Build SOH
+      run: |
+        make setup -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc"
+        make -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc"
 
-    #- name: Prepare Artifact
-    #  run: |
-    #    mkdir artifacts
-    #    cp soh/soh.elf artifacts
-    #    cp OTRGui/build/OTRGui artifacts
-    #    rsync -av --exclude='*.gitignore' OTRGui/build/assets artifacts/
-    #    cp ZAPDTR/ZAPD.out artifacts/assets/extractor/
-    #- uses: actions/upload-artifact@v3
-    #  with:
-    #      name: SOH-Linux-z64
-    #      path: artifacts
+    - name: Prepare Artifact
+      run: |
+        mkdir artifacts
+        cp soh/soh.elf artifacts
+        cp OTRGui/build/OTRGui artifacts
+        rsync -av --exclude='*.gitignore' OTRGui/build/assets artifacts/
+        cp ZAPDTR/ZAPD.out artifacts/assets/extractor/
+    - uses: actions/upload-artifact@v3
+      with:
+          name: SOH-Linux-z64
+          path: artifacts
