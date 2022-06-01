@@ -104,10 +104,14 @@ jobs:
         cmake --build external/StormLib/build
         cp external/StormLib/build/libstorm.a external
         cp /usr/local/lib/libGLEW.a external
-    - name: Build libultraship
+        
+    - name: Linux Fixes
       run: |
         sed -i 's/-m32//g' libultraship/Makefile
-        make -C libultraship -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc"
+        sed -i '/-Wno-missing-field-initializers/i -Wno-error=stringop-overflow \\' libultraship/Makefile
+        
+    - name: Build libultraship
+      run: make -C libultraship -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc"
 
     #- name: Build OTRExporter
     #  run: make -C OTRExporter/OTRExporter -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc"
