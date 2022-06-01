@@ -6,7 +6,7 @@ on:
     branches: 
       - main
   workflow_dispatch:
-  
+
 jobs:
   linux_gcc:
     name: Build Linux GCC
@@ -23,7 +23,7 @@ jobs:
       with:
           clean: false
           path: appimage
-          
+
     - name: cache
       uses: actions/cache@v3
       with:
@@ -33,7 +33,7 @@ jobs:
         key: build-${{github.run_id}}
         restore-keys: |
           build
-            
+
     - name: Prepare Build
       run: |
         if [[ ! -e soh/ROM/baserom_non_mq.z64 ]]; then
@@ -49,7 +49,7 @@ jobs:
         sudo rm -f /etc/apt/sources.list.d/microsoft-prod.list
         sudo apt-get update -qq
         sudo apt-get install -yqq --allow-downgrades libpcre2-8-0/focal libpcre2-16-0/focal libpcre2-32-0/focal libpcre2-posix2/focal
-  
+
     - name: Install Dependencies
       run: |
         sudo apt-get update
@@ -79,6 +79,7 @@ jobs:
         cmake glew-cmake 
         make -j$(nproc) 
         sudo make install ARCH64=true
+
     - name: Build SDL2
       run: |
         SDL2VER=2.0.22
@@ -96,7 +97,7 @@ jobs:
         fi
         sudo make -C SDL2-${SDL2VER} install
         sudo cp -av /lib/libSDL* /lib/x86_64-linux-gnu/
-        
+
     - name: Build StormLib
       run: |
         git clone https://github.com/ladislav-zezula/StormLib external/StormLib
@@ -104,31 +105,31 @@ jobs:
         cmake --build external/StormLib/build
         cp external/StormLib/build/libstorm.a external
         cp /usr/local/lib/libGLEW.a external
-        
+
     - name: Linux Fixes
       run: |
         sed -i 's/-m32//g' libultraship/Makefile
         sed -i '/-Wno-missing-field-initializers/i -Wno-error=stringop-overflow \\' libultraship/Makefile
-        
+
     - name: Build libultraship
       run: make -C libultraship -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc"
 
-    #- name: Build OTRExporter
-    #  run: make -C OTRExporter/OTRExporter -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc"
+    - name: Build OTRExporter
+      run: make -C OTRExporter/OTRExporter -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc"
 
-    #- name: Build ZAPDTR
-    #  run: make -C ZAPDTR -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc"
+    - name: Build ZAPDTR
+      run: make -C ZAPDTR -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc"
 
     - name: Build OTRGui
       run: |
         cmake -B OTRGui/build -S OTRGui -DOpenGL_GL_PREFERENCE=GLVND
         cmake --build OTRGui/build
-      
+
     #- name: Build SOH
     #  run: |
     #    make setup -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc"
     #    make -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc"
-        
+
     #- name: Prepare Artifact
     #  run: |
     #    mkdir artifacts
