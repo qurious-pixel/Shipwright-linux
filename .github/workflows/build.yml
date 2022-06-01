@@ -110,6 +110,7 @@ jobs:
       run: |
         sed -i 's/-m32//g' libultraship/Makefile
         sed -i 's/-m32//g' soh/Makefile
+        sed -i 's/-march=i386//g' soh/Makefile
         sed -i '/-Wno-missing-field-initializers/i -Wno-error=stringop-overflow \\' libultraship/Makefile
 
     - name: Build libultraship
