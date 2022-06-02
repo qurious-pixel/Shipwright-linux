@@ -116,7 +116,7 @@ jobs:
         sed "s%../ZAPDTR/ZAPD.out%build-cmake/ZAPD/ZAPD.out%" < extract_assets.py > extract_assets_cmake.py  
         cmake -S . -B build-cmake -G Ninja \
             -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
-        cmake --build build-cmake
+        cmake --build build-cmake -- -j$(nproc)
         ccache -s    
     - name: Extract Assets
       run: |
@@ -132,12 +132,12 @@ jobs:
            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
            -DCMAKE_FIND_LIBRARY_SUFFIXES=.a \
            -G Ninja
-        cmake --build build-cmake 
+        cmake --build build-cmake -- -j$(nproc)
         
     - name: Build OTRGui
       run: |
         cmake -B OTRGui/build -S OTRGui
-        cmake --build OTRGui/build
+        cmake --build OTRGui/build -- -j$(nproc)
 
     - name: Prepare Artifact
       run: |
