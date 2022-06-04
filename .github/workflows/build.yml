@@ -113,18 +113,18 @@ jobs:
         #sed -i 's/-march=i386//g' soh/Makefile
         #sed -i '/pulse \\/i SDL2 \\\nGLEW \\' soh/Makefile
         #sed -i 's/clan//g' ZAPDTR/Makefile
-        #sed -i '/-Wno-missing-field-initializers/i -Wno-error=stringop-overflow -Wno-error=multichar -Wno-error=sign-compare -Wno-unused-variable \\' libultraship/Makefile
+        sed -i '/-Wno-missing-field-initializers/i -Wno-error=stringop-overflow -Wno-error=multichar -Wno-error=sign-compare -Wno-unused-variable \\' libultraship/Makefile
         #sed -i '/libultraship \\/a \.\.\/StormLib\/src \\' libultraship/Makefile
         #cp appimage/audio_load.c soh/src/code/audio_load.c
 
     - name: Build libultraship
-      run: make -C libultraship -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc"
+      run: make -C libultraship -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc" CXX="ccache g++"
 
     - name: Build OTRExporter
-      run: make -C OTRExporter/OTRExporter -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc"
+      run: make -C OTRExporter/OTRExporter -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc" CXX="ccache g++"
 
     - name: Build ZAPDTR
-      run: make -C ZAPDTR -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc"
+      run: make -C ZAPDTR -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc" CXX="ccache g++"
 
     - name: Build OTRGui
       run: |
@@ -133,8 +133,11 @@ jobs:
 
     - name: Build SOH
       run: |
-        make setup -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc"
-        make -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc"
+        make setup -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc" CXX="ccache g++"
+        make -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc" CXX="ccache g++"
+
+    - name: Ccache stats
+      run: ccache -s
 
     - name: Prepare Artifact
       run: |
