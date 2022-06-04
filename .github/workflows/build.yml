@@ -98,19 +98,19 @@ jobs:
         sudo make -C SDL2-${SDL2VER} install
         sudo cp -av /lib/libSDL* /lib/x86_64-linux-gnu/
 
-    - name: Build StormLib
-      run: |
-        git clone https://github.com/ladislav-zezula/StormLib external/StormLib
-        cmake -B external/StormLib/build -S external/StormLib
-        cmake --build external/StormLib/build
-        cp external/StormLib/build/libstorm.a external
-        cp /usr/local/lib/libGLEW.a external
+    #- name: Build StormLib
+    #  run: |
+    #    git clone https://github.com/ladislav-zezula/StormLib external/StormLib
+    #    cmake -B external/StormLib/build -S external/StormLib
+    #    cmake --build external/StormLib/build
+    #    cp external/StormLib/build/libstorm.a external
+    #    cp /usr/local/lib/libGLEW.a external
 
     - name: Linux Fixes
       run: |
-        sed -i 's/-m32//g' libultraship/Makefile
-        sed -i 's/-m32//g' soh/Makefile
-        sed -i 's/-march=i386//g' soh/Makefile
+        #sed -i 's/-m32//g' libultraship/Makefile
+        #sed -i 's/-m32//g' soh/Makefile
+        #sed -i 's/-march=i386//g' soh/Makefile
         #sed -i '/pulse \\/i SDL2 \\\nGLEW \\' soh/Makefile
         sed -i 's/clan//g' ZAPDTR/Makefile
         sed -i '/-Wno-missing-field-initializers/i -Wno-error=stringop-overflow -Wno-error=multichar -Wno-error=sign-compare -Wno-unused-variable \\' libultraship/Makefile
