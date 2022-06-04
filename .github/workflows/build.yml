@@ -6,24 +6,28 @@ on:
     branches: 
       - main
   workflow_dispatch:
-  
+
 jobs:
   linux_gcc:
+    strategy:
+        fail-fast: false
+        matrix:
+          ref: [develop, zelda64] # [master, develop, zelda64]
     name: Build Linux GCC
     runs-on: ubuntu-20.04
     steps:
     - name: Checkout Upstream Repo
       uses: actions/checkout@v3
       with:
-        repository: qurious-pixel/Shipwright
-        ref: controller-nav2
+        repository: HarbourMasters/Shipwright
+        ref: ${{ matrix.ref }}
 
     - name: Checkout AppImage Repo
       uses: actions/checkout@v3
       with:
           clean: false
           path: appimage
-          
+
     - name: cache
       uses: actions/cache@v3
       with:
@@ -33,7 +37,7 @@ jobs:
         key: build-${{github.run_id}}
         restore-keys: |
           build
-            
+
     - name: Prepare Build
       run: |
         if [[ ! -e soh/ROM/baserom_non_mq.z64 ]]; then
@@ -49,7 +53,7 @@ jobs:
         sudo rm -f /etc/apt/sources.list.d/microsoft-prod.list
         sudo apt-get update -qq
         sudo apt-get install -yqq --allow-downgrades libpcre2-8-0/focal libpcre2-16-0/focal libpcre2-32-0/focal libpcre2-posix2/focal
-  
+
     - name: Install Dependencies
       run: |
         sudo dpkg --add-architecture i386
@@ -73,12 +77,14 @@ jobs:
         sudo ln -s /usr/bin/gcc-10 /usr/bin/cc
         sudo ln -s /usr/bin/g++-10 /usr/bin/g++
         sudo ln -s /usr/bin/g++-10 /usr/bin/c++
+
     - name: Build glew:i386
       run: |
         git clone https://github.com/Perlmint/glew-cmake.git 
         cmake glew-cmake 
         make -j$(nproc) 
-        sudo make install ARCH64=false
+        sudo make install # ARCH64=false
+
     - name: Build SDL2:i386
       run: |
         SDL2VER=2.0.22
@@ -96,7 +102,7 @@ jobs:
         fi
         sudo make -C SDL2-${SDL2VER} install
         sudo cp -av /lib/libSDL* /lib/i386-linux-gnu/
-        
+
     - name: Build StormLib
       run: |
         git clone https://github.com/ladislav-zezula/StormLib external/StormLib
@@ -104,25 +110,37 @@ jobs:
         cmake --build external/StormLib/build
         cp external/StormLib/build/libstorm.a external
         cp /usr/local/lib/libGLEW.a external
+
+    - name: Linux Fixes
+      run: |
+        sed -i 's/-m32//g' libultraship/Makefile
+        sed -i 's/-m32//g' soh/Makefile
+        sed -i 's/-march=i386//g' soh/Makefile
+        sed -i 's/clan//g' ZAPDTR/Makefile
+        sed -i '/-Wno-missing-field-initializers/i -Wno-error=stringop-overflow -Wno-error=multichar -Wno-error=sign-compare -Wno-unused-variable \\' libultraship/Makefile
+        sed -i '/libultraship \\/a \.\.\/StormLib\/src \\' libultraship/Makefile
+        cp appimage/audio_load.c soh/src/code/audio_load.c
+      if: ${{ matrix.ref == 'zelda64' }}
+
     - name: Build libultraship
-      run: make -C libultraship -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc"
+      run: make -C libultraship -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc" CXX="ccache g++"
 
     - name: Build OTRExporter
-      run: make -C OTRExporter/OTRExporter -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc"
+      run: make -C OTRExporter/OTRExporter -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc" CXX="ccache g++"
 
     - name: Build ZAPDTR
-      run: make -C ZAPDTR -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc"
+      run: make -C ZAPDTR -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc" CXX="ccache g++"
 
     - name: Build OTRGui
       run: |
         cmake -B OTRGui/build -S OTRGui
         cmake --build OTRGui/build
-      
+
     - name: Build SOH
       run: |
-        make setup -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc"
-        make -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc"
-        
+        make setup -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc" CXX="ccache g++"
+        make -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc" CXX="ccache g++"
+
     - name: Prepare Artifact
       run: |
         mkdir artifacts
@@ -132,5 +150,5 @@ jobs:
         cp ZAPDTR/ZAPD.out artifacts/assets/extractor/
     - uses: actions/upload-artifact@v3
       with:
-          name: SOH-Linux
+          name: SOH-Linux-${{ matrix.ref }}
           path: artifacts
