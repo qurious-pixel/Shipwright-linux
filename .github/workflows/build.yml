@@ -79,8 +79,8 @@ jobs:
         cmake glew-cmake 
         make -j$(nproc) 
         sudo make install ARCH64=true
-        mkdir -p StormLib/build
-        cp /usr/local/lib/libGLEW.a StormLib/build
+        #mkdir -p StormLib/build
+        cp /usr/local/lib/libGLEW.a libultraship
 
     - name: Build SDL2
       run: |
