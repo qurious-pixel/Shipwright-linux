@@ -115,7 +115,7 @@ jobs:
         #sed -i 's/-march=i386//g' soh/Makefile
         #sed -i '/pulse \\/i SDL2 \\\nGLEW \\' soh/Makefile
         #sed -i 's/clan//g' ZAPDTR/Makefile
-        sed -i '/-Wno-missing-field-initializers/i -Wno-error=stringop-overflow -Wno-error=multichar -Wno-error=sign-compare -Wno-unused-variable \\' libultraship/Makefile
+        #sed -i '/-Wno-missing-field-initializers/i -Wno-error=stringop-overflow -Wno-error=multichar -Wno-error=sign-compare -Wno-unused-variable \\' libultraship/Makefile
         #sed -i '/libultraship \\/a \.\.\/StormLib\/src \\' libultraship/Makefile
         #cp appimage/audio_load.c soh/src/code/audio_load.c
 
