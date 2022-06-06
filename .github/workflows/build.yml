@@ -73,13 +73,13 @@ jobs:
         gcc --version
         g++ --version
 
-    - name: Build glew
-      run: |
-        git clone https://github.com/Perlmint/glew-cmake.git 
-        cmake glew-cmake 
-        make -j$(nproc) 
-        sudo make install ARCH64=true
-        cp /usr/local/lib/libGLEW.a libultraship
+    #- name: Build glew
+    #  run: |
+    #    git clone https://github.com/Perlmint/glew-cmake.git 
+    #    cmake glew-cmake 
+    #    make -j$(nproc) 
+    #    sudo make install ARCH64=true
+    #    cp /usr/local/lib/libGLEW.a libultraship
 
     - name: Build SDL2
       run: |
@@ -111,13 +111,13 @@ jobs:
       run: |
         #sed -i 's/-m32//g' libultraship/Makefile
         #sed -i 's/-m32//g' soh/Makefile
-        #sed -i 's/-lGLEW //g' ZAPDTR/Makefile
+        sed -i 's/-lGLEW //g' ZAPDTR/Makefile
         #sed -i 's/-march=i386//g' soh/Makefile
         #sed -i '/pulse \\/i SDL2 \\\nGLEW \\' soh/Makefile
         #sed -i 's/clan//g' ZAPDTR/Makefile
         sed -i '/-Wno-missing-field-initializers/i -Wno-error=stringop-overflow \\' libultraship/Makefile # -Wno-error=multichar -Wno-error=sign-compare -Wno-unused-variable
         #sed -i '/libultraship \\/a \.\.\/StormLib\/src \\' libultraship/Makefile
-        #cp appimage/audio_load.c soh/src/code/audio_load.c
+        cp appimage/gfx_opengl.cpp libultraship/libultraship/Lib/Fast3D/gfx_opengl.cpp
 
     #- name: Build libultraship
     #  run: make -C libultraship -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc" CXX="ccache g++"
