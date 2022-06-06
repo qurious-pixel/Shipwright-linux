@@ -73,13 +73,13 @@ jobs:
         gcc --version
         g++ --version
 
-    #- name: Build glew
-    #  run: |
-    #    git clone https://github.com/Perlmint/glew-cmake.git 
-    #    cmake glew-cmake 
-    #    make -j$(nproc) 
-    #    sudo make install ARCH64=true
-    #    cp /usr/local/lib/libGLEW.a libultraship
+    - name: Build glew
+      run: |
+        git clone https://github.com/Perlmint/glew-cmake.git 
+        cmake glew-cmake 
+        make -j$(nproc) 
+        sudo make install ARCH64=true
+        cp /usr/local/lib/libGLEW.a libultraship
 
     - name: Build SDL2
       run: |
@@ -111,7 +111,7 @@ jobs:
       run: |
         #sed -i 's/-m32//g' libultraship/Makefile
         #sed -i 's/-m32//g' soh/Makefile
-        sed -i 's/-lGLEW //g' ZAPDTR/Makefile
+        #sed -i 's/-lGLEW //g' ZAPDTR/Makefile
         #sed -i 's/-march=i386//g' soh/Makefile
         #sed -i '/pulse \\/i SDL2 \\\nGLEW \\' soh/Makefile
         #sed -i 's/clan//g' ZAPDTR/Makefile
