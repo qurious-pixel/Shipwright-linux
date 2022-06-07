@@ -114,7 +114,7 @@ jobs:
     - name: Linux Fixes
       run: |
         sed -i '632,634d' libultraship/libultraship/Lib/Fast3D/gfx_opengl.cpp
-        sed -i '/#include <GL\/glew.h>/d' gfx_opengl.cpp
+        sed -i '/#include <GL\/glew.h>/d' libultraship/libultraship/Lib/Fast3D/gfx_opengl.cpp
         sed -i 's/\/\/ #include <SDL2\/SDL_opengles2.h>/#include <SDL2\/SDL_opengl.h>/g' libultraship/libultraship/Lib/Fast3D/gfx_opengl.cpp
         sed -i 's/-lGLEW //g' ZAPDTR/Makefile
         sed -i '/GLEW \\/d' soh/Makefile
