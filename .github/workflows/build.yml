@@ -150,6 +150,7 @@ jobs:
         cp OTRGui/build/OTRGui Release
         rsync -av --exclude='*.gitignore' OTRGui/build/assets Release/
         cp ZAPDTR/ZAPD.out Release/assets/extractor/
+        cp appimage/.github/workflows/scripts/OTR_Extractor.sh Release
     - uses: actions/upload-artifact@v3
       with:
           name: SOH-Linux
