@@ -20,8 +20,10 @@ if [[ ! -e $PWD/oot.otr ]]; then
 	ln -s $HERE/usr/bin/{assets,soh.elf,OTRGui} $ASSETDIR
 	export OLDPWD=$PWD
 	mkdir -p $ASSETDIR/tmp
+	mkdir -p $ASSETDIR/Extract/assets
 	if [ -e $PWD/*.*64 ]; then
 		ln -s $OLDPWD/*.*64 $ASSETDIR/tmp/rom.z64
+		cp -r $ASSETDIR/assets/game/ship_of_harkinian $ASSETDIR/Extract/assets/
 		cd $ASSETDIR
 		case $(sha1sum -b $ASSETDIR/tmp/rom.z64 | awk '{ print $1 }') in
 		cee6bc3c2a634b41728f2af8da54d9bf8cc14099)
