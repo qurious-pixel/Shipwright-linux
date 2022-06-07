@@ -2,6 +2,9 @@
 
 if [ -e $PWD/*.*64 ]; then
 	mkdir tmp
+	mkdir -p Extract/assets
+	cp *.*64 tmp/rom.z64
+	cp -r assets/game/ship_of_harkinian Extract/assets/
 	cp *.*64 tmp/rom.z64
 	case $(sha1sum -b tmp/rom.z64 | awk '{ print $1 }') in
 	cee6bc3c2a634b41728f2af8da54d9bf8cc14099)
