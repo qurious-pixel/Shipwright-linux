@@ -112,7 +112,7 @@ jobs:
         #sed -i 's/-m32//g' libultraship/Makefile
         #sed -i 's/-m32//g' soh/Makefile
         sed -i 's/-lGLEW //g' ZAPDTR/Makefile
-        sed '/GLEW \\/d' soh/Makefile
+        sed -i '/GLEW \\/d' soh/Makefile
         #sed -i 's/-march=i386//g' soh/Makefile
         #sed -i '/pulse \\/i SDL2 \\\nGLEW \\' soh/Makefile
         #sed -i 's/clan//g' ZAPDTR/Makefile
