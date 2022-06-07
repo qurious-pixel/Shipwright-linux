@@ -630,9 +630,9 @@ static void gfx_opengl_draw_triangles(float buf_vbo[], size_t buf_vbo_len, size_
 }
 
 static void gfx_opengl_init(void) {
-//#if FOR_WINDOWS
+#if FOR_WINDOWS
     glewInit();
-//#endif
+#endif
 
     glGenBuffers(1, &opengl_vbo);
     glBindBuffer(GL_ARRAY_BUFFER, opengl_vbo);
