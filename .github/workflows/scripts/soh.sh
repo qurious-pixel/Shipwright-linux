@@ -35,7 +35,7 @@ if [[ ! -e $PWD/oot.otr ]]; then
   			exit;;
 		esac
 		echo "Processing..."
-		assets/extractor/ZAPD.out ed -eh -i assets/extractor/xmls/${ROM} -b tmp/rom.z64 -fl assets/extractor/filelists -o placeholder -osf placeholder -gsf 1 -rconf assets/extractor/Config_${ROM}.xml -se OTR > /dev/null 2>&1
+		$MAIN32LDLIBRARY assets/extractor/ZAPD.out ed -eh -i assets/extractor/xmls/${ROM} -b tmp/rom.z64 -fl assets/extractor/filelists -o placeholder -osf placeholder -gsf 1 -rconf assets/extractor/Config_${ROM}.xml -se OTR > /dev/null 2>&1
 		cp "$ASSETDIR"/oot.otr $OLDPWD
 		echo "Restart $APPIMAGE to play!" 
 		sleep 3
