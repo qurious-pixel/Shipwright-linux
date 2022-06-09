@@ -99,6 +99,21 @@ jobs:
         sudo make -C SDL2-${SDL2VER} install
         sudo cp -av /lib/libSDL* /lib/x86_64-linux-gnu/
 
+    - name: Update Patchelf
+      run: |
+        PATCHELFVER=0.14.5
+        curl -sL https://github.com/NixOS/patchelf/releases/download/${PATCHELFVER}/patchelf-${PATCHELFVER}-x86_64.tar.gz -o /tmp/patchelf.tar.gz
+        tar -xvf /tmp/patchelf.tar.gz --directory /tmp/ ./bin/patchelf --strip-components=2 
+        sudo mv /tmp/patchelf /usr/bin
+        patchelf --version
+
+    - uses: actions/setup-python@v3
+      with:
+        python-version: '3.10'
+    - uses: actions/setup-go@v3
+      with:
+        go-version: '>=1.17.0'
+
     - name: Linux Fixes
       run: |
         #sed -i 's/-m32//g' libultraship/Makefile
