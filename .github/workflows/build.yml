@@ -1,7 +1,7 @@
 name: Build
 
 on: 
-  #push:
+  push:
   pull_request:
     branches: 
       - main
@@ -99,14 +99,6 @@ jobs:
         sudo make -C SDL2-${SDL2VER} install
         sudo cp -av /lib/libSDL* /lib/x86_64-linux-gnu/
 
-    #- name: Build StormLib
-    #  run: |
-    #    git clone https://github.com/ladislav-zezula/StormLib external/StormLib
-    #    cmake -B external/StormLib/build -S external/StormLib
-    #    cmake --build external/StormLib/build
-    #    cp external/StormLib/build/libstorm.a external
-    #    cp /usr/local/lib/libGLEW.a external
-
     - name: Linux Fixes
       run: |
         #sed -i 's/-m32//g' libultraship/Makefile
@@ -119,15 +111,6 @@ jobs:
         sed -i '/-Wno-missing-field-initializers/i -Wno-error=stringop-overflow \\' libultraship/Makefile # -Wno-error=multichar -Wno-error=sign-compare -Wno-unused-variable
         #sed -i '/libultraship \\/a \.\.\/StormLib\/src \\' libultraship/Makefile
         cp appimage/gfx_opengl.cpp libultraship/libultraship/Lib/Fast3D/gfx_opengl.cpp
-
-    #- name: Build libultraship
-    #  run: make -C libultraship -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc" CXX="ccache g++"
-
-    #- name: Build OTRExporter
-    #  run: make -C OTRExporter/OTRExporter -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc" CXX="ccache g++"
-
-    #- name: Build ZAPDTR
-    #  run: make -C ZAPDTR -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc" CXX="ccache g++"
 
     - name: Build OTRGui
       run: |
@@ -149,7 +132,18 @@ jobs:
         cp OTRGui/build/OTRGui artifacts
         rsync -av --exclude='*.gitignore' OTRGui/build/assets artifacts/
         cp ZAPDTR/ZAPD.out artifacts/assets/extractor/
+        cp appimage/.github/workflows/scripts/OTR_Extractor.sh Release
     - uses: actions/upload-artifact@v3
       with:
           name: SOH-Linux-z64
           path: artifacts
+
+    - name: Build AppImage
+      run: |
+        chmod +x appimage/.github/workflows/scripts/appimage.sh
+        appimage/.github/workflows/scripts/appimage.sh
+
+    - name: Publish Release
+      run: |
+        go install github.com/tcnksm/ghr@latest
+        ghr -u qurious-pixel -r Shipwright-linux -recreate -n "AppImage build" -t "${{ secrets.GITHUB_TOKEN }}" zelda64 artifacts
