@@ -161,4 +161,4 @@ jobs:
     - name: Publish Release
       run: |
         go install github.com/tcnksm/ghr@latest
-        ghr -u qurious-pixel -r Shipwright-linux -recreate -n "AppImage build" -t "${{ secrets.GITHUB_TOKEN }}" zelda64 artifacts
+        ghr -u qurious-pixel -r Shipwright-linux -recreate -n "AppImage 64bit build" -t "${{ secrets.GITHUB_TOKEN }}" zelda64 artifacts
