@@ -5,6 +5,7 @@ if [ -e $PWD/*.*64 ]; then
 	mkdir -p Extract/assets
 	cp *.*64 tmp/rom.z64
 	cp -r assets/game/ship_of_harkinian Extract/assets/
+	chmod +x assets/extractor/ZAPD.out
 	case $(sha1sum -b tmp/rom.z64 | awk '{ print $1 }') in
 	cee6bc3c2a634b41728f2af8da54d9bf8cc14099)
   		ROM=GC_NMQ_D;;
