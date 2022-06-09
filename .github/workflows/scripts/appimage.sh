@@ -20,7 +20,7 @@ chmod +x AppDir/usr/bin/{soh.elf,OTRGui,soh.sh}
  
 cd AppDir && ln -s ./usr/bin/soh.sh ./AppRun && cd ..
 
-export UPD_INFO="gh-releases-zsync|qurious-pixel|Shipwright-linux|continuous|SOH-Linux.AppImage.zsync"
+export UPD_INFO="gh-releases-zsync|qurious-pixel|Shipwright-linux|zelda64|SOH-Linux.AppImage.zsync"
 ./linuxdeploy-x86_64.AppImage                   \
   --appdir="$GITHUB_WORKSPACE"/AppDir/          \
   -d "$GITHUB_WORKSPACE"/AppDir/soh.desktop     \
@@ -33,7 +33,7 @@ cd "$GITHUB_WORKSPACE"/AppDir/usr/bin/assets/extractor/
 patchelf --set-rpath "\$ORIGIN/../../../lib" ZAPD.out
 cd "$GITHUB_WORKSPACE"
  
-./appimagetool-x86_64.AppImage "$GITHUB_WORKSPACE"/AppDir "SOH-Linux.AppImage" -u "gh-releases-zsync|qurious-pixel|Shipwright-linux|continuous|SOH-Linux.AppImage.zsync"
+./appimagetool-x86_64.AppImage "$GITHUB_WORKSPACE"/AppDir "SOH-Linux.AppImage" -u "gh-releases-zsync|qurious-pixel|Shipwright-linux|zelda64|SOH-Linux.AppImage.zsync"
 
 mkdir -p "$GITHUB_WORKSPACE"/artifacts/ 
 mv SOH-Linux.AppImage* "$GITHUB_WORKSPACE"/artifacts/
