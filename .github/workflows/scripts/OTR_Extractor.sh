@@ -8,9 +8,11 @@ if [ -e $PWD/*.*64 ]; then
 	chmod +x assets/extractor/ZAPD.out
 	case $(sha1sum -b tmp/rom.z64 | awk '{ print $1 }') in
 	cee6bc3c2a634b41728f2af8da54d9bf8cc14099)
-  		ROM=GC_NMQ_D;;
+  		ROM=GC_NMQ_D
+		cp assets/version/version_dbg Extract/version;;
 	0227d7c0074f2d0ac935631990da8ec5914597b4)
-  		ROM=GC_NMQ_PAL_F;;
+  		ROM=GC_NMQ_PAL_F
+		cp assets/version/version_pal Extract/version;;;;
 	*)
   		echo "rom hash does not match";;
 	esac
