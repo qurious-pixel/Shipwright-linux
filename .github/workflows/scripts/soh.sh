@@ -15,9 +15,11 @@ while [[ ! -e $PWD/oot.otr ]]; do
 		cd $ASSETDIR
 		case $(sha1sum -b $ASSETDIR/tmp/rom.z64 | awk '{ print $1 }') in
 		cee6bc3c2a634b41728f2af8da54d9bf8cc14099)
-			ROM=GC_NMQ_D;;
+			ROM=GC_NMQ_D
+			cp $ASSETDIR/assets/version/version_dbg $ASSETDIR/Extract/version;;
 		0227d7c0074f2d0ac935631990da8ec5914597b4)
-			ROM=GC_NMQ_PAL_F;;
+			ROM=GC_NMQ_PAL_F
+			cp $ASSETDIR/assets/version/version_pal $ASSETDIR/Extract/version;;
 		*)
   			echo -e "\nrom hash does not match\n"
   			exit;;
