@@ -12,7 +12,7 @@ if [ -e $PWD/*.*64 ]; then
 		cp assets/version/version_dbg Extract/version;;
 	0227d7c0074f2d0ac935631990da8ec5914597b4)
   		ROM=GC_NMQ_PAL_F
-		cp assets/version/version_pal Extract/version;;;;
+		cp assets/version/version_pal Extract/version;;
 	*)
   		echo "rom hash does not match";;
 	esac
