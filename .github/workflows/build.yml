@@ -52,23 +52,24 @@ jobs:
 
     - name: Install Dependencies
       run: |
-        sudo dpkg --add-architecture aarch64
         sudo apt-get update
         sudo apt-get upgrade -y
         sudo apt-get install -y \
-            libc6-dev:arm64 \
-            binutils:arm64 \
-            gcc-10:arm64 \
-            g++-10:arm64 \
-            python:arm64 \
+            libc6-dev \
+            binutils \
+            gcc-10 \
+            g++-10 \
+            gcc-10-arm-linux-gnueabihf \
+            pkg-config-arm-linux-gnueabihf \
+            python \
             ccache \
             cmake \
             lld \
-            libsdl2-dev:arm64 \
-            zlib1g-dev:arm64 \
-            libbz2-dev:arm64 \
-            libpng-dev:arm64 \
-            libgles2-mesa-dev:arm64
+            libsdl2-dev \
+            zlib1g-dev \
+            libbz2-dev \
+            libpng-dev \
+            libgles2-mesa-dev
         sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 10
         sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-10 10
         gcc --version
