@@ -144,14 +144,8 @@ jobs:
 
     - name: Build SOH NRO
       run: |
-        wget https://apt.devkitpro.org/install-devkitpro-pacman
-        chmod +x ./install-devkitpro-pacman
-        sudo ./install-devkitpro-pacman
-        export DEVKITPRO=/opt/devkitpro
-        export DEVKITARM=${DEVKITPRO}/devkitARM
-        export DEVKITARM=${DEVKITPRO}/devkitPPC
-        export PATH=${DEVKITPRO}/tools/bin:$PATH
-        make -j$(nproc)
+        sudo docker pull devkitpro/devkita64_devkitarm
+        sudo docker run -rm -v $(pwd):/soh devkitpro/devkita64_devkitarm /bin/bash -c "make -j$(nproc)"
         ls soh
 
     #- name: Ccache stats
