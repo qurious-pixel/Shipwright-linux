@@ -136,6 +136,11 @@ jobs:
     #    make setup -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc" CXX="ccache g++"
     #    make -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc" CXX="ccache g++"
 
+    - name: Build SOH NRO
+      run: |
+        make setup -j$(nproc)
+        make -C soh -j$(nproc)
+    
     #- name: Ccache stats
     #  run: ccache -s
 
