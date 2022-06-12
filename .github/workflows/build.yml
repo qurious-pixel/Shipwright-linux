@@ -75,31 +75,31 @@ jobs:
         gcc --version
         g++ --version
 
-    #- name: Build glew
-    #  run: |
-    #    git clone https://github.com/Perlmint/glew-cmake.git 
-    #    cmake glew-cmake 
-    #    make -j$(nproc) 
-    #    sudo make install ARCH64=true
-    #    cp /usr/local/lib/libGLEW.a libultraship
+    - name: Build glew
+      run: |
+        git clone https://github.com/Perlmint/glew-cmake.git 
+        cmake glew-cmake 
+        make -j$(nproc) 
+        sudo make install ARCH64=true
+        cp /usr/local/lib/libGLEW.a libultraship
 
-    #- name: Build SDL2
-    #  run: |
-    #    SDL2VER=2.0.22
-    #    if [[ ! -e ~/.ccache ]]; then
-    #      mkdir ~/.ccache
-    #    fi  
-    #    cd ~/.ccache
-    #    if [[ ! -e SDL2-${SDL2VER} ]]; then
-    #      curl -sLO https://libsdl.org/release/SDL2-${SDL2VER}.tar.gz
-    #      tar -xzf SDL2-${SDL2VER}.tar.gz
-    #      cd SDL2-${SDL2VER}
-    #      ./configure --prefix=/usr
-    #      make && cd ../
-    #      rm SDL2-${SDL2VER}.tar.gz
-    #    fi
-    #    sudo make -C SDL2-${SDL2VER} install
-    #    sudo cp -av /lib/libSDL* /lib/x86_64-linux-gnu/
+    - name: Build SDL2
+      run: |
+        SDL2VER=2.0.22
+        if [[ ! -e ~/.ccache ]]; then
+          mkdir ~/.ccache
+        fi  
+        cd ~/.ccache
+        if [[ ! -e SDL2-${SDL2VER} ]]; then
+          curl -sLO https://libsdl.org/release/SDL2-${SDL2VER}.tar.gz
+          tar -xzf SDL2-${SDL2VER}.tar.gz
+          cd SDL2-${SDL2VER}
+          ./configure --prefix=/usr
+          make && cd ../
+          rm SDL2-${SDL2VER}.tar.gz
+        fi
+        sudo make -C SDL2-${SDL2VER} install
+        sudo cp -av /lib/libSDL* /lib/x86_64-linux-gnu/
 
     #- name: Update Patchelf
     #  run: |
