@@ -138,12 +138,12 @@ jobs:
 
     - name: Build extract assets
       run: |
-        cd ../OTRExporter && python3 extract_assets.py
-        cp ../OTRExporter/oot.otr .
+        cd OTRExporter && python3 extract_assets.py
+        cp oot.otr ../soh
 
     - name: Build SOH NRO
       run: |
-        make -C soh -j$(nproc)
+        make -j$(nproc)
     
     #- name: Ccache stats
     #  run: ccache -s
