@@ -153,6 +153,7 @@ jobs:
         echo $PWD
         ls -al .
         sudo dpkg -i appimage/.github/workflows/deb/*
+        sudo dpk-pacman -S libnx
         export DEVKITPRO=/opt/devkitpro
         export DEVKITARM=${DEVKITPRO}/devkitARM
         export DEVKITARM=${DEVKITPRO}/devkitPPC
