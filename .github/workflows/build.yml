@@ -156,7 +156,9 @@ jobs:
         export DEVKITARM=${DEVKITPRO}/devkitPPC
         export PATH=${DEVKITPRO}/tools/bin:$PATH
         make -j$(nproc)
+        make -C soh -f soh/Makefile.switch -j$(nproc)
         ls soh
+        ls soh/build
 
     #- name: Ccache stats
     #  run: ccache -s
