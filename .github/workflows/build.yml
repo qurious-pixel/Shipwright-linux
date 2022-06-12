@@ -8,15 +8,15 @@ on:
   workflow_dispatch:
 
 jobs:
-  linux_gcc:
-    name: Build Linux GCC
+  switch_gcc:
+    name: Build Switch NRO
     runs-on: ubuntu-20.04
     steps:
     - name: Checkout Upstream Repo
       uses: actions/checkout@v3
       with:
-        repository: HarbourMasters/Shipwright # dcvz/Shipwright # 
-        ref: zelda64 # zelda64_mac # 
+        repository: KiritoDv/Shipwright
+        ref: znx 
 
     - name: Checkout AppImage Repo
       uses: actions/checkout@v3
@@ -52,22 +52,23 @@ jobs:
 
     - name: Install Dependencies
       run: |
+        sudo dpkg --add-architecture aarch64
         sudo apt-get update
         sudo apt-get upgrade -y
         sudo apt-get install -y \
-            libc6-dev \
-            binutils \
-            gcc-10 \
-            g++-10 \
-            python \
+            libc6-dev:arm64 \
+            binutils:arm64 \
+            gcc-10:arm64 \
+            g++-10:arm64 \
+            python:arm64 \
             ccache \
             cmake \
             lld \
-            libsdl2-dev \
-            zlib1g-dev \
-            libbz2-dev \
-            libpng-dev \
-            libgles2-mesa-dev
+            libsdl2-dev:arm64 \
+            zlib1g-dev:arm64 \
+            libbz2-dev:arm64 \
+            libpng-dev:arm64 \
+            libgles2-mesa-dev:arm64
         sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 10
         sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-10 10
         gcc --version
@@ -81,82 +82,82 @@ jobs:
     #    sudo make install ARCH64=true
     #    cp /usr/local/lib/libGLEW.a libultraship
 
-    - name: Build SDL2
-      run: |
-        SDL2VER=2.0.22
-        if [[ ! -e ~/.ccache ]]; then
-          mkdir ~/.ccache
-        fi  
-        cd ~/.ccache
-        if [[ ! -e SDL2-${SDL2VER} ]]; then
-          curl -sLO https://libsdl.org/release/SDL2-${SDL2VER}.tar.gz
-          tar -xzf SDL2-${SDL2VER}.tar.gz
-          cd SDL2-${SDL2VER}
-          ./configure --prefix=/usr
-          make && cd ../
-          rm SDL2-${SDL2VER}.tar.gz
-        fi
-        sudo make -C SDL2-${SDL2VER} install
-        sudo cp -av /lib/libSDL* /lib/x86_64-linux-gnu/
+    #- name: Build SDL2
+    #  run: |
+    #    SDL2VER=2.0.22
+    #    if [[ ! -e ~/.ccache ]]; then
+    #      mkdir ~/.ccache
+    #    fi  
+    #    cd ~/.ccache
+    #    if [[ ! -e SDL2-${SDL2VER} ]]; then
+    #      curl -sLO https://libsdl.org/release/SDL2-${SDL2VER}.tar.gz
+    #      tar -xzf SDL2-${SDL2VER}.tar.gz
+    #      cd SDL2-${SDL2VER}
+    #      ./configure --prefix=/usr
+    #      make && cd ../
+    #      rm SDL2-${SDL2VER}.tar.gz
+    #    fi
+    #    sudo make -C SDL2-${SDL2VER} install
+    #    sudo cp -av /lib/libSDL* /lib/x86_64-linux-gnu/
 
-    - name: Update Patchelf
-      run: |
-        PATCHELFVER=0.14.5
-        curl -sL https://github.com/NixOS/patchelf/releases/download/${PATCHELFVER}/patchelf-${PATCHELFVER}-x86_64.tar.gz -o /tmp/patchelf.tar.gz
-        tar -xvf /tmp/patchelf.tar.gz --directory /tmp/ ./bin/patchelf --strip-components=2 
-        sudo mv /tmp/patchelf /usr/bin
-        patchelf --version
+    #- name: Update Patchelf
+    #  run: |
+    #    PATCHELFVER=0.14.5
+    #    curl -sL https://github.com/NixOS/patchelf/releases/download/${PATCHELFVER}/patchelf-${PATCHELFVER}-x86_64.tar.gz -o /tmp/patchelf.tar.gz
+    #    tar -xvf /tmp/patchelf.tar.gz --directory /tmp/ ./bin/patchelf --strip-components=2 
+    #    sudo mv /tmp/patchelf /usr/bin
+    #    patchelf --version
 
-    - uses: actions/setup-python@v3
-      with:
-        python-version: '3.10'
-    - uses: actions/setup-go@v3
-      with:
-        go-version: '>=1.17.0'
+    #- uses: actions/setup-python@v3
+    #  with:
+    #    python-version: '3.10'
+    #- uses: actions/setup-go@v3
+    #  with:
+    #    go-version: '>=1.17.0'
 
-    - name: Linux Fixes
-      run: |
-        sed -i 's/exit(0);/_Exit(0);/g' libultraship/libultraship/Lib/Fast3D/gfx_glx.cpp
-        sed -i 's/exit(0);/_Exit(0);/g' libultraship/libultraship/Lib/Fast3D/gfx_sdl2.cpp
-        sed -i 's/-lGLEW //g' ZAPDTR/Makefile
-        sed -i '/GLEW \\/d' soh/Makefile
-        sed -i '/-Wno-missing-field-initializers/i -Wno-error=stringop-overflow \\' libultraship/Makefile # -Wno-error=multichar -Wno-error=sign-compare -Wno-unused-variable
-        #sed -i '/libultraship \\/a \.\.\/StormLib\/src \\' libultraship/Makefile
-        cp appimage/gfx_opengl.cpp libultraship/libultraship/Lib/Fast3D/gfx_opengl.cpp
+    #- name: Linux Fixes
+    #  run: |
+    #    sed -i 's/exit(0);/_Exit(0);/g' libultraship/libultraship/Lib/Fast3D/gfx_glx.cpp
+    #    sed -i 's/exit(0);/_Exit(0);/g' libultraship/libultraship/Lib/Fast3D/gfx_sdl2.cpp
+    #    sed -i 's/-lGLEW //g' ZAPDTR/Makefile
+    #    sed -i '/GLEW \\/d' soh/Makefile
+    #    sed -i '/-Wno-missing-field-initializers/i -Wno-error=stringop-overflow \\' libultraship/Makefile # -Wno-error=multichar -Wno-error=sign-compare -Wno-unused-variable
+    #    #sed -i '/libultraship \\/a \.\.\/StormLib\/src \\' libultraship/Makefile
+    #    cp appimage/gfx_opengl.cpp libultraship/libultraship/Lib/Fast3D/gfx_opengl.cpp
 
-    - name: Build OTRGui
-      run: |
-        cmake -B OTRGui/build -S OTRGui -DOpenGL_GL_PREFERENCE=GLVND
-        cmake --build OTRGui/build
+    #- name: Build OTRGui
+    #  run: |
+    #    cmake -B OTRGui/build -S OTRGui -DOpenGL_GL_PREFERENCE=GLVND
+    #    cmake --build OTRGui/build
 
-    - name: Build SOH
-      run: |
-        make setup -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc" CXX="ccache g++"
-        make -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc" CXX="ccache g++"
+    #- name: Build SOH
+    #  run: |
+    #    make setup -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc" CXX="ccache g++"
+    #    make -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc" CXX="ccache g++"
 
-    - name: Ccache stats
-      run: ccache -s
+    #- name: Ccache stats
+    #  run: ccache -s
 
-    - name: Prepare Artifact
-      run: |
-        mkdir Release
-        cp soh/soh.elf Release
-        cp OTRGui/build/OTRGui Release
-        rsync -av --exclude='*.gitignore' OTRGui/build/assets Release/
-        cp ZAPDTR/ZAPD.out Release/assets/extractor/
-        cp appimage/.github/workflows/scripts/OTR_Extractor.sh Release
-        cp -r appimage/.github/workflows/scripts/version Release/assets/
-    - uses: actions/upload-artifact@v3
-      with:
-          name: SOH-Linux-z64
-          path: Release
+    #- name: Prepare Artifact
+    #  run: |
+    #    mkdir Release
+    #    cp soh/soh.elf Release
+    #    cp OTRGui/build/OTRGui Release
+    #    rsync -av --exclude='*.gitignore' OTRGui/build/assets Release/
+    #    cp ZAPDTR/ZAPD.out Release/assets/extractor/
+    #    cp appimage/.github/workflows/scripts/OTR_Extractor.sh Release
+    #    cp -r appimage/.github/workflows/scripts/version Release/assets/
+    #- uses: actions/upload-artifact@v3
+    #  with:
+    #      name: SOH-Linux-z64
+    #      path: Release
 
-    - name: Build AppImage
-      run: |
-        chmod +x appimage/.github/workflows/scripts/appimage.sh
-        appimage/.github/workflows/scripts/appimage.sh
+    #- name: Build AppImage
+    #  run: |
+    #    chmod +x appimage/.github/workflows/scripts/appimage.sh
+    #    appimage/.github/workflows/scripts/appimage.sh
 
-    - name: Publish Release
-      run: |
-        go install github.com/tcnksm/ghr@latest
-        ghr -u qurious-pixel -r Shipwright-linux -recreate -n "AppImage 64bit build" -t "${{ secrets.GITHUB_TOKEN }}" zelda64 artifacts
+    #- name: Publish Release
+    #  run: |
+    #    go install github.com/tcnksm/ghr@latest
+    #    ghr -u qurious-pixel -r Shipwright-linux -recreate -n "AppImage 64bit build" -t "${{ secrets.GITHUB_TOKEN }}" zelda64 artifacts
