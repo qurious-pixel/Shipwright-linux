@@ -138,6 +138,7 @@ jobs:
 
     - name: Build extract assets
       run: |
+        make -C ZAPDTR -j$(nproc)
         cd OTRExporter && python3 extract_assets.py
         cp oot.otr ../soh
 
