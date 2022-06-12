@@ -131,16 +131,16 @@ jobs:
     #    cmake -B OTRGui/build -S OTRGui -DOpenGL_GL_PREFERENCE=GLVND
     #    cmake --build OTRGui/build
 
-    #- name: Build SOH
-    #  run: |
-    #    make setup -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc" CXX="ccache g++"
-    #    make -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc" CXX="ccache g++"
-
-    - name: Build extract assets
+    - name: Build SOH
       run: |
-        make -C ZAPDTR -j$(nproc)
-        cd OTRExporter && python3 extract_assets.py
-        cp oot.otr ../soh
+        make setup -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc" CXX="ccache g++"
+        make -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc" CXX="ccache g++"
+
+    #- name: Build extract assets
+    #  run: |
+    #    make -C ZAPDTR -j$(nproc)
+    #    cd OTRExporter && python3 extract_assets.py
+    #    cp oot.otr ../soh
 
     - name: Build SOH NRO
       run: |
