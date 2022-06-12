@@ -138,7 +138,6 @@ jobs:
 
     - name: Build SOH NRO
       run: |
-        make setup -j$(nproc)
         make -C soh -j$(nproc)
     
     #- name: Ccache stats
