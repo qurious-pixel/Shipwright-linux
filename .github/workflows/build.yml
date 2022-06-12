@@ -145,7 +145,7 @@ jobs:
     - name: Build SOH NRO
       run: |
         sudo docker pull devkitpro/devkita64
-        sudo docker run -rm -v $(pwd):/soh devkitpro/devkita64 /bin/bash -c "make -j$(nproc)"
+        sudo docker run --rm -v $(pwd):/soh devkitpro/devkita64 /bin/bash -c "make -j$(nproc)"
         ls soh
 
     #- name: Ccache stats
