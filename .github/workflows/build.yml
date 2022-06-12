@@ -145,6 +145,7 @@ jobs:
     - name: Build SOH NRO
       run: |
         make -j$(nproc)
+        ls soh
     
     #- name: Ccache stats
     #  run: ccache -s
