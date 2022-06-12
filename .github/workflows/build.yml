@@ -142,10 +142,20 @@ jobs:
     #    cd OTRExporter && python3 extract_assets.py
     #    cp oot.otr ../soh
 
-    - name: Build SOH NRO
+    #- name: Build SOH NRO (docker)
+    #  run: |
+    #    sudo docker pull devkitpro/devkita64
+    #    sudo docker run --rm -v $(pwd):/soh devkitpro/devkita64 /bin/bash -c "make -j$(nproc)"
+    #    ls soh
+
+    - name: Build SOH NRO (deb)
       run: |
-        sudo docker pull devkitpro/devkita64
-        sudo docker run --rm -v $(pwd):/soh devkitpro/devkita64 /bin/bash -c "make -j$(nproc)"
+        sudo dpkg -i appimage/.github/workflows/deb/*
+        export DEVKITPRO=/opt/devkitpro
+        export DEVKITARM=${DEVKITPRO}/devkitARM
+        export DEVKITARM=${DEVKITPRO}/devkitPPC
+        export PATH=${DEVKITPRO}/tools/bin:$PATH
+        make -j$(nproc)
         ls soh
 
     #- name: Ccache stats
