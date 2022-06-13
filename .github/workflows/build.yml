@@ -118,15 +118,16 @@ jobs:
       run: |
         sed -i 's/exit(0);/_Exit(0);/g' libultraship/libultraship/Lib/Fast3D/gfx_glx.cpp
         sed -i 's/exit(0);/_Exit(0);/g' libultraship/libultraship/Lib/Fast3D/gfx_sdl2.cpp
-        sed -i '/#include "libc\/stdarg.h"/i #ifndef __linux__' soh/include/ultra64.h 
-        sed -i '/#include "libc\/math.h"/a #endif' soh/include/ultra64.h 
+        sed -i '/\#include "libc\/stdarg.h"/i \#ifndef __linux__' soh/include/ultra64.h 
+        sed -i '/\#include "libc\/math.h"/a \#endif' soh/include/ultra64.h 
         sed -i 's/-lGLEW //g' ZAPDTR/Makefile
         sed -i '/GLEW \\/d' soh/Makefile
         sed -i '/-Wno-missing-field-initializers/i -Wno-error=stringop-overflow \\' libultraship/Makefile # -Wno-error=multichar -Wno-error=sign-compare -Wno-unused-variable
-        sed -i '/-Wno-error=multichar/i -Wno-error=unused-but-set-variable -Wno-error=sign-compare \\' OTRExporter/OTRExporter/Makefile
+        #sed -i '/-Wno-error=multichar/i -Wno-error=unused-but-set-variable -Wno-error=sign-compare \\' OTRExporter/OTRExporter/Makefile
         #sed -i '/libultraship \\/a \.\.\/StormLib\/src \\' libultraship/Makefile
         cp appimage/gfx_opengl.cpp libultraship/libultraship/Lib/Fast3D/gfx_opengl.cpp
         #cp appimage/audio_load.c soh/src/code/audio_load.c
+        cat soh/include/ultra64.h
 
     - name: Build OTRGui
       run: |
