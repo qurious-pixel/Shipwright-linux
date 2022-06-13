@@ -126,7 +126,7 @@ jobs:
         sed -i '/-Wno-error=multichar/i -Wno-error=unused-but-set-variable -Wno-error=sign-compare \\' OTRExporter/OTRExporter/Makefile
         #sed -i '/libultraship \\/a \.\.\/StormLib\/src \\' libultraship/Makefile
         cp appimage/gfx_opengl.cpp libultraship/libultraship/Lib/Fast3D/gfx_opengl.cpp
-        cp appimage/audio_load.c soh/src/code/audio_load.c
+        #cp appimage/audio_load.c soh/src/code/audio_load.c
         #cat soh/include/ultra64.h
 
     - name: Build OTRGui
