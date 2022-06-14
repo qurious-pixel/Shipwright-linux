@@ -125,7 +125,7 @@ jobs:
         sed -i '/gbi.h>/a \#include <string.h>' soh/soh/Enhancements/bootcommands.c
         sed -i 's/-lGLEW //g' ZAPDTR/Makefile
         sed -i '/GLEW \\/d' soh/Makefile
-        sed -i 's/-fwrapv/-fwrapv -Wno-int-conversion -Wno-implicit-function-declaration -Wno-incompatible-pointer-types/g' soh/Makefile
+        sed -i 's/-fwrapv/-fwrapv -Wno-int-conversion -Wno-implicit-function-declaration -Wno-incompatible-pointer-types -Wno-pointer-to-int-cast/g' soh/Makefile
         sed -i '/-Wno-missing-field-initializers/i -Wno-error=stringop-overflow \\' libultraship/Makefile # -Wno-error=multichar -Wno-error=sign-compare -Wno-unused-variable
         sed -i '/-Wno-error=multichar/i -Wno-error=unused-but-set-variable -Wno-error=sign-compare \\' OTRExporter/OTRExporter/Makefile
         #sed -i '/libultraship \\/a \.\.\/StormLib\/src \\' libultraship/Makefile
