@@ -122,7 +122,7 @@ jobs:
         sed -i '/\#include "libc\/math.h"/a \#endif' soh/include/ultra64.h
         sed -i '/\#define Z64_AUDIO_H/a \#include <stdbool.h>' soh/include/z64audio.h
         sed -i '/luslog.h"/a \#include <stdarg.h>' soh/include/functions.h
-        sed -i '/gbi.h>/a \#include <string.h>' bootcommands.c soh/soh/Enhancements/bootcommands.c
+        sed -i '/gbi.h>/a \#include <string.h>' soh/soh/Enhancements/bootcommands.c
         sed -i 's/-lGLEW //g' ZAPDTR/Makefile
         sed -i '/GLEW \\/d' soh/Makefile
         sed -i '/-Wno-missing-field-initializers/i -Wno-error=stringop-overflow \\' libultraship/Makefile # -Wno-error=multichar -Wno-error=sign-compare -Wno-unused-variable
