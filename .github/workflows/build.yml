@@ -44,11 +44,6 @@ jobs:
         cp soh/ROM/baserom_non_mq.z64 soh
         cp soh/ROM/baserom_non_mq.z64 OTRExporter
 
-    #- name: Build Docker Image
-    #  run: |
-    #    cp appimage/.github/workflows/Dockerfile Dockerfile
-    #    sudo docker build . -t znx --no-cache
-
     - uses: actions/setup-python@v3
       with:
         python-version: '3.10'
@@ -62,11 +57,6 @@ jobs:
         sed -i '/-Wno-missing-field-initializers/i -Wno-error=stringop-overflow \\' libultraship/Makefile # -Wno-error=multichar -Wno-error=sign-compare -Wno-unused-variable
         cp appimage/FileStream.cpp StormLib/src/FileStream.cpp
         sed -i '/\#include "libc\/stddef.h"/d' soh/include/ultra64.h
-    #    sed -i 's/exit(0);/_Exit(0);/g' libultraship/libultraship/Lib/Fast3D/gfx_glx.cpp
-    #    sed -i 's/exit(0);/_Exit(0);/g' libultraship/libultraship/Lib/Fast3D/gfx_sdl2.cpp
-    #    sed -i 's/-lGLEW //g' ZAPDTR/Makefile
-    #    sed -i '/GLEW \\/d' soh/Makefile
-    #    #sed -i '/libultraship \\/a \.\.\/StormLib\/src \\' libultraship/Makefile
 
     - name: Build libultraship
       run: sudo docker run --rm -e DEVKITPRO=/opt/devkitpro -v $(pwd):/soh -w /soh quriouspixel/devkitpro /bin/bash -c "chmod +x appimage/docker/libultraship.sh && appimage/docker/libultraship.sh"
@@ -74,14 +64,11 @@ jobs:
     - name: Build SOH
       run: sudo docker run --rm -v $(pwd):/soh -w /soh quriouspixel/devkitpro /bin/bash -c "chmod +x appimage/docker/stormlib.sh && appimage/docker/stormlib.sh"
 
-    #- name: Build SOH
-    #  run: sudo docker run --rm -e DEVKITPRO=/opt/devkitpro -v $(pwd):/soh -w /soh quriouspixel/devkitpro /bin/bash -c "make -j$(nproc) OPTFLAGS=-O2 DEBUG=0"
-
     - name: Prepare Artifact
       run: |
         mkdir Release
         cp soh/soh.nro Release
-        rsync -av --exclude='*.gitignore' OTRGui/build/assets Release/
+        rsync -av --exclude='*.gitignore' OTRGui/assets Release/
         cp ZAPDTR/ZAPD.out Release/assets/extractor/
         cp appimage/.github/workflows/scripts/OTR_Extractor.sh Release
     #    cp -r appimage/.github/workflows/scripts/version Release/assets/
@@ -98,4 +85,4 @@ jobs:
     #- name: Publish Release
     #  run: |
     #    go install github.com/tcnksm/ghr@latest
-    #    ghr -u qurious-pixel -r Shipwright-linux -recreate -n "AppImage 64bit build" -t "${{ secrets.GITHUB_TOKEN }}" zelda64 artifacts
+    #    ghr -u qurious-pixel -r Shipwright-linux -recreate -n "Switch build" -t "${{ secrets.GITHUB_TOKEN }}" znx artifacts
