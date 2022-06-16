@@ -44,10 +44,10 @@ jobs:
         cp soh/ROM/baserom_non_mq.z64 soh
         cp soh/ROM/baserom_non_mq.z64 OTRExporter
 
-    - name: Build Docker Image
-      run: |
-        cp appimage/.github/workflows/Dockerfile Dockerfile
-        sudo docker build . -t znx --no-cache
+    #- name: Build Docker Image
+    #  run: |
+    #    cp appimage/.github/workflows/Dockerfile Dockerfile
+    #    sudo docker build . -t znx --no-cache
 
     - uses: actions/setup-python@v3
       with:
@@ -56,9 +56,9 @@ jobs:
       with:
         go-version: '>=1.17.0'
 
-    - name: Linux Fixes
-      run: |
-        cp appimage/FileStream.cpp StormLib/src/FileStream.cpp
+    #- name: Linux Fixes
+    #  run: |
+    #    cp appimage/FileStream.cpp StormLib/src/FileStream.cpp
     #    sed -i '/-Wno-missing-field-initializers/i -Wno-error=stringop-overflow \\' libultraship/Makefile # -Wno-error=multichar -Wno-error=sign-compare -Wno-unused-variable
     #    sed -i 's/exit(0);/_Exit(0);/g' libultraship/libultraship/Lib/Fast3D/gfx_glx.cpp
     #    sed -i 's/exit(0);/_Exit(0);/g' libultraship/libultraship/Lib/Fast3D/gfx_sdl2.cpp
@@ -68,13 +68,13 @@ jobs:
         
 
     - name: Build StormLib
-      run: sudo docker run --rm -v $(pwd):/soh -w /soh znx /bin/bash -c "chmod +x appimage/docker/stormlib.sh && appimage/docker/stormlib.sh"
+      run: sudo docker run --rm -v $(pwd):/soh -w /soh quriouspixel/devkitpro /bin/bash -c "chmod +x appimage/docker/stormlib.sh && appimage/docker/stormlib.sh"
        
     - name: Build libultraship
-      run: sudo docker run --rm -v $(pwd):/soh -w /soh znx /bin/bash -c "make setup -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc" CXX="ccache g++""
+      run: sudo docker run --rm -v $(pwd):/soh -w /soh quriouspixel/devkitpro /bin/bash -c "make setup -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc" CXX="ccache g++""
 
     - name: Build SOH
-      run: sudo docker run --rm -v $(pwd):/soh -w /soh znx /bin/bash -c "make -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc" CXX="ccache g++"
+      run: sudo docker run --rm -v $(pwd):/soh -w /soh quriouspixel/devkitpro /bin/bash -c "make -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc" CXX="ccache g++"
 
     - name: Prepare Artifact
       run: |
