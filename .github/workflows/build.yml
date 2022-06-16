@@ -101,14 +101,6 @@ jobs:
         sudo make -C SDL2-${SDL2VER} install
         sudo cp -av /lib/libSDL* /lib/x86_64-linux-gnu/
 
-    #- name: Update Patchelf
-    #  run: |
-    #    PATCHELFVER=0.14.5
-    #    curl -sL https://github.com/NixOS/patchelf/releases/download/${PATCHELFVER}/patchelf-${PATCHELFVER}-x86_64.tar.gz -o /tmp/patchelf.tar.gz
-    #    tar -xvf /tmp/patchelf.tar.gz --directory /tmp/ ./bin/patchelf --strip-components=2 
-    #    sudo mv /tmp/patchelf /usr/bin
-    #    patchelf --version
-
     - uses: actions/setup-python@v3
       with:
         python-version: '3.10'
@@ -116,9 +108,9 @@ jobs:
       with:
         go-version: '>=1.17.0'
 
-    - name: Linux Fixes
-      run: |
-        sed -i '/-Wno-missing-field-initializers/i -Wno-error=stringop-overflow \\' libultraship/Makefile # -Wno-error=multichar -Wno-error=sign-compare -Wno-unused-variable
+    #- name: Linux Fixes
+    #  run: |
+    #    sed -i '/-Wno-missing-field-initializers/i -Wno-error=stringop-overflow \\' libultraship/Makefile # -Wno-error=multichar -Wno-error=sign-compare -Wno-unused-variable
     #    sed -i 's/exit(0);/_Exit(0);/g' libultraship/libultraship/Lib/Fast3D/gfx_glx.cpp
     #    sed -i 's/exit(0);/_Exit(0);/g' libultraship/libultraship/Lib/Fast3D/gfx_sdl2.cpp
     #    sed -i 's/-lGLEW //g' ZAPDTR/Makefile
@@ -131,10 +123,30 @@ jobs:
     #    cmake -B OTRGui/build -S OTRGui -DOpenGL_GL_PREFERENCE=GLVND
     #    cmake --build OTRGui/build
 
+
+    - name: Setup DevKitPro (deb)
+      env:
+        DEVKITPRO: /opt/devkitpro
+        DEVKITARM: ${DEVKITPRO}/devkitARM
+        DEVKITPPC: ${DEVKITPRO}/devkitPPC
+      run: |
+        mkdir -p /usr/local/share/keyring/
+        wget -O /usr/local/share/keyring/devkitpro-pub.gpg https://apt.devkitpro.org/devkitpro-pub.gpg
+        echo "deb [signed-by=/usr/local/share/keyring/devkitpro-pub.gpg] https://apt.devkitpro.org stable main" > /etc/apt/sources.list.d/devkitpro.list
+        apt-get update -y
+        apt-get install -y devkitpro-pacman
+        yes | sudo dkp-pacman -Syu switch-dev switch-portlibs --noconfirm
+        export PATH=${DEVKITPRO}/tools/bin:$PATH
+        /opt/devkitpro/portlibs/switch/bin/aarch64-none-elf-cmake -B StormLib/build -S StormLib
+        make -C StormLib/build -j$(nproc)
+        sudo make install -C StormLib/build
+        sudo cp /usr/local/lib/libstorm.a /opt/devkitpro/portlibs/switch/lib/
+        sudo cp /usr/local/include/Storm* /opt/devkitpro/portlibs/switch/include/
+    
     - name: Build SOH
       run: |
         make setup -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc" CXX="ccache g++"
-        make -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc" CXX="ccache g++"
+    #    make -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc" CXX="ccache g++"
 
     #- name: Build extract assets
     #  run: |
@@ -142,16 +154,16 @@ jobs:
     #    cd OTRExporter && python3 extract_assets.py
     #    cp oot.otr ../soh
 
-    - name: Build SOH NRO (docker)
-      run: |
-        sudo docker pull devkitpro/devkita64
-        sudo docker run --rm -v $(pwd):/soh devkitpro/devkita64 /bin/bash -c "make -C soh -j$(nproc)"
-        echo "ls soh"
-        ls soh
-        echo "ls soh/soh"
-        ls soh/soh
-        echo "ls soh/soh/build"
-        ls soh/soh/build
+    #- name: Build SOH NRO (docker)
+    #  run: |
+    #    sudo docker pull devkitpro/devkita64
+    #    sudo docker run --rm -v $(pwd):/soh devkitpro/devkita64 /bin/bash -c "make -C soh -j$(nproc)"
+    #    echo "ls soh"
+    #    ls soh
+    #    echo "ls soh/soh"
+    #    ls soh/soh
+    #    echo "ls soh/soh/build"
+    #    ls soh/soh/build
 
     #- name: Build SOH NRO (deb)
     #  run: |
