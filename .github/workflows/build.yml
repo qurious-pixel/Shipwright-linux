@@ -11,10 +11,6 @@ jobs:
   switch_gcc:
     name: Build Switch NRO
     runs-on: ubuntu-20.04
-    env:
-      DEVKITPRO: /opt/devkitpro
-      DEVKITARM: /opt/devkitpro/devkitARM
-      DEVKITPPC: /opt/devkitpro/devkitPPC
     steps:
     - name: Checkout Upstream Repo
       uses: actions/checkout@v3
@@ -75,12 +71,10 @@ jobs:
       run: sudo docker run --rm -e DEVKITPRO=/opt/devkitpro -v $(pwd):/soh -w /soh quriouspixel/devkitpro /bin/bash -c "chmod +x appimage/docker/stormlib.sh && appimage/docker/stormlib.sh"
        
     - name: Build libultraship
-      run: sudo docker run --rm -v $(pwd):/soh \
-               -w /soh quriouspixel/devkitpro \
-               /bin/bash -c "make setup -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc" CXX="ccache g++""
+      run: sudo docker run --rm -e DEVKITPRO=/opt/devkitpro -v $(pwd):/soh -w /soh quriouspixel/devkitpro /bin/bash -c "make setup -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc" CXX="ccache g++""
 
     - name: Build SOH
-      run: sudo docker run --rm -v $(pwd):/soh -w /soh quriouspixel/devkitpro /bin/bash -c "make -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc" CXX="ccache g++"
+      run: sudo docker run --rm -e DEVKITPRO=/opt/devkitpro -v $(pwd):/soh -w /soh quriouspixel/devkitpro /bin/bash -c "make -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc" CXX="ccache g++"
 
     - name: Prepare Artifact
       run: |
