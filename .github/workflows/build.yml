@@ -66,10 +66,12 @@ jobs:
 
     - name: Prepare Artifact
       run: |
-        mkdir Release
+        mkdir -p Release/assets/game
         cp soh/soh.nro Release
         rsync -av --exclude='*.gitignore' OTRGui/assets Release/
         cp ZAPDTR/ZAPD.out Release/assets/extractor/
+        cp -r OTRExporter/assets/ship_of_harkinian Release/assets/game/ship_of_harkinian
+        cp -r soh/assets/xml Release/assets/extractor/xmls
         cp appimage/.github/workflows/scripts/OTR_Extractor.sh Release
     #    cp -r appimage/.github/workflows/scripts/version Release/assets/
     - uses: actions/upload-artifact@v3
