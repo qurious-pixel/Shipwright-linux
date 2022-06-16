@@ -71,11 +71,11 @@ jobs:
     - name: Build libultraship
       run: sudo docker run --rm -e DEVKITPRO=/opt/devkitpro -v $(pwd):/soh -w /soh quriouspixel/devkitpro /bin/bash -c "chmod +x appimage/docker/libultraship.sh && appimage/docker/libultraship.sh"
 
-    - name: Build StormLib
+    - name: Build SOH
       run: sudo docker run --rm -v $(pwd):/soh -w /soh quriouspixel/devkitpro /bin/bash -c "chmod +x appimage/docker/stormlib.sh && appimage/docker/stormlib.sh"
 
-    - name: Build SOH
-      run: sudo docker run --rm -e DEVKITPRO=/opt/devkitpro -v $(pwd):/soh -w /soh quriouspixel/devkitpro /bin/bash -c "make -j$(nproc) OPTFLAGS=-O2 DEBUG=0"
+    #- name: Build SOH
+    #  run: sudo docker run --rm -e DEVKITPRO=/opt/devkitpro -v $(pwd):/soh -w /soh quriouspixel/devkitpro /bin/bash -c "make -j$(nproc) OPTFLAGS=-O2 DEBUG=0"
 
     - name: Prepare Artifact
       run: |
