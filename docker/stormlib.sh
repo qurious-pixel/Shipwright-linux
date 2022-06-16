@@ -1,5 +1,6 @@
 #!/bin/bash
 
+rm -r StormLib/build
 /opt/devkitpro/portlibs/switch/bin/aarch64-none-elf-cmake -D_POSIX_C_SOURCE=200809L -B StormLib/build -S StormLib
 make -C StormLib/build -j$(nproc)
 make install -C StormLib/build
