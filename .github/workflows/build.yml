@@ -12,7 +12,7 @@ jobs:
     strategy:
         fail-fast: false
         matrix:
-          ref: [develop, zelda64] # [master, develop, zelda64]
+          ref: [develop] # [master, develop, zelda64]
     name: Build Linux GCC
     runs-on: ubuntu-20.04
     steps:
@@ -119,7 +119,9 @@ jobs:
         sed -i 's/-lGLEW //g' ZAPDTR/Makefile
         sed -i '/GLEW \\/d' soh/Makefile
         sed -i '/-Wno-missing-field-initializers/i -Wno-error=stringop-overflow -Wno-error=multichar -Wno-error=sign-compare -Wno-unused-variable \\' libultraship/Makefile
-        #cp appimage/audio_load.c soh/src/code/audio_load.c
+        cp appimage/gfx_sdl2.cpp libultraship/libultraship/Lib/Fast3D/gfx_sdl2.cpp
+        sed -i 's/exit(0);/_Exit(0);/g' libultraship/libultraship/Lib/Fast3D/gfx_glx.cpp
+        sed -i 's/exit(0);/_Exit(0);/g' libultraship/libultraship/Lib/Fast3D/gfx_sdl2.cpp
       #if: ${{ matrix.ref == 'zelda64' }}
 
     #- name: Build libultraship
