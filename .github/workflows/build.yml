@@ -58,24 +58,22 @@ jobs:
 
     - name: Linux Fixes
       run: |
-        sed -i '130,131d' soh/Makefile
+        sed -i '/cmake --build ..\/StormLib\/build/a $(MAKE) install -C ..\/StormLib\/build' soh/Makefile
         sed -i '/-Wno-missing-field-initializers/i -Wno-error=stringop-overflow \\' libultraship/Makefile # -Wno-error=multichar -Wno-error=sign-compare -Wno-unused-variable
         cp appimage/FileStream.cpp StormLib/src/FileStream.cpp
-        sed -i '/\#include "libc\/stdarg.h"/i \#ifndef __linux__' soh/include/ultra64.h 
-        sed -i '/\#include "libc\/math.h"/a \#endif' soh/include/ultra64.h
+        sed -i '/\#include "libc\/stddef.h"/d' soh/include/ultra64.h
     #    sed -i 's/exit(0);/_Exit(0);/g' libultraship/libultraship/Lib/Fast3D/gfx_glx.cpp
     #    sed -i 's/exit(0);/_Exit(0);/g' libultraship/libultraship/Lib/Fast3D/gfx_sdl2.cpp
     #    sed -i 's/-lGLEW //g' ZAPDTR/Makefile
     #    sed -i '/GLEW \\/d' soh/Makefile
     #    #sed -i '/libultraship \\/a \.\.\/StormLib\/src \\' libultraship/Makefile
-        
 
-    #- name: Build StormLib
-    #  run: sudo docker run --rm -v $(pwd):/soh -w /soh quriouspixel/devkitpro /bin/bash -c "chmod +x appimage/docker/stormlib.sh && appimage/docker/stormlib.sh"
-       
     - name: Build libultraship
       run: sudo docker run --rm -e DEVKITPRO=/opt/devkitpro -v $(pwd):/soh -w /soh quriouspixel/devkitpro /bin/bash -c "chmod +x appimage/docker/libultraship.sh && appimage/docker/libultraship.sh"
-      
+
+    - name: Build StormLib
+      run: sudo docker run --rm -v $(pwd):/soh -w /soh quriouspixel/devkitpro /bin/bash -c "chmod +x appimage/docker/stormlib.sh && appimage/docker/stormlib.sh"
+
     - name: Build SOH
       run: sudo docker run --rm -e DEVKITPRO=/opt/devkitpro -v $(pwd):/soh -w /soh quriouspixel/devkitpro /bin/bash -c "make -j$(nproc) OPTFLAGS=-O2 DEBUG=0"
 
