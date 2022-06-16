@@ -11,6 +11,10 @@ jobs:
   switch_gcc:
     name: Build Switch NRO
     runs-on: ubuntu-20.04
+    env:
+      DEVKITPRO: /opt/devkitpro
+      DEVKITARM: /opt/devkitpro/devkitARM
+      DEVKITPPC: /opt/devkitpro/devkitPPC
     steps:
     - name: Checkout Upstream Repo
       uses: actions/checkout@v3
