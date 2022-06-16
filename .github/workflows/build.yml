@@ -59,7 +59,7 @@ jobs:
     - name: Linux Fixes
       run: |
         sed '130,131d' soh/Makefile
-    #    cp appimage/FileStream.cpp StormLib/src/FileStream.cpp
+        cp appimage/FileStream.cpp StormLib/src/FileStream.cpp
     #    sed -i '/-Wno-missing-field-initializers/i -Wno-error=stringop-overflow \\' libultraship/Makefile # -Wno-error=multichar -Wno-error=sign-compare -Wno-unused-variable
     #    sed -i 's/exit(0);/_Exit(0);/g' libultraship/libultraship/Lib/Fast3D/gfx_glx.cpp
     #    sed -i 's/exit(0);/_Exit(0);/g' libultraship/libultraship/Lib/Fast3D/gfx_sdl2.cpp
