@@ -64,6 +64,7 @@ jobs:
             python \
             ccache \
             cmake \
+            wget \
             lld \
             libsdl2-dev \
             zlib1g-dev \
@@ -123,18 +124,17 @@ jobs:
     #    cmake -B OTRGui/build -S OTRGui -DOpenGL_GL_PREFERENCE=GLVND
     #    cmake --build OTRGui/build
 
-
     - name: Setup DevKitPro (deb)
       env:
         DEVKITPRO: /opt/devkitpro
         DEVKITARM: ${DEVKITPRO}/devkitARM
         DEVKITPPC: ${DEVKITPRO}/devkitPPC
       run: |
-        mkdir -p /usr/local/share/keyring/
+        sudo mkdir -p /usr/local/share/keyring/
         wget -O /usr/local/share/keyring/devkitpro-pub.gpg https://apt.devkitpro.org/devkitpro-pub.gpg
-        echo "deb [signed-by=/usr/local/share/keyring/devkitpro-pub.gpg] https://apt.devkitpro.org stable main" > /etc/apt/sources.list.d/devkitpro.list
-        apt-get update -y
-        apt-get install -y devkitpro-pacman
+        echo "deb [signed-by=/usr/local/share/keyring/devkitpro-pub.gpg] https://apt.devkitpro.org stable main" | sudo tee /etc/apt/sources.list.d/devkitpro.list
+        sudo apt-get update -y
+        sudo apt-get install -y devkitpro-pacman
         yes | sudo dkp-pacman -Syu switch-dev switch-portlibs --noconfirm
         export PATH=${DEVKITPRO}/tools/bin:$PATH
         /opt/devkitpro/portlibs/switch/bin/aarch64-none-elf-cmake -B StormLib/build -S StormLib
@@ -142,11 +142,11 @@ jobs:
         sudo make install -C StormLib/build
         sudo cp /usr/local/lib/libstorm.a /opt/devkitpro/portlibs/switch/lib/
         sudo cp /usr/local/include/Storm* /opt/devkitpro/portlibs/switch/include/
-    
+
     - name: Build SOH
       run: |
         make setup -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc" CXX="ccache g++"
-    #    make -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc" CXX="ccache g++"
+        make -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc" CXX="ccache g++"
 
     #- name: Build extract assets
     #  run: |
@@ -180,8 +180,8 @@ jobs:
     #    ls soh
     #    ls soh/build
 
-    #- name: Ccache stats
-    #  run: ccache -s
+    - name: Ccache stats
+      run: ccache -s
 
     #- name: Prepare Artifact
     #  run: |
