@@ -15,8 +15,8 @@ jobs:
     - name: Checkout Upstream Repo
       uses: actions/checkout@v3
       with:
-        repository: briaguya-ai/Shipwright # HarbourMasters/Shipwright # dcvz/Shipwright # 
-        ref: z64-devmerge # zelda64 # zelda64_mac # 
+        repository: HarbourMasters/Shipwright # briaguya-ai/Shipwright # dcvz/Shipwright # 
+        ref: zelda64 # zelda64_mac # z64-devmerge # 
 
     - name: Checkout AppImage Repo
       uses: actions/checkout@v3
@@ -118,11 +118,11 @@ jobs:
       run: |
         sed -i 's/exit(0);/_Exit(0);/g' libultraship/libultraship/Lib/Fast3D/gfx_glx.cpp
         sed -i 's/exit(0);/_Exit(0);/g' libultraship/libultraship/Lib/Fast3D/gfx_sdl2.cpp
-        sed -i '/\#include "libc\/stdarg.h"/i \#ifndef __linux__' soh/include/ultra64.h 
-        sed -i '/\#include "libc\/math.h"/a \#endif' soh/include/ultra64.h
-        sed -i '/\#define Z64_AUDIO_H/a \#include <stdbool.h>' soh/include/z64audio.h
-        sed -i '/luslog.h"/a \#include <stdarg.h>' soh/include/functions.h
-        sed -i '/gbi.h>/a \#include <string.h>' soh/soh/Enhancements/bootcommands.c
+        #sed -i '/\#include "libc\/stdarg.h"/i \#ifndef __linux__' soh/include/ultra64.h 
+        #sed -i '/\#include "libc\/math.h"/a \#endif' soh/include/ultra64.h
+        #sed -i '/\#define Z64_AUDIO_H/a \#include <stdbool.h>' soh/include/z64audio.h
+        #sed -i '/luslog.h"/a \#include <stdarg.h>' soh/include/functions.h
+        #sed -i '/gbi.h>/a \#include <string.h>' soh/soh/Enhancements/bootcommands.c
         sed -i 's/-lGLEW //g' ZAPDTR/Makefile
         sed -i '/GLEW \\/d' soh/Makefile
         sed -i 's/-fwrapv/-fwrapv -Wno-int-conversion -Wno-implicit-function-declaration -Wno-incompatible-pointer-types -Wno-pointer-to-int-cast/g' soh/Makefile
