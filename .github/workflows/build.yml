@@ -54,7 +54,7 @@ jobs:
     - name: Linux Fixes
       run: |
         sed -i '/-Wno-missing-field-initializers/i -Wno-error=stringop-overflow \\' libultraship/Makefile # -Wno-error=multichar -Wno-error=sign-compare -Wno-unused-variable
-        cp appimage/Makefile.switch libultraship/Makefile.switch
+    #    cp appimage/Makefile.switch libultraship/Makefile.switch
     #    sed -i '/cmake --build ..\/StormLib\/build/a \\t$(MAKE) install -C ..\/StormLib\/build' soh/Makefile
     #    sed -i '/\#include "libc\/stddef.h"/d' soh/include/ultra64.h
     #    sed -i '196d' StormLib/src/StormPort.h
