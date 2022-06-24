@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export PATH=$PATH:/opt/devkitpro/portlibs/switch/bin/
+
 rm -r StormLib/build
 /opt/devkitpro/portlibs/switch/bin/aarch64-none-elf-cmake -B StormLib/build -S StormLib
 make -C StormLib/build -j$(nproc)
