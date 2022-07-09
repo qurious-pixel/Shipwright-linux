@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        compiler: [g++, clang++]
+        compiler: [g++-10, clang++-12]
         #compiler: [gcc, clang]
     name: Build Linux ${{ matrix.compiler }}
     runs-on: ubuntu-20.04
@@ -128,7 +128,7 @@ jobs:
     - name: Linux Fixes
       run: |
         echo "Custom fixes"
-        sed -i '/-Wno-missing-field-initializers/i -Wno-error=stringop-overflow \\' libultraship/Makefile # -Wno-error=sign-compare -Wno-unused-variable
+        #sed -i '/-Wno-missing-field-initializers/i -Wno-error=stringop-overflow \\' libultraship/Makefile # -Wno-error=sign-compare -Wno-unused-variable
         #sed -i 's/enum-conversion/enum-conversion -Wno-deprecated-copy/g' libultraship/Makefile
         #sed -i 's/exit(0);/_Exit(0);/g' libultraship/libultraship/Lib/Fast3D/gfx_glx.cpp
         #sed -i 's/exit(0);/_Exit(0);/g' libultraship/libultraship/Lib/Fast3D/gfx_sdl2.cpp
