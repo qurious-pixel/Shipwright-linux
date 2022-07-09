@@ -9,14 +9,18 @@ on:
 
 jobs:
   linux_gcc:
-    name: Build Linux GCC
+    strategy:
+      matrix:
+        compiler: [g++, clang++]
+        #compiler: [gcc, clang]
+    name: Build Linux ${{ matrix.compiler }}
     runs-on: ubuntu-20.04
     steps:
     - name: Checkout Upstream Repo
       uses: actions/checkout@v3
       with:
-        repository: HarbourMasters/Shipwright # briaguya-ai/Shipwright # dcvz/Shipwright # 
-        ref: zelda64 # zelda64_mac # z64-devmerge # 
+        repository: dcvz/Shipwright # HarbourMasters/Shipwright # briaguya-ai/Shipwright #  
+        ref: devel-clang # develop
 
     - name: Checkout AppImage Repo
       uses: actions/checkout@v3
@@ -57,12 +61,14 @@ jobs:
         sudo apt-get install -y \
             libc6-dev \
             binutils \
+            clang-12 \
             gcc-10 \
             g++-10 \
             python \
             ccache \
             cmake \
             lld \
+            llvm-12 \
             libsdl2-dev \
             zlib1g-dev \
             libbz2-dev \
@@ -70,8 +76,12 @@ jobs:
             libgles2-mesa-dev
         sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 10
         sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-10 10
+        sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-12 10
+        sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-12 10
         gcc --version
         g++ --version
+        clang --version
+        clang++ --version
 
     #- name: Build glew
     #  run: |
@@ -125,10 +135,10 @@ jobs:
         #sed -i '/gbi.h>/a \#include <string.h>' soh/soh/Enhancements/bootcommands.c
         sed -i 's/-lGLEW //g' ZAPDTR/Makefile
         sed -i '/GLEW \\/d' soh/Makefile
-        sed -i 's/-fwrapv/-fwrapv -Wno-int-conversion -Wno-implicit-function-declaration -Wno-incompatible-pointer-types -Wno-pointer-to-int-cast/g' soh/Makefile
-        sed -i '/-Wno-missing-field-initializers/i -Wno-error=stringop-overflow -Wno-error=multichar \\' libultraship/Makefile # -Wno-error=sign-compare -Wno-unused-variable
-        sed -i '/-Wno-error=multichar/i -Wno-error=unused-but-set-variable -Wno-error=sign-compare \\' OTRExporter/OTRExporter/Makefile
-        #sed -i '/libultraship \\/a \.\.\/StormLib\/src \\' libultraship/Makefile
+        #sed -i 's/-fwrapv/-fwrapv -Wno-int-conversion -Wno-implicit-function-declaration -Wno-incompatible-pointer-types -Wno-pointer-to-int-cast/g' soh/Makefile
+        sed -i '/-Wno-missing-field-initializers/i -Wno-error=stringop-overflow -Wno-error=multichar -Wno-unknown-warning-option \\' libultraship/Makefile # -Wno-error=sign-compare -Wno-unused-variable
+        #sed -i '/-Wno-error=multichar/i -Wno-error=unused-but-set-variable -Wno-error=sign-compare\' OTRExporter/OTRExporter/Makefile
+        sed -i 's/enum-conversion/enum-conversion -Wno-deprecated-copy/g' libultraship/Makefile
         cp appimage/gfx_opengl.cpp libultraship/libultraship/Lib/Fast3D/gfx_opengl.cpp
         #cp appimage/AudioExporter.cpp OTRExporter/OTRExporter/AudioExporter.cpp
         #cat soh/include/ultra64.h
@@ -140,8 +150,8 @@ jobs:
 
     - name: Build SOH
       run: |
-        make setup -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc" CXX="ccache g++"
-        make -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache gcc" CXX="ccache g++"
+        make setup -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CXX="ccache ${{ matrix.compiler }}"
+        make -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CXX="ccache ${{ matrix.compiler }}"
 
     - name: Ccache stats
       run: ccache -s
@@ -160,12 +170,13 @@ jobs:
           name: SOH-Linux-z64
           path: Release
 
-    - name: Build AppImage
-      run: |
-        chmod +x appimage/.github/workflows/scripts/appimage.sh
-        appimage/.github/workflows/scripts/appimage.sh
+    
+    #- name: Build AppImage
+    #  run: |
+    #    chmod +x appimage/.github/workflows/scripts/appimage.sh
+    #    appimage/.github/workflows/scripts/appimage.sh
 
-    - name: Publish Release
-      run: |
-        go install github.com/tcnksm/ghr@latest
-        ghr -u qurious-pixel -r Shipwright-linux -recreate -n "AppImage 64bit build" -t "${{ secrets.GITHUB_TOKEN }}" zelda64 artifacts
+    #- name: Publish Release
+    #  run: |
+    #    go install github.com/tcnksm/ghr@latest
+    #    ghr -u qurious-pixel -r Shipwright-linux -recreate -n "AppImage 64bit build" -t "${{ secrets.GITHUB_TOKEN }}" zelda64 artifacts
