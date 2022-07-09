@@ -127,8 +127,9 @@ jobs:
 
     - name: Linux Fixes
       run: |
-        sed -i '/-Wno-missing-field-initializers/i -Wno-error=stringop-overflow -Wno-error=multichar -Wno-unknown-warning-option \\' libultraship/Makefile # -Wno-error=sign-compare -Wno-unused-variable
-        sed -i 's/enum-conversion/enum-conversion -Wno-deprecated-copy/g' libultraship/Makefile
+        echo "Custom fixes"
+        #sed -i '/-Wno-missing-field-initializers/i -Wno-error=stringop-overflow -Wno-error=multichar -Wno-unknown-warning-option \\' libultraship/Makefile # -Wno-error=sign-compare -Wno-unused-variable
+        #sed -i 's/enum-conversion/enum-conversion -Wno-deprecated-copy/g' libultraship/Makefile
         #sed -i 's/exit(0);/_Exit(0);/g' libultraship/libultraship/Lib/Fast3D/gfx_glx.cpp
         #sed -i 's/exit(0);/_Exit(0);/g' libultraship/libultraship/Lib/Fast3D/gfx_sdl2.cpp
         #sed -i '/\#include "libc\/stdarg.h"/i \#ifndef __linux__' soh/include/ultra64.h 
