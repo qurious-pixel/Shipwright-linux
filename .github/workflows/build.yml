@@ -11,6 +11,7 @@ jobs:
   linux_gcc:
     strategy:
       matrix:
+        fail-fast: false
         compiler: [g++, clang++]
         #compiler: [gcc, clang]
     name: Build Linux ${{ matrix.compiler }}
@@ -83,13 +84,13 @@ jobs:
         clang --version
         clang++ --version
 
-    #- name: Build glew
-    #  run: |
-    #    git clone https://github.com/Perlmint/glew-cmake.git 
-    #    cmake glew-cmake 
-    #    make -j$(nproc) 
-    #    sudo make install ARCH64=true
-    #    cp /usr/local/lib/libGLEW.a libultraship
+    - name: Build glew
+      run: |
+        git clone https://github.com/Perlmint/glew-cmake.git 
+        cmake glew-cmake 
+        make -j$(nproc) 
+        sudo make install ARCH64=true
+        cp /usr/local/lib/libGLEW.a libultraship
 
     - name: Build SDL2
       run: |
@@ -126,20 +127,20 @@ jobs:
 
     - name: Linux Fixes
       run: |
-        sed -i 's/exit(0);/_Exit(0);/g' libultraship/libultraship/Lib/Fast3D/gfx_glx.cpp
-        sed -i 's/exit(0);/_Exit(0);/g' libultraship/libultraship/Lib/Fast3D/gfx_sdl2.cpp
+        sed -i '/-Wno-missing-field-initializers/i -Wno-error=stringop-overflow -Wno-error=multichar -Wno-unknown-warning-option \\' libultraship/Makefile # -Wno-error=sign-compare -Wno-unused-variable
+        sed -i 's/enum-conversion/enum-conversion -Wno-deprecated-copy/g' libultraship/Makefile
+        #sed -i 's/exit(0);/_Exit(0);/g' libultraship/libultraship/Lib/Fast3D/gfx_glx.cpp
+        #sed -i 's/exit(0);/_Exit(0);/g' libultraship/libultraship/Lib/Fast3D/gfx_sdl2.cpp
         #sed -i '/\#include "libc\/stdarg.h"/i \#ifndef __linux__' soh/include/ultra64.h 
         #sed -i '/\#include "libc\/math.h"/a \#endif' soh/include/ultra64.h
         #sed -i '/\#define Z64_AUDIO_H/a \#include <stdbool.h>' soh/include/z64audio.h
         #sed -i '/luslog.h"/a \#include <stdarg.h>' soh/include/functions.h
         #sed -i '/gbi.h>/a \#include <string.h>' soh/soh/Enhancements/bootcommands.c
-        sed -i 's/-lGLEW //g' ZAPDTR/Makefile
-        sed -i '/GLEW \\/d' soh/Makefile
+        #sed -i 's/-lGLEW //g' ZAPDTR/Makefile
+        #sed -i '/GLEW \\/d' soh/Makefile
         #sed -i 's/-fwrapv/-fwrapv -Wno-int-conversion -Wno-implicit-function-declaration -Wno-incompatible-pointer-types -Wno-pointer-to-int-cast/g' soh/Makefile
-        sed -i '/-Wno-missing-field-initializers/i -Wno-error=stringop-overflow -Wno-error=multichar -Wno-unknown-warning-option \\' libultraship/Makefile # -Wno-error=sign-compare -Wno-unused-variable
         #sed -i '/-Wno-error=multichar/i -Wno-error=unused-but-set-variable -Wno-error=sign-compare\' OTRExporter/OTRExporter/Makefile
-        sed -i 's/enum-conversion/enum-conversion -Wno-deprecated-copy/g' libultraship/Makefile
-        cp appimage/gfx_opengl.cpp libultraship/libultraship/Lib/Fast3D/gfx_opengl.cpp
+        #cp appimage/gfx_opengl.cpp libultraship/libultraship/Lib/Fast3D/gfx_opengl.cpp
         #cp appimage/AudioExporter.cpp OTRExporter/OTRExporter/AudioExporter.cpp
         #cat soh/include/ultra64.h
 
