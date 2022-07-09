@@ -10,8 +10,8 @@ on:
 jobs:
   linux_gcc:
     strategy:
+      fail-fast: false
       matrix:
-        fail-fast: false
         compiler: [g++, clang++]
         #compiler: [gcc, clang]
     name: Build Linux ${{ matrix.compiler }}
