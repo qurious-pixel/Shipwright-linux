@@ -13,6 +13,11 @@ jobs:
       fail-fast: false
       matrix:
         compiler: [g++-10, clang++-12]
+        include:
+           - compiler: g++-10
+             cc: gcc-10
+           - compiler: clang++-12
+             cc: clang-12
         #compiler: [gcc, clang]
     name: Build Linux ${{ matrix.compiler }}
     runs-on: ubuntu-20.04
@@ -152,8 +157,8 @@ jobs:
 
     - name: Build SOH
       run: |
-        make setup -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CXX="ccache ${{ matrix.compiler }}"
-        make -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CXX="ccache ${{ matrix.compiler }}"
+        make setup -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache ${{ matrix.cc }}" CXX="ccache ${{ matrix.compiler }}"
+        make -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache ${{ matrix.cc }}" CXX="ccache ${{ matrix.compiler }}"
 
     - name: Ccache stats
       run: ccache -s
