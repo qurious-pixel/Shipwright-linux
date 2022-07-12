@@ -171,7 +171,7 @@ jobs:
         cpack -G External
         cd ..
         mkdir Release
-        cp _Packages/{*.appimage,*.zip,*.deb} Release
+        cp _packages/{*.appimage,*.zip,*.deb} Release
         
     - uses: actions/upload-artifact@v3
       with:
