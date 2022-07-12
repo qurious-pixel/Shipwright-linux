@@ -51,23 +51,21 @@ jobs:
   
     - name: Install Dependencies
       run: |
-        sudo dpkg --add-architecture i386
         sudo apt-get update
         sudo apt-get upgrade -y
         sudo apt-get install -y \
-            libc6-dev:i386 \
-            binutils:i386 \
-            gcc-10:i386 \
-            g++-10:i386 \
+            libc6-dev \
+            binutils \
+            gcc-10 \
+            g++-10 \
             python \
-            cmake \
             ccache \
             lld \
             ninja-build \
-            libsdl2-dev:i386 \
-            zlib1g-dev:i386 \
-            libbz2-dev:i386 \
-            libpng-dev:i386 \
+            libsdl2-dev \
+            zlib1g-dev \
+            libbz2-dev \
+            libpng-dev \
             libgles2-mesa-dev
         sudo ln -s /usr/bin/gcc-10 /usr/bin/gcc
         sudo ln -s /usr/bin/gcc-10 /usr/bin/cc
@@ -78,7 +76,25 @@ jobs:
         git clone https://github.com/Perlmint/glew-cmake.git external/glew
         git clone https://github.com/ladislav-zezula/StormLib external/StormLib 
 
-    - name: Build SDL2:i386
+    - name: Install CMAKE Build
+      run: |
+        CMAKEVER=3.22.5
+        if [[ ! -e ~/.ccache ]]; then
+          mkdir ~/.ccache
+        fi  
+        cd ~/.ccache
+        if [[ ! -e cmake-${CMAKEVER} ]]; then
+          wget https://github.com/Kitware/CMake/releases/download/v${CMAKEVER}/cmake-${CMAKEVER}.tar.gz
+          tar -xf cmake-${CMAKEVER}.tar.gz
+          cd cmake-${CMAKEVER}
+          ./bootstrap
+          make && cd ../
+          rm cmake-${CMAKEVER}.tar.gz
+        fi
+        sudo make -C cmake-${CMAKEVER} install
+        cmake --version
+          
+    - name: Build SDL2
       run: |
         SDL2VER=2.0.22
         if [[ ! -e ~/.ccache ]]; then
@@ -89,7 +105,7 @@ jobs:
           curl -sLO https://libsdl.org/release/SDL2-${SDL2VER}.tar.gz
           tar -xzf SDL2-${SDL2VER}.tar.gz
           cd SDL2-${SDL2VER}
-          ./configure --build=i386-linux-gnu --prefix=/usr
+          ./configure --prefix=/usr
           make && cd ../
           rm SDL2-${SDL2VER}.tar.gz
         fi
