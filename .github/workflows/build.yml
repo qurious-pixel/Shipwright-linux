@@ -2,88 +2,88 @@ name: Build
 
 on: 
   push:
+    branches: 
+      - main
   pull_request:
     branches: 
       - main
-  workflow_dispatch:
 
 jobs:
-  switch_gcc:
-    name: Build Switch NRO
-    runs-on: ubuntu-20.04
+  build:
+    runs-on: ubuntu-latest
+    env:
+      JVM_OPTS: -Xmx6G
+
     steps:
-    - name: Checkout Upstream Repo
-      uses: actions/checkout@v3
-      with:
-        repository: KiritoDv/Shipwright
-        ref: znx 
+      - name: Git Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+          repository: HarbourMasters/Shipwright
+          ref: develop
 
-    - name: Checkout AppImage Repo
-      uses: actions/checkout@v3
-      with:
-          clean: false
-          path: appimage
+      - name: Restore Gradle Cache
+        uses: actions/cache@v3
+        with:
+          path: /root/.gradle/
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/build.gradle') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
 
-    - name: cache
-      uses: actions/cache@v3
-      with:
-        path: |
-          ${{github.workspace}}/soh/ROM
-          ~/.ccache
-        key: build-${{github.run_id}}
-        restore-keys: |
-          build
+      - name: Restore CXX Cache
+        uses: actions/cache@v2
+        with:
+          path: app/.cxx/
+          key: ${{ runner.os }}-cxx-${{ hashFiles('**/CMakeLists.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-cxx-
 
-    - name: Prepare Build
-      run: |
-        if [[ ! -e soh/ROM/baserom_non_mq.z64 ]]; then
-          mkdir -p soh/ROM 
-          wget -qO soh/ROM/ROM.zip ${{ secrets.DEBUG_ROM }} 2>/dev/null
-          7za e soh/ROM/ROM.zip -so > soh/ROM/baserom_non_mq.z64
-        fi
-        cp soh/ROM/baserom_non_mq.z64 soh
-        cp soh/ROM/baserom_non_mq.z64 OTRExporter
+      - name: Install CMAKE Build
+        run: |
+          CMAKEVER=3.22.5
+          wget https://github.com/Kitware/CMake/releases/download/v${CMAKEVER}/cmake-${CMAKEVER}-linux-x86_64.tar.gz
+          tar -xf cmake-${CMAKEVER}-linux-x86_64.tar.gz
+          sudo ln -sf cmake-${CMAKEVER}-linux-x86_64/bin/cmake /usr/bin/
+          cmake --version
 
-    - uses: actions/setup-python@v3
-      with:
-        python-version: '3.10'
-    - uses: actions/setup-go@v3
-      with:
-        go-version: '>=1.17.0'
+      - name: Install Ninja Build
+        run: |
+          sudo apt-get install -y ninja-build
+          ln -s /usr/bin/ninja .
 
-    - name: Linux Fixes
-      run: |
-        sed -i '/-Wno-missing-field-initializers/i -Wno-error=stringop-overflow \\' libultraship/Makefile # -Wno-error=multichar -Wno-error=sign-compare -Wno-unused-variable
-        sed -i 's/-Wno-switch-unreachable/-Wno-switch-unreachable -fno-stack-protector/g' soh/Makefile.switch
-    #    sed -i '/cmake --build ..\/StormLib\/build/a \\t$(MAKE) install -C ..\/StormLib\/build' soh/Makefile
-    #    sed -i '/\#include "libc\/stddef.h"/d' soh/include/ultra64.h
-    #    sed -i '196d' StormLib/src/StormPort.h
+      - name: Install CMake & Android NDK
+        run: echo "yes" | $ANDROID_HOME/tools/bin/sdkmanager "cmake;3.18.1" "ndk;24.0.7856742" --channel=3 | grep -v = || true
 
-    - name: Build libultraship
-      run: sudo docker run --rm -e DEVKITPRO=/opt/devkitpro -v $(pwd):/soh -w /soh quriouspixel/devkitpro /bin/bash -c "chmod +x appimage/docker/libultraship.sh && appimage/docker/libultraship.sh"
+      #- name: Android Lint
+      #  run: |
+      #    chmod +x gradlew
+      #    ./gradlew --stacktrace lint
 
-    - name: Build SOH
-      run: sudo docker run --rm -v $(pwd):/soh -w /soh quriouspixel/devkitpro /bin/bash -c "chmod +x appimage/docker/stormlib.sh && appimage/docker/stormlib.sh"
+      #- name: Upload Lint Report
+      #  uses: actions/upload-artifact@v2
+      #  with:
+      #    name: lint-result.html
+      #    path: app/build/reports/lint-results-debug.html
 
-    - name: Prepare Artifact
-      run: |
-        mkdir -p Release/assets/game
-        cp soh/soh.nro Release
-        rsync -av --exclude='*.gitignore' OTRGui/assets Release/
-        cp ZAPDTR/ZAPD.out Release/assets/extractor/
-        cp -r OTRExporter/assets/ship_of_harkinian Release/assets/game/ship_of_harkinian
-        cp -r soh/assets/xml Release/assets/extractor/xmls
-        cp appimage/.github/workflows/scripts/OTR_Extractor.sh Release
-    #    cp -r appimage/.github/workflows/scripts/version Release/assets/
-    - uses: actions/upload-artifact@v3
-      with:
-          name: SOH-Switch-nro
-          path: Release
+      - name: Android Assemble
+        run: |
+          cd Source/Android
+          ./gradlew --stacktrace assembleDebug
+          echo "Done"
+      - name: Upload Debug APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: app-debug.apk
+          path: Source/Android/app/build/outputs/apk/debug/app-debug.apk
 
-    #- name: Build AppImage
-    #  run: |
-    #    chmod +x appimage/.github/workflows/scripts/appimage.sh
-    #    appimage/.github/workflows/scripts/appimage.sh
+      - name: Upload Release APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: app-release.apk
+          path: app/build/outputs/apk/release/
+
+      - name: Delete Build Folder
+        run: rm -rf app/build/
 
     #- name: Publish Release
     #  run: |
