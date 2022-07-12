@@ -110,7 +110,7 @@ jobs:
           rm SDL2-${SDL2VER}.tar.gz
         fi
         sudo make -C SDL2-${SDL2VER} install
-        sudo cp -av /lib/libSDL* /lib/i386-linux-gnu/
+        sudo cp -av /lib/libSDL* /lib/x86_64-linux-gnu/
 
     - uses: actions/setup-python@v3
       with:
@@ -139,44 +139,44 @@ jobs:
     #    cd OTRExporter
     #    chmod +x extract_assets_cmake.py
     #    python3 extract_assets_cmake.py
-    - name: Build SOH
-      run: |
-        cd soh 
-        cmake -H. -Bbuild-cmake -GNinja \
-          -DSDL2_DIR=/usr/lib/cmake/SDL2/ 
-           #-DCMAKE_TOOLCHAIN_FILE=CMake/Linux32bit-toolchain.cmake \
-           
-           #-DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
-           #-DCMAKE_FIND_LIBRARY_SUFFIXES=.a \
-           #-G Ninja
-        cmake --build build-cmake -- -j$(nproc)
+    #- name: Build SOH
+    #  run: |
+    #    cd soh 
+    #    cmake -H. -Bbuild-cmake -GNinja \
+    #      -DSDL2_DIR=/usr/lib/cmake/SDL2/ 
+    #       #-DCMAKE_TOOLCHAIN_FILE=CMake/Linux32bit-toolchain.cmake \
+    #       
+    #       #-DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+    #       #-DCMAKE_FIND_LIBRARY_SUFFIXES=.a \
+    #       #-G Ninja
+    #    cmake --build build-cmake -- -j$(nproc)
         
     #- name: Build OTRGui
     #  run: |
     #    cmake -B OTRGui/build -S OTRGui
     #    cmake --build OTRGui/build -- -j$(nproc)
 
-    - name: Prepare Artifact
-      run: |
-        mkdir Release
-        cp soh/build-cmake/soh.elf Release
-        cp OTRGui/build/OTRGui Release
-        rsync -av --exclude='*.gitignore' OTRGui/build/assets Release/
-        cp OTRExporter/build-cmake/ZAPD/ZAPD.out Release/assets/extractor/
-    - uses: actions/upload-artifact@v3
-      with:
-          name: SOH-Linux-cmake
-          path: Release
+    #- name: Prepare Artifact
+    #  run: |
+    #    mkdir Release
+    #    cp soh/build-cmake/soh.elf Release
+    #    cp OTRGui/build/OTRGui Release
+    #    rsync -av --exclude='*.gitignore' OTRGui/build/assets Release/
+    #    cp OTRExporter/build-cmake/ZAPD/ZAPD.out Release/assets/extractor/
+    #- uses: actions/upload-artifact@v3
+    #  with:
+    #      name: SOH-Linux-cmake
+    #      path: Release
 
-    - name: Check soh.elf
-      run: |
-        ls -al Release
-        ldd Release/soh.elf
+    #- name: Check soh.elf
+    #  run: |
+    #    ls -al Release
+    #    ldd Release/soh.elf
 
-    - name: Publish Release
-      run: |
-        7z a SOH-Linux-cmake.7z Release
-        mkdir artifacts
-        mv SOH-Linux-cmake.7z artifacts/
-        go install github.com/tcnksm/ghr@latest
-        ghr -u qurious-pixel -r Shipwright-linux -recreate -n "Cmake build" -t "${{ secrets.GITHUB_TOKEN }}" cmake artifacts
+    #- name: Publish Release
+    #  run: |
+    #    7z a SOH-Linux-cmake.7z Release
+    #    mkdir artifacts
+    #    mv SOH-Linux-cmake.7z artifacts/
+    #    go install github.com/tcnksm/ghr@latest
+    #    ghr -u qurious-pixel -r Shipwright-linux -recreate -n "Cmake build" -t "${{ secrets.GITHUB_TOKEN }}" cmake artifacts
