@@ -141,7 +141,6 @@ jobs:
     #    python3 extract_assets_cmake.py
     - name: Build SOH
       run: |
-        cd soh 
         cmake -H. -Bbuild-cmake -GNinja \
           -DSDL2_DIR=/usr/lib/cmake/SDL2/ 
           #-DCMAKE_TOOLCHAIN_FILE=CMake/Linux32bit-toolchain.cmake \
