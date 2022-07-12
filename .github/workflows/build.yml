@@ -110,34 +110,34 @@ jobs:
         #cp ci/libultraship_CMakeLists.txt libultraship/libultraship/CMakeLists.txt
         #cp ci/soh_CMakeLists.txt soh/CMakeLists.txt
         #cp ci/FindSDL2.cmake soh/CMake/
-    - name: Build OTRExporter
-      run: |
-        cd OTRExporter
-        sed "s%../ZAPDTR/ZAPD.out%build-cmake/ZAPD/ZAPD.out%" < extract_assets.py > extract_assets_cmake.py  
-        cmake -S . -B build-cmake -G Ninja \
-            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
-        cmake --build build-cmake -- -j$(nproc)
-        ccache -s    
-    - name: Extract Assets
-      run: |
-        cd OTRExporter
-        chmod +x extract_assets_cmake.py
-        python3 extract_assets_cmake.py
+    #- name: Build OTRExporter
+    #  run: |
+    #    cd OTRExporter
+    #    sed "s%../ZAPDTR/ZAPD.out%build-cmake/ZAPD/ZAPD.out%" < extract_assets.py > extract_assets_cmake.py  
+    #    cmake -S . -B build-cmake -G Ninja \
+    #        -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+    #    cmake --build build-cmake -- -j$(nproc)
+    #    ccache -s    
+    #- name: Extract Assets
+    #  run: |
+    #    cd OTRExporter
+    #    chmod +x extract_assets_cmake.py
+    #    python3 extract_assets_cmake.py
     - name: Build SOH
       run: |
         cd soh 
-        cmake -S . -B build-cmake \
-           -DCMAKE_TOOLCHAIN_FILE=CMake/Linux32bit-toolchain.cmake \
-           -DSDL2_DIR=/usr/lib/cmake/SDL2/ \
-           -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
-           -DCMAKE_FIND_LIBRARY_SUFFIXES=.a \
-           -G Ninja
+        cmake -H. -Bbuild-cmake -GNinja #\
+           #-DCMAKE_TOOLCHAIN_FILE=CMake/Linux32bit-toolchain.cmake \
+           #-DSDL2_DIR=/usr/lib/cmake/SDL2/ \
+           #-DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+           #-DCMAKE_FIND_LIBRARY_SUFFIXES=.a \
+           #-G Ninja
         cmake --build build-cmake -- -j$(nproc)
         
-    - name: Build OTRGui
-      run: |
-        cmake -B OTRGui/build -S OTRGui
-        cmake --build OTRGui/build -- -j$(nproc)
+    #- name: Build OTRGui
+    #  run: |
+    #    cmake -B OTRGui/build -S OTRGui
+    #    cmake --build OTRGui/build -- -j$(nproc)
 
     - name: Prepare Artifact
       run: |
