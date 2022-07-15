@@ -26,7 +26,7 @@ jobs:
       uses: actions/checkout@v3
       with:
         repository: dcvz/Shipwright # HarbourMasters/Shipwright # briaguya-ai/Shipwright #  
-        ref: devel-clang # develop
+        ref: develop # devel-clang #
 
     - name: Checkout AppImage Repo
       uses: actions/checkout@v3
