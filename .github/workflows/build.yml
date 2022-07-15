@@ -12,12 +12,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        compiler: [g++-10, clang++-12]
+        compiler: [g++-11, clang++-14]
         include:
-           - compiler: g++-10
-             cc: gcc-10
-           - compiler: clang++-12
-             cc: clang-12
+           - compiler: g++-11
+             cc: gcc-11
+           - compiler: clang++-14
+             cc: clang-14
         #compiler: [gcc, clang]
     name: Build Linux ${{ matrix.compiler }}
     runs-on: ubuntu-20.04
@@ -62,30 +62,33 @@ jobs:
 
     - name: Install Dependencies
       run: |
+        sudo add-apt-repository ppa:ubuntu-toolchain-r/test
         sudo apt-get update
         sudo apt-get upgrade -y
         sudo apt-get install -y \
             libc6-dev \
             binutils \
-            clang-12 \
-            gcc-10 \
-            g++-10 \
+            gcc-11 \
+            g++-11 \
             python \
             ccache \
             cmake \
             lld \
-            llvm-12 \
             libsdl2-dev \
             zlib1g-dev \
             libbz2-dev \
             libpng-dev \
             libgles2-mesa-dev
-        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 10
-        sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-10 10
-        sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-12 10
-        sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-12 10
+        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 10
+        sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-11 10
         gcc --version
         g++ --version
+
+    - name: Install Clang (Experimental)
+      run: |
+        wget https://apt.llvm.org/llvm.sh
+        chmod +x llvm.sh
+        sudo ./llvm.sh 14
         clang --version
         clang++ --version
 
