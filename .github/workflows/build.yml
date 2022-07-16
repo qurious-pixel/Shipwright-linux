@@ -54,7 +54,7 @@ jobs:
     - name: Linux Fixes
       run: |
         sed -i '/-Wno-missing-field-initializers/i -Wno-error=stringop-overflow \\' libultraship/Makefile # -Wno-error=multichar -Wno-error=sign-compare -Wno-unused-variable
-        sed -i 's/-DDEBUG/-DDEBUG -Wno-unused-variable/g' libultraship/Makefile.switch 
+        sed -i 's/-DDEBUG/-DDEBUG -Wno-unused-variable -Wno-unused-function/g' libultraship/Makefile.switch 
         sed -i 's/-Wno-switch-unreachable/-Wno-switch-unreachable -fno-stack-protector/g' soh/Makefile.switch
         sed -i 's/"imgui_internal.h"/"Lib\/ImGui\/imgui_internal.h"/g' libultraship/libultraship/Cvar.cpp
         sed -i 's/"imgui.h"/"..\/imgui.h"/g' libultraship/libultraship/Lib/ImGui/backends/imgui_impl_opengl3.cpp
