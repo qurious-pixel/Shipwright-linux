@@ -15,7 +15,7 @@ jobs:
     - name: Checkout Upstream Repo
       uses: actions/checkout@v3
       with:
-        repository: KiritoDv/Shipwright
+        repository: guaycuru/Shipwright # KiritoDv/Shipwright
         ref: znx 
 
     - name: Checkout AppImage Repo
