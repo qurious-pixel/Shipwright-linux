@@ -58,6 +58,8 @@ jobs:
         sed -i 's/"imgui_internal.h"/"Lib\/ImGui\/imgui_internal.h"/g' libultraship/libultraship/Cvar.cpp
         sed -i 's/"imgui.h"/"..\/imgui.h"/g' libultraship/libultraship/Lib/ImGui/backends/imgui_impl_opengl3.cpp
         sed -i 's/"imgui.h"/"..\/imgui.h"/g' libultraship/libultraship/Lib/ImGui/backends/imgui_impl_opengl3.h
+        sed -i 's/"imgui.h"/"..\/imgui.h"/g' libultraship/libultraship/Lib/ImGui/backends/imgui_impl_sdl.cpp
+        sed -i 's/"imgui.h"/"..\/imgui.h"/g' libultraship/libultraship/Lib/ImGui/backends/imgui_impl_sdl.h
     #    sed -i '/cmake --build ..\/StormLib\/build/a \\t$(MAKE) install -C ..\/StormLib\/build' soh/Makefile
     #    sed -i '/\#include "libc\/stddef.h"/d' soh/include/ultra64.h
     #    sed -i '196d' StormLib/src/StormPort.h
