@@ -161,8 +161,8 @@ jobs:
 
     - name: Build SOH
       run: |
-        make setup -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache ${{ matrix.cc }}" CXX="ccache ${{ matrix.compiler }}"
-        make -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache ${{ matrix.cc }}" CXX="ccache ${{ matrix.compiler }}"
+        make setup -C soh -j$(nproc) OPTFLAGS=-O0 DEBUG=0 CC="ccache ${{ matrix.cc }}" CXX="ccache ${{ matrix.compiler }}"
+        make -C soh -j$(nproc) OPTFLAGS=-O0 DEBUG=0 CC="ccache ${{ matrix.cc }}" CXX="ccache ${{ matrix.compiler }}"
 
     - name: Ccache stats
       run: ccache -s
