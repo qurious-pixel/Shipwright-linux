@@ -12,7 +12,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        compiler: [g++-11, clang++-14]
+        compiler: [g++-11] #, clang++-14]
+        debug: [0, 1]
+        opt: [O0, O2]
         include:
            - compiler: g++-11
              cc: gcc-11
@@ -161,8 +163,8 @@ jobs:
 
     - name: Build SOH
       run: |
-        make setup -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=1 CC="ccache ${{ matrix.cc }}" CXX="ccache ${{ matrix.compiler }}"
-        make -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=1 CC="ccache ${{ matrix.cc }}" CXX="ccache ${{ matrix.compiler }}"
+        make setup -C soh -j$(nproc) OPTFLAGS=-${{ matrix.opt }} DEBUG=${{ matrix.debug }} CC="ccache ${{ matrix.cc }}" CXX="ccache ${{ matrix.compiler }}"
+        make -C soh -j$(nproc) OPTFLAGS=-${{ matrix.opt }} DEBUG=${{ matrix.debug }} CC="ccache ${{ matrix.cc }}" CXX="ccache ${{ matrix.compiler }}"
 
     - name: Ccache stats
       run: ccache -s
