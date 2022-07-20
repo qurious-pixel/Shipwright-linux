@@ -18,10 +18,10 @@ jobs:
         include:
            - compiler: g++-11
              cc: gcc-11
-           - compiler: clang++-14
-             cc: clang-14
+           #- compiler: clang++-14
+           #  cc: clang-14
         #compiler: [gcc, clang]
-    name: Build Linux ${{ matrix.compiler }}
+    name: Build Linux ${{ matrix.compiler }}-OPTFLAGS=-${{ matrix.opt }}-DEBUG=${{ matrix.debug }}
     runs-on: ubuntu-20.04
     steps:
     - name: Checkout Upstream Repo
@@ -180,7 +180,7 @@ jobs:
         cp -r appimage/.github/workflows/scripts/version Release/assets/
     - uses: actions/upload-artifact@v3
       with:
-          name: SOH-Linux-${{ matrix.compiler }}
+          name: SOH-Linux-${{ matrix.compiler }}-OPTFLAGS=-${{ matrix.opt }}-DEBUG=${{ matrix.debug }}
           path: Release
 
     
