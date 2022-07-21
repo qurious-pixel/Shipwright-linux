@@ -2,11 +2,8 @@
 
 export PATH=$PATH:/opt/devkitpro/portlibs/switch/bin/
 
-rm -r StormLib/build
-/opt/devkitpro/portlibs/switch/bin/aarch64-none-elf-cmake -B StormLib/build -S StormLib
-make -C StormLib/build -j$(nproc)
-make install -C StormLib/build
-cp -v /usr/local/lib/libstorm.a /opt/devkitpro/portlibs/switch/lib/
-cp -v /usr/local/include/Storm* /opt/devkitpro/portlibs/switch/include/
+/opt/devkitpro/portlibs/switch/bin/aarch64-none-elf-cmake -B StormLib/build-switch -S StormLib -DCMAKE_INSTALL_PREFIX=/opt/devkitpro/portlibs/switch/
+make -C StormLib/build-switch -j$(nproc)
+make install -C StormLib/build-switch
 
-make -j$(nproc) OPTFLAGS=-O2 DEBUG=0
+make -f Makefile.switch -j$(nproc) OPTFLAGS=-O2 DEBUG=0
