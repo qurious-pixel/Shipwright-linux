@@ -65,5 +65,5 @@ while [ ! -e "$DATA_SHARE/oot.otr" ]; do
 done
 
 sleep 2
-$SNAME/soh
+"$SNAME"/soh
 exit
