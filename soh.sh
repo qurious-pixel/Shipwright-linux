@@ -2,7 +2,7 @@
 
 export DATA_SHARE="$HOME/Library/Application Support/com.shipofharkinian.soh"
 export ASSETDIR="$(mktemp -d /tmp/assets-XXXXX)"
-export SNAME=$(dirname $0)
+export SNAME=$(dirname "$0")
 export NAME=${SNAME%/soh.app*}
 export LIBPATH=${SNAME%/MacOS*}
 
