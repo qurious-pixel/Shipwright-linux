@@ -36,6 +36,7 @@ jobs:
         path: |
           ${{github.workspace}}/soh/ROM
           ~/.ccache
+          /opt/local/libexec/macports
         key: build-${{github.run_id}}
         restore-keys: |
           build
@@ -50,53 +51,60 @@ jobs:
         cp soh/ROM/baserom_non_mq.z64 soh
         cp soh/ROM/baserom_non_mq.z64 OTRExporter
 
-    - name: Install Dependencies
+    - name: Build MacPorts
       run: |
-        curl -O https://distfiles.macports.org/MacPorts/MacPorts-2.7.2.tar.bz2
-        tar xf MacPorts-2.7.2.tar.bz2
-        cd MacPorts-2.7.2/
-        ./configure
-        make
-        sudo make install
+        MPVER=2.7.2
+        cd ~/.ccache
+        if [[ ! -e /opt/local/libexec/macports ]]; then
+          curl -sLO https://distfiles.macports.org/MacPorts/MacPorts-${MPVER}.tar.bz2
+          tar -xf MacPorts-${MPVER}.tar.bz2
+          cd MacPorts-${MPVER}
+          ./configure
+          make && cd ../
+          rm MacPorts-${MPVER}.tar.bz2
+          sudo make -C MacPorts-${MPVER} install
+        fi
         echo "/opt/local/bin" >> $GITHUB_PATH
-        sudo /opt/local/bin/port selfupdate
-        yes | sudo /opt/local/bin/port install clang-14
-        brew install sdl2 glew dylibbundler ccache rsync
-        ${{ matrix.compilerC }} --version
+
+    #- name: Install Dependencies
+    #  run: |       
+    #    yes | sudo /opt/local/bin/port install clang-14
+    #    brew install sdl2 glew dylibbundler ccache rsync
+    #    ${{ matrix.compilerC }} --version
         
-    - uses: actions/setup-python@v3
-      with:
-        python-version: '3.10'
-    - uses: actions/setup-go@v3
-      with:
-        go-version: '>=1.17.0'
+    #- uses: actions/setup-python@v3
+    #  with:
+    #    python-version: '3.10'
+    #- uses: actions/setup-go@v3
+    #  with:
+    #    go-version: '>=1.17.0'
 
-    - name: Build SOH
-      run: |
-        export PATH=/usr/local/opt/ccache/libexec:$PATH
-        make setup -C soh -j4 OPTFLAGS=-O2 DEBUG=0 CC="ccache ${{ matrix.compilerC }} -arch x86_64 -arch arm64" CXX="ccache ${{ matrix.compilerCXX }}++ -arch x86_64 -arch arm64" LD="ld"
-        make -C soh -j4 OPTFLAGS=-O2 DEBUG=0 CC="ccache ${{ matrix.compilerC }} -arch x86_64 -arch arm64" CXX="ccache ${{ matrix.compilerCXX }}++ -arch x86_64 -arch arm64" LD="ld"
-        make appbundle -C soh -j4 CC="ccache ${{ matrix.compilerC }} -arch x86_64 -arch arm64" CXX="ccache ${{ matrix.compilerCXX }}++ -arch x86_64 -arch arm64" LD="ld"
+    #- name: Build SOH
+    #  run: |
+    #    export PATH=/usr/local/opt/ccache/libexec:$PATH
+    #    make setup -C soh -j4 OPTFLAGS=-O2 DEBUG=0 CC="ccache ${{ matrix.compilerC }} -arch x86_64 -arch arm64" CXX="ccache ${{ matrix.compilerCXX }}++ -arch x86_64 -arch arm64" LD="ld"
+    #    make -C soh -j4 OPTFLAGS=-O2 DEBUG=0 CC="ccache ${{ matrix.compilerC }} -arch x86_64 -arch arm64" CXX="ccache ${{ matrix.compilerCXX }}++ -arch x86_64 -arch arm64" LD="ld"
+    #    make appbundle -C soh -j4 CC="ccache ${{ matrix.compilerC }} -arch x86_64 -arch arm64" CXX="ccache ${{ matrix.compilerCXX }}++ -arch x86_64 -arch arm64" LD="ld"
 
-    - name: Ccache stats
-      run: ccache -s
+    #- name: Ccache stats
+    #  run: ccache -s
 
-    - name: Prepare Artifact
-      run: |
-        export APP_PATH=soh/soh.app/Contents/MacOS
-        mkdir Release
-        rsync -av --exclude='*.gitignore' OTRGui/assets $APP_PATH/
-        cp ZAPDTR/ZAPD.out $APP_PATH/assets/extractor/
-        cp -r soh/assets/xml $APP_PATH/assets/extractor/xmls
-        cp -r OTRExporter/assets $APP_PATH/assets/game
-        sed -i '' 's/>soh</>soh.sh</g' soh/soh.app/Contents/Info.plist
-        chmod +x ci/soh.sh
-        cp ci/soh.sh $APP_PATH/ 
-        7z a Release/soh.7z ./soh/soh.app  
-    - uses: actions/upload-artifact@v3
-      with:
-          name: SOH-MacOS-Extract-${{ matrix.macversion }}
-          path: Release
+    #- name: Prepare Artifact
+    #  run: |
+    #    export APP_PATH=soh/soh.app/Contents/MacOS
+    #    mkdir Release
+    #    rsync -av --exclude='*.gitignore' OTRGui/assets $APP_PATH/
+    #    cp ZAPDTR/ZAPD.out $APP_PATH/assets/extractor/
+    #    cp -r soh/assets/xml $APP_PATH/assets/extractor/xmls
+    #    cp -r OTRExporter/assets $APP_PATH/assets/game
+    #    sed -i '' 's/>soh</>soh.sh</g' soh/soh.app/Contents/Info.plist
+    #    chmod +x ci/soh.sh
+    #    cp ci/soh.sh $APP_PATH/ 
+    #    7z a Release/soh.7z ./soh/soh.app  
+    #- uses: actions/upload-artifact@v3
+    #  with:
+    #      name: SOH-MacOS-Extract-${{ matrix.macversion }}
+    #      path: Release
    
     #- name: Publish Release
     #  run: |
