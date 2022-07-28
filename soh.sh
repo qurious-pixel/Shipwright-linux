@@ -4,9 +4,12 @@ export DATA_SHARE="$HOME/Library/Application Support/com.shipofharkinian.soh"
 export ASSETDIR="$(mktemp -d /tmp/assets-XXXXX)"
 export SNAME=$(dirname $0)
 export NAME=${SNAME%/soh.app*}
+export LIBPATH=${SNAME%/MacOS*}
 
 while [ ! -e "$DATA_SHARE/oot.otr" ]; do
 	cp -r "$SNAME/assets" "$ASSETDIR"
+	mkdir -p /usr/local/opt/glew/lib/
+	ln -s "$LIBPATH"/libs/libGLEW.2.2.0.dylib /usr/local/opt/glew/lib/libGLEW.2.2.0.dylib
 	mkdir -p "$ASSETDIR"/tmp
 	mkdir -p "$ASSETDIR"/Extract/assets
 	DROPROM=$(osascript -ss - "$ASSETDIR" <<EOF
