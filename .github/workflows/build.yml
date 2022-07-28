@@ -69,11 +69,11 @@ jobs:
         sudo /opt/local/bin/port -v selfupdate
         echo "/opt/local/bin" >> $GITHUB_PATH
 
-    #- name: Install Dependencies
-    #  run: |       
-    #    yes | sudo /opt/local/bin/port install clang-14
-    #    brew install sdl2 glew dylibbundler ccache rsync
-    #    ${{ matrix.compilerC }} --version
+    - name: Install Dependencies
+      run: |       
+        yes | sudo /opt/local/bin/port install clang-14
+        brew install sdl2 glew dylibbundler ccache rsync
+        ${{ matrix.compilerC }} --version
         
     #- uses: actions/setup-python@v3
     #  with:
