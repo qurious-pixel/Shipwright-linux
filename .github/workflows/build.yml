@@ -54,7 +54,6 @@ jobs:
     - name: Build MacPorts
       run: |
         MPVER=2.7.2
-        cd ~/.ccache
         if [[ ! -e /opt/local/libexec/macports ]]; then
           curl -sLO https://distfiles.macports.org/MacPorts/MacPorts-${MPVER}.tar.bz2
           tar -xf MacPorts-${MPVER}.tar.bz2
