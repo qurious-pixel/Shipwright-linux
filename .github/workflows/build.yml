@@ -50,7 +50,6 @@ jobs:
         cp soh/ROM/baserom_non_mq.z64 soh
         cp soh/ROM/baserom_non_mq.z64 OTRExporter
 
-   
     - name: Install Dependencies
       run: |
         curl -O https://distfiles.macports.org/MacPorts/MacPorts-2.7.2.tar.bz2
@@ -59,10 +58,10 @@ jobs:
         ./configure
         make
         sudo make install
-        yes | sudo port install clang-14
+        echo "/opt/local/bin" >> $GITHUB_PATH
+        yes | sudo /opt/local/bin/port install clang-14
         brew install sdl2 glew dylibbundler ccache rsync
         ${{ matrix.compiler }} --version
-        
         
     - uses: actions/setup-python@v3
       with:
