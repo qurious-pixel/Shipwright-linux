@@ -59,6 +59,7 @@ jobs:
         make
         sudo make install
         echo "/opt/local/bin" >> $GITHUB_PATH
+        sudo /opt/local/bin/port selfupdate
         yes | sudo /opt/local/bin/port install clang-14
         brew install sdl2 glew dylibbundler ccache rsync
         ${{ matrix.compiler }} --version
