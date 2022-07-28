@@ -12,7 +12,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        compiler: [$(brew --prefix llvm@14)/bin/clang]
+        compilerC: [clang-mp-14]
+        compilerCXX: [clang++-mp-14]
         macversion: [macos-12, macos-11, macos-10.15]
     name: Build MacOS ${{ matrix.macversion }}
     runs-on: ${{ matrix.macversion }}
@@ -51,7 +52,14 @@ jobs:
 
    
     - name: Install Dependencies
-      run: | 
+      run: |
+        curl -O https://distfiles.macports.org/MacPorts/MacPorts-2.7.2.tar.bz2
+        tar xf MacPorts-2.7.2.tar.bz2
+        cd MacPorts-2.7.2/
+        ./configure
+        make
+        sudo make install
+        yes | sudo port install clang-14
         brew install sdl2 glew dylibbundler ccache rsync
         ${{ matrix.compiler }} --version
         
@@ -66,9 +74,9 @@ jobs:
     - name: Build SOH
       run: |
         export PATH=/usr/local/opt/ccache/libexec:$PATH
-        make setup -C soh -j4 OPTFLAGS=-O2 DEBUG=0 CC="ccache ${{ matrix.compiler }} -arch x86_64" CXX="ccache ${{ matrix.compiler }}++ -arch x86_64" LD="ld"
-        make -C soh -j4 OPTFLAGS=-O2 DEBUG=0 CC="ccache ${{ matrix.compiler }} -arch x86_64" CXX="ccache ${{ matrix.compiler }}++ -arch x86_64" LD="ld"
-        make appbundle -C soh -j4 CC="ccache ${{ matrix.compiler }} -arch x86_64" CXX="ccache ${{ matrix.compiler }}++ -arch x86_64" LD="ld"
+        make setup -C soh -j4 OPTFLAGS=-O2 DEBUG=0 CC="ccache ${{ matrix.compilerC }} -arch x86_64 -arch arm64" CXX="ccache ${{ matrix.compilerCXX }}++ -arch x86_64 -arch arm64" LD="ld"
+        make -C soh -j4 OPTFLAGS=-O2 DEBUG=0 CC="ccache ${{ matrix.compilerC }} -arch x86_64 -arch arm64" CXX="ccache ${{ matrix.compilerCXX }}++ -arch x86_64 -arch arm64" LD="ld"
+        make appbundle -C soh -j4 CC="ccache ${{ matrix.compilerC }} -arch x86_64 -arch arm64" CXX="ccache ${{ matrix.compilerCXX }}++ -arch x86_64 -arch arm64" LD="ld"
 
     - name: Ccache stats
       run: ccache -s
