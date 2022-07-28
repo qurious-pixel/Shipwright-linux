@@ -51,9 +51,9 @@ while [ ! -e "$DATA_SHARE/oot.otr" ]; do
 
 	osascript -e 'display notification "Processing OTR..." with title "SOH: Generating OTR"'
 	mkdir -p /usr/local/opt/glew/lib/
-	ln -s "$LIBPATH"/libs/libGLEW.2.2.0.dylib /usr/local/opt/glew/lib/libGLEW.2.2.0.dylib
+	ln -s "$LIBPATH"/libs/libGLEW.2.2.0.dylib /usr/local/opt/glew/lib/libGLEW.2.2.dylib
 	assets/extractor/ZAPD.out ed -i assets/extractor/xmls/${ROM} -b tmp/rom.z64 -fl assets/extractor/filelists -o placeholder -osf placeholder -gsf 1 -rconf assets/extractor/Config_${ROM}.xml -se OTR
-	unlink /usr/local/opt/glew/lib/libGLEW.2.2.0.dylib
+	unlink /usr/local/opt/glew/lib/libGLEW.2.2.dylib
 	if [ -e $PWD/oot.otr ]; then
 		osascript -e 'display notification "OTR Successfully Generated" with title "SOH: Generating OTR"'
 		if [ ! -e "$DATA_SHARE" ]; then	mkdir "$DATA_SHARE"; fi
