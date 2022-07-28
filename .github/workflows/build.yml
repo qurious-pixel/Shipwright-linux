@@ -13,9 +13,7 @@ jobs:
       fail-fast: false
       matrix:
         compiler: [$(brew --prefix llvm@14)/bin/clang]
-        version: [14]
-        arch: ["arm64", "x86_64"] #  
-    name: Build MacOS ${{ matrix.arch }}
+    name: Build MacOS
     runs-on: macos-10.15
     steps:
     - name: Checkout Upstream Repo
@@ -67,9 +65,10 @@ jobs:
 
     - name: Build SOH
       run: |
-        make setup -C soh -j4 OPTFLAGS=-O2 DEBUG=0 CC="ccache ${{ matrix.compiler }}-${{ matrix.version }} -arch ${{ matrix.arch }}" CXX="ccache ${{ matrix.compiler }}++ -arch ${{ matrix.arch }}" LD="ld"
-        make -C soh -j4 OPTFLAGS=-O2 DEBUG=0 CC="ccache ${{ matrix.compiler }}-${{ matrix.version }} -arch ${{ matrix.arch }}" CXX="ccache ${{ matrix.compiler }}++ -arch ${{ matrix.arch }}" LD="ld"
-        make appbundle -C soh -j4 CC="ccache ${{ matrix.compiler }}-${{ matrix.version }} -arch ${{ matrix.arch }}" CXX="ccache ${{ matrix.compiler }}++ -arch ${{ matrix.arch }}" LD="ld"
+        export PATH=/usr/local/opt/ccache/libexec:$PATH
+        make setup -C soh -j4 OPTFLAGS=-O2 DEBUG=0 CC="ccache ${{ matrix.compiler }} -arch arm64 -arch x86_64" CXX="ccache ${{ matrix.compiler }}++ -arch arm64 -arch x86_64" LD="ld"
+        make -C soh -j4 OPTFLAGS=-O2 DEBUG=0 CC="ccache ${{ matrix.compiler }} -arch arm64 -arch x86_64" CXX="ccache ${{ matrix.compiler }}++ -arch arm64 -arch x86_64" LD="ld"
+        make appbundle -C soh -j4 CC="ccache ${{ matrix.compiler }} -arch arm64 -arch x86_64" CXX="ccache ${{ matrix.compiler }}++ -arch arm64 -arch x86_64" LD="ld"
 
     - name: Ccache stats
       run: ccache -s
@@ -82,13 +81,13 @@ jobs:
         cp ZAPDTR/ZAPD.out $APP_PATH/assets/extractor/
         cp -r soh/assets/xml $APP_PATH/assets/extractor/xmls
         cp -r OTRExporter/assets $APP_PATH/assets/game
-        sed -i 's/>soh</>soh.sh</g' soh/soh.app/Contents/Info.plist
+        sed -i '' 's/>soh</>soh.sh</g' soh/soh.app/Contents/Info.plist
         chmod +x ci/soh.sh
         cp ci/soh.sh $APP_PATH/ 
         7z a Release/soh.7z ./soh/soh.app  
     - uses: actions/upload-artifact@v3
       with:
-          name: SOH-MacOS-${{ matrix.arch }}
+          name: SOH-MacOS-Extract
           path: Release
    
     #- name: Publish Release
