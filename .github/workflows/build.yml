@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        compiler: [clang]
+        compiler: [$(brew --prefix llvm@14)/bin/clang]
         version: [14]
         arch: ["x86_64"] # "arm64", 
     name: Build MacOS ${{ matrix.arch }}
@@ -52,7 +52,11 @@ jobs:
 
    
     - name: Install Dependencies
-      run: brew install sdl2 glew dylibbundler ccache
+      run: | 
+        brew install sdl2 glew dylibbundler ccache
+        clang --version
+        ${{ matrix.compiler }} --version
+        
         
     - uses: actions/setup-python@v3
       with:
