@@ -13,8 +13,9 @@ jobs:
       fail-fast: false
       matrix:
         compiler: [$(brew --prefix llvm@14)/bin/clang]
-    name: Build MacOS
-    runs-on: macos-10.15
+        macversion: [macos-11, macos-10.15]
+    name: Build MacOS ${{ matrix.macversion }}
+    runs-on: ${{ matrix.macversion }}
     steps:
     - name: Checkout Upstream Repo
       uses: actions/checkout@v3
@@ -52,7 +53,6 @@ jobs:
     - name: Install Dependencies
       run: | 
         brew install sdl2 glew dylibbundler ccache
-        clang --version
         ${{ matrix.compiler }} --version
         
         
@@ -87,7 +87,7 @@ jobs:
         7z a Release/soh.7z ./soh/soh.app  
     - uses: actions/upload-artifact@v3
       with:
-          name: SOH-MacOS-Extract
+          name: SOH-MacOS-Extract-${{ matrix.macversion }}
           path: Release
    
     #- name: Publish Release
