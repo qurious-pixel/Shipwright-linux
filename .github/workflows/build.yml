@@ -12,8 +12,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        compilerC: [clang-mp-14]
-        compilerCXX: [clang++-mp-14]
+        compilerC: [clang]
+        compilerCXX: [clang++]
         macversion: [macos-12] # , macos-11, macos-10.15]
     name: Build MacOS ${{ matrix.macversion }}
     runs-on: ${{ matrix.macversion }}
@@ -50,28 +50,27 @@ jobs:
         cp soh/ROM/baserom_non_mq.z64 soh
         cp soh/ROM/baserom_non_mq.z64 OTRExporter
 
-    - name: Build MacPorts
-      run: |
-        MPVER=2.7.2
-        if [[ ! -e ~/.ccache ]]; then
-          mkdir ~/.ccache
-        fi  
-        cd ~/.ccache        
-        if [[ ! -e MacPorts-${MPVER} ]]; then
-          curl -sLO https://distfiles.macports.org/MacPorts/MacPorts-${MPVER}.tar.bz2
-          tar -xf MacPorts-${MPVER}.tar.bz2
-          cd MacPorts-${MPVER}
-          ./configure
-          make && cd ../
-          rm MacPorts-${MPVER}.tar.bz2
-        fi
-        sudo make -C MacPorts-${MPVER} install
-        sudo /opt/local/bin/port -v selfupdate
-        echo "/opt/local/bin" >> $GITHUB_PATH
+    #- name: Build MacPorts
+    #  run: |
+    #    MPVER=2.7.2
+    #    if [[ ! -e ~/.ccache ]]; then
+    #      mkdir ~/.ccache
+    #    fi  
+    #    cd ~/.ccache        
+    #    if [[ ! -e MacPorts-${MPVER} ]]; then
+    #      curl -sLO https://distfiles.macports.org/MacPorts/MacPorts-${MPVER}.tar.bz2
+    #      tar -xf MacPorts-${MPVER}.tar.bz2
+    #      cd MacPorts-${MPVER}
+    #      ./configure
+    #      make && cd ../
+    #      rm MacPorts-${MPVER}.tar.bz2
+    #    fi
+    #    sudo make -C MacPorts-${MPVER} install
+    #    sudo /opt/local/bin/port -v selfupdate
+    #    echo "/opt/local/bin" >> $GITHUB_PATH
 
     - name: Install Dependencies
       run: |       
-        yes | sudo /opt/local/bin/port install clang-14
         brew install sdl2 glew dylibbundler ccache rsync
         ${{ matrix.compilerC }} --version
         
