@@ -12,29 +12,22 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        compiler: [g++-11] #, clang++-14]
-        debug: [0, 1]
-        opt: [O0, O2]
-        include:
-           - compiler: g++-11
-             cc: gcc-11
-           #- compiler: clang++-14
-           #  cc: clang-14
-        #compiler: [gcc, clang]
-    name: Build Linux ${{ matrix.compiler }}-OPTFLAGS=-${{ matrix.opt }}-DEBUG=${{ matrix.debug }}
-    runs-on: ubuntu-20.04
+        compiler: [clang]
+        arch: ["arm64", "x86_64"]
+    name: Build MacOS ${{ matrix.arch }}
+    runs-on: macos-10.15
     steps:
     - name: Checkout Upstream Repo
       uses: actions/checkout@v3
       with:
         repository: HarbourMasters/Shipwright # dcvz/Shipwright # briaguya-ai/Shipwright #  
-        ref: develop-rachael # devel-clang #
+        ref: develop-zhora # develop-rachael #
 
     - name: Checkout AppImage Repo
       uses: actions/checkout@v3
       with:
           clean: false
-          path: appimage
+          path: ci
 
     - name: cache
       uses: actions/cache@v3
@@ -56,105 +49,16 @@ jobs:
         cp soh/ROM/baserom_non_mq.z64 soh
         cp soh/ROM/baserom_non_mq.z64 OTRExporter
 
-    - name: Remove Microsft Source List
-      run: |
-        sudo rm -f /etc/apt/sources.list.d/microsoft-prod.list
-        sudo apt-get update -qq
-        sudo apt-get install -yqq --allow-downgrades libpcre2-8-0/focal libpcre2-16-0/focal libpcre2-32-0/focal libpcre2-posix2/focal
-
+   
     - name: Install Dependencies
-      run: |
-        sudo add-apt-repository ppa:ubuntu-toolchain-r/test
-        sudo apt-get update
-        sudo apt-get upgrade -y
-        sudo apt-get install -y \
-            libc6-dev \
-            binutils \
-            gcc-11 \
-            g++-11 \
-            python \
-            ccache \
-            cmake \
-            lld \
-            libsdl2-dev \
-            zlib1g-dev \
-            libbz2-dev \
-            libpng-dev \
-            libgles2-mesa-dev
-        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 10
-        sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-11 10
-        gcc --version
-        g++ --version
-
-    - name: Install Clang (Experimental)
-      run: |
-        wget https://apt.llvm.org/llvm.sh
-        chmod +x llvm.sh
-        sudo ./llvm.sh 14
-        clang --version
-        clang++ --version
-
-    - name: Build glew
-      run: |
-        git clone https://github.com/Perlmint/glew-cmake.git 
-        cmake glew-cmake 
-        make -j$(nproc) 
-        sudo make install ARCH64=true
-        cp /usr/local/lib/libGLEW.a libultraship
-
-    - name: Build SDL2
-      run: |
-        SDL2VER=2.0.22
-        if [[ ! -e ~/.ccache ]]; then
-          mkdir ~/.ccache
-        fi  
-        cd ~/.ccache
-        if [[ ! -e SDL2-${SDL2VER} ]]; then
-          curl -sLO https://libsdl.org/release/SDL2-${SDL2VER}.tar.gz
-          tar -xzf SDL2-${SDL2VER}.tar.gz
-          cd SDL2-${SDL2VER}
-          ./configure --prefix=/usr
-          make && cd ../
-          rm SDL2-${SDL2VER}.tar.gz
-        fi
-        sudo make -C SDL2-${SDL2VER} install
-        sudo cp -av /lib/libSDL* /lib/x86_64-linux-gnu/
-
-    - name: Update Patchelf
-      run: |
-        PATCHELFVER=0.14.5
-        curl -sL https://github.com/NixOS/patchelf/releases/download/${PATCHELFVER}/patchelf-${PATCHELFVER}-x86_64.tar.gz -o /tmp/patchelf.tar.gz
-        tar -xvf /tmp/patchelf.tar.gz --directory /tmp/ ./bin/patchelf --strip-components=2 
-        sudo mv /tmp/patchelf /usr/bin
-        patchelf --version
-
+      run: brew install sdl2 libpng glew cmake pkgconfig dylibbundler
+        
     - uses: actions/setup-python@v3
       with:
         python-version: '3.10'
     - uses: actions/setup-go@v3
       with:
         go-version: '>=1.17.0'
-
-    - name: Linux Fixes
-      run: |
-        echo "Custom fixes"
-        sed -i '/-Wno-missing-field-initializers/i -Wno-missing-braces \\' libultraship/Makefile
-        ##sed -i '/-Wno-missing-field-initializers/i -Wno-error=stringop-overflow \\' libultraship/Makefile # -Wno-error=sign-compare -Wno-unused-variable
-        #sed -i 's/enum-conversion/enum-conversion -Wno-deprecated-copy/g' libultraship/Makefile
-        #sed -i 's/exit(0);/_Exit(0);/g' libultraship/libultraship/Lib/Fast3D/gfx_glx.cpp
-        #sed -i 's/exit(0);/_Exit(0);/g' libultraship/libultraship/Lib/Fast3D/gfx_sdl2.cpp
-        #sed -i '/\#include "libc\/stdarg.h"/i \#ifndef __linux__' soh/include/ultra64.h 
-        #sed -i '/\#include "libc\/math.h"/a \#endif' soh/include/ultra64.h
-        #sed -i '/\#define Z64_AUDIO_H/a \#include <stdbool.h>' soh/include/z64audio.h
-        #sed -i '/luslog.h"/a \#include <stdarg.h>' soh/include/functions.h
-        #sed -i '/gbi.h>/a \#include <string.h>' soh/soh/Enhancements/bootcommands.c
-        #sed -i 's/-lGLEW //g' ZAPDTR/Makefile
-        #sed -i '/GLEW \\/d' soh/Makefile
-        #sed -i 's/-fwrapv/-fwrapv -Wno-int-conversion -Wno-implicit-function-declaration -Wno-incompatible-pointer-types -Wno-pointer-to-int-cast/g' soh/Makefile
-        #sed -i '/-Wno-error=multichar/i -Wno-error=unused-but-set-variable -Wno-error=sign-compare\' OTRExporter/OTRExporter/Makefile
-        #cp appimage/Makefile libultraship/Makefile
-        #cp appimage/AudioExporter.cpp OTRExporter/OTRExporter/AudioExporter.cpp
-        #cat soh/include/ultra64.h
 
     - name: Build OTRGui
       run: |
@@ -163,8 +67,9 @@ jobs:
 
     - name: Build SOH
       run: |
-        make setup -C soh -j$(nproc) OPTFLAGS=-${{ matrix.opt }} DEBUG=${{ matrix.debug }} CC="ccache ${{ matrix.cc }}" CXX="ccache ${{ matrix.compiler }}"
-        make -C soh -j$(nproc) OPTFLAGS=-${{ matrix.opt }} DEBUG=${{ matrix.debug }} CC="ccache ${{ matrix.cc }}" CXX="ccache ${{ matrix.compiler }}"
+        make setup -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache ${{ matrix.cc }} -arch ${{ matrix.arch }}" CXX="ccache ${{ matrix.compiler }}++ -arch ${{ matrix.arch }}" LD="ld"
+        make -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache ${{ matrix.cc }} -arch ${{ matrix.arch }}" CXX="ccache ${{ matrix.compiler }}++ -arch ${{ matrix.arch }}" LD="ld"
+        make appbundle -C soh -j$(nproc) CC="ccache ${{ matrix.cc }} -arch ${{ matrix.arch }}" CXX="ccache ${{ matrix.compiler }}++ -arch ${{ matrix.arch }}" LD="ld"
 
     - name: Ccache stats
       run: ccache -s
@@ -172,23 +77,16 @@ jobs:
     - name: Prepare Artifact
       run: |
         mkdir Release
-        cp soh/soh.elf Release
-        cp OTRGui/build/OTRGui Release
-        rsync -av --exclude='*.gitignore' OTRGui/build/assets Release/
-        cp ZAPDTR/ZAPD.out Release/assets/extractor/
-        cp appimage/.github/workflows/scripts/OTR_Extractor.sh Release
-        cp -r appimage/.github/workflows/scripts/version Release/assets/
+        cp soh/soh.app Release
+    #    cp OTRGui/build/OTRGui Release
+    #    rsync -av --exclude='*.gitignore' OTRGui/build/assets Release/
+    #    cp ZAPDTR/ZAPD.out Release/assets/extractor/
+    #    cp appimage/.github/workflows/scripts/OTR_Extractor.sh Release
     - uses: actions/upload-artifact@v3
       with:
-          name: SOH-Linux-${{ matrix.compiler }}-OPTFLAGS=-${{ matrix.opt }}-DEBUG=${{ matrix.debug }}
+          name: SOH-MacOS-${{ matrix.arch }}
           path: Release
-
-    
-    #- name: Build AppImage
-    #  run: |
-    #    chmod +x appimage/.github/workflows/scripts/appimage.sh
-    #    appimage/.github/workflows/scripts/appimage.sh
-
+   
     #- name: Publish Release
     #  run: |
     #    go install github.com/tcnksm/ghr@latest
