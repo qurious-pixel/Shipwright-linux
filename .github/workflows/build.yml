@@ -52,7 +52,7 @@ jobs:
    
     - name: Install Dependencies
       run: | 
-        brew install sdl2 glew dylibbundler ccache
+        brew install sdl2 glew dylibbundler ccache rsync
         ${{ matrix.compiler }} --version
         
         
