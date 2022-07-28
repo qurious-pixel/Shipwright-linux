@@ -51,7 +51,7 @@ jobs:
 
    
     - name: Install Dependencies
-      run: brew install sdl2 libpng glew cmake pkgconfig dylibbundler
+      run: brew install sdl2 glew dylibbundler
         
     - uses: actions/setup-python@v3
       with:
@@ -59,11 +59,6 @@ jobs:
     - uses: actions/setup-go@v3
       with:
         go-version: '>=1.17.0'
-
-    - name: Build OTRGui
-      run: |
-        cmake -B OTRGui/build -S OTRGui -DOpenGL_GL_PREFERENCE=GLVND
-        cmake --build OTRGui/build
 
     - name: Build SOH
       run: |
