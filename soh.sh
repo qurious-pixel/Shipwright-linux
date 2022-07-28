@@ -8,8 +8,6 @@ export LIBPATH=${SNAME%/MacOS*}
 
 while [ ! -e "$DATA_SHARE/oot.otr" ]; do
 	cp -r "$SNAME/assets" "$ASSETDIR"
-	mkdir -p /usr/local/opt/glew/lib/
-	ln -s "$LIBPATH"/libs/libGLEW.2.2.0.dylib /usr/local/opt/glew/lib/libGLEW.2.2.0.dylib
 	mkdir -p "$ASSETDIR"/tmp
 	mkdir -p "$ASSETDIR"/Extract/assets
 	DROPROM=$(osascript -ss - "$ASSETDIR" <<EOF
@@ -18,7 +16,7 @@ while [ ! -e "$DATA_SHARE/oot.otr" ]; do
 	tell application "Finder"
 	duplicate romFile to destinationFolder
 	end tell
-EOF
+	EOF
 	)
 	$DROPROM
 	if [ ! -e "$ASSETDIR"/*.*64 ]; then
@@ -43,7 +41,7 @@ EOF
 		with title "Incompatible ROM hash" \
 		with icon caution \
 		giving up after 5
-EOF
+		EOF
 		)
 		$WRONGHASH
 		rm -r "$ASSETDIR"
@@ -52,7 +50,10 @@ EOF
 	echo $ROM
 
 	osascript -e 'display notification "Processing OTR..." with title "SOH: Generating OTR"'
+	mkdir -p /usr/local/opt/glew/lib/
+	ln -s "$LIBPATH"/libs/libGLEW.2.2.0.dylib /usr/local/opt/glew/lib/libGLEW.2.2.0.dylib
 	assets/extractor/ZAPD.out ed -i assets/extractor/xmls/${ROM} -b tmp/rom.z64 -fl assets/extractor/filelists -o placeholder -osf placeholder -gsf 1 -rconf assets/extractor/Config_${ROM}.xml -se OTR
+	unlink /usr/local/opt/glew/lib/libGLEW.2.2.0.dylib
 	if [ -e $PWD/oot.otr ]; then
 		osascript -e 'display notification "OTR Successfully Generated" with title "SOH: Generating OTR"'
 		if [ ! -e "$DATA_SHARE" ]; then	mkdir "$DATA_SHARE"; fi
