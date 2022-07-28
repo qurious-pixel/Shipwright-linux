@@ -77,7 +77,7 @@ jobs:
     - name: Prepare Artifact
       run: |
         mkdir Release
-        cp soh/soh.app Release
+        7z a Release/soh.7z ./soh/soh.app
     #    cp OTRGui/build/OTRGui Release
     #    rsync -av --exclude='*.gitignore' OTRGui/build/assets Release/
     #    cp ZAPDTR/ZAPD.out Release/assets/extractor/
