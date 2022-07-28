@@ -67,9 +67,9 @@ jobs:
       run: |
         export PATH=/usr/local/opt/ccache/libexec:$PATH
         export MACOSX_DEPLOYMENT_TARGET=10.15
-        make setup -C soh -j4 OPTFLAGS=-O2 DEBUG=0 CC="ccache ${{ matrix.compiler }} -arch arm64 -arch x86_64" CXX="ccache ${{ matrix.compiler }}++ -arch arm64 -arch x86_64" LD="ld"
-        make -C soh -j4 OPTFLAGS=-O2 DEBUG=0 CC="ccache ${{ matrix.compiler }} -arch arm64 -arch x86_64" CXX="ccache ${{ matrix.compiler }}++ -arch arm64 -arch x86_64" LD="ld"
-        make appbundle -C soh -j4 CC="ccache ${{ matrix.compiler }} -arch arm64 -arch x86_64" CXX="ccache ${{ matrix.compiler }}++ -arch arm64 -arch x86_64" LD="ld"
+        make setup -C soh -j4 OPTFLAGS=-O2 DEBUG=0 CC="ccache ${{ matrix.compiler }} -arch x86_64" CXX="ccache ${{ matrix.compiler }}++ -arch x86_64" LD="ld"
+        make -C soh -j4 OPTFLAGS=-O2 DEBUG=0 CC="ccache ${{ matrix.compiler }} -arch x86_64" CXX="ccache ${{ matrix.compiler }}++ -arch x86_64" LD="ld"
+        make appbundle -C soh -j4 CC="ccache ${{ matrix.compiler }} -arch x86_64" CXX="ccache ${{ matrix.compiler }}++ -arch x86_64" LD="ld"
 
     - name: Ccache stats
       run: ccache -s
