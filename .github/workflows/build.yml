@@ -62,9 +62,9 @@ jobs:
 
     - name: Build SOH
       run: |
-        make setup -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache ${{ matrix.cc }} -arch ${{ matrix.arch }}" CXX="ccache ${{ matrix.compiler }}++ -arch ${{ matrix.arch }}" LD="ld"
-        make -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="ccache ${{ matrix.cc }} -arch ${{ matrix.arch }}" CXX="ccache ${{ matrix.compiler }}++ -arch ${{ matrix.arch }}" LD="ld"
-        make appbundle -C soh -j$(nproc) CC="ccache ${{ matrix.cc }} -arch ${{ matrix.arch }}" CXX="ccache ${{ matrix.compiler }}++ -arch ${{ matrix.arch }}" LD="ld"
+        make setup -C soh -j4 OPTFLAGS=-O2 DEBUG=0 CC="ccache ${{ matrix.compiler }} -arch ${{ matrix.arch }}" CXX="ccache ${{ matrix.compiler }}++ -arch ${{ matrix.arch }}" LD="ld"
+        make -C soh -j4 OPTFLAGS=-O2 DEBUG=0 CC="ccache ${{ matrix.compiler }} -arch ${{ matrix.arch }}" CXX="ccache ${{ matrix.compiler }}++ -arch ${{ matrix.arch }}" LD="ld"
+        make appbundle -C soh -j4 CC="ccache ${{ matrix.compiler }} -arch ${{ matrix.arch }}" CXX="ccache ${{ matrix.compiler }}++ -arch ${{ matrix.arch }}" LD="ld"
 
     - name: Ccache stats
       run: ccache -s
