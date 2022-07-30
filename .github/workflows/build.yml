@@ -68,8 +68,7 @@ jobs:
     - name: Build libultraship
       run: sudo docker run --rm -e DEVKITPRO=/opt/devkitpro -v $(pwd):/soh -w /soh quriouspixel/devkitpro /bin/bash -c "chmod +x appimage/docker/libultraship.sh && appimage/docker/libultraship.sh"
 
-
-    - name: Build SOH (switch)
+    - name: Build SOH (linux)
       run: sudo docker run --rm -v $(pwd):/soh -w /soh quriouspixel/devkitpro /bin/bash -c "make -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="gcc" CXX="g++""
       if: ${{ matrix.build == 'linux' }}
 
