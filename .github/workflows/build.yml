@@ -18,7 +18,7 @@ jobs:
             bin: soh.nro
           - build: linux
             bin: soh.elf
-    name: Build Switch NRO
+    name: Build ${{ matrix.build }}
     runs-on: ubuntu-20.04
     steps:
     - name: Checkout Upstream Repo
@@ -60,9 +60,10 @@ jobs:
       with:
         go-version: '>=1.17.0'
 
-    - name: Switch Fixes
+    - name: Custom Fixes
       run: |
-        echo "switch fixes"
+        echo "custom fixes"
+        sed -i '/-Wno-missing-field-initializers/i -Wno-missing-braces \\' libultraship/Makefile
 
     - name: Build libultraship
       run: sudo docker run --rm -e DEVKITPRO=/opt/devkitpro -v $(pwd):/soh -w /soh quriouspixel/devkitpro /bin/bash -c "chmod +x appimage/docker/libultraship.sh && appimage/docker/libultraship.sh"
@@ -88,7 +89,7 @@ jobs:
     #    cp -r appimage/.github/workflows/scripts/version Release/assets/
     - uses: actions/upload-artifact@v3
       with:
-          name: SOH-Switch-nro
+          name: SOH-${{ matrix.build }}
           path: Release
 
     #- name: Build AppImage
