@@ -9,14 +9,23 @@ on:
 
 jobs:
   switch_gcc:
+    strategy:
+      fail-fast: false
+      matrix:
+        build: [switch, linux]
+        include:
+          - build: switch
+            bin: soh.nro
+          - build: linux
+            bin: soh.elf
     name: Build Switch NRO
     runs-on: ubuntu-20.04
     steps:
     - name: Checkout Upstream Repo
       uses: actions/checkout@v3
       with:
-        repository: KiritoDv/Shipwright # guaycuru/Shipwright # 
-        ref: znx_merge
+        repository: HarbourMasters/Shipwright # KiritoDv/Shipwright #
+        ref: develop-zhora # znx_merge
 
     - name: Checkout AppImage Repo
       uses: actions/checkout@v3
@@ -54,28 +63,23 @@ jobs:
     - name: Switch Fixes
       run: |
         echo "switch fixes"
-    #   sed -i '/-Wno-missing-field-initializers/i -Wno-error=stringop-overflow \\' libultraship/Makefile # -Wno-error=multichar -Wno-error=sign-compare -Wno-unused-variable
-    #    sed -i 's/-DDEBUG/-DDEBUG -Wno-unused-variable -Wno-unused-function/g' libultraship/Makefile.switch 
-    #    sed -i 's/-Wno-switch-unreachable/-Wno-switch-unreachable -fno-stack-protector/g' soh/Makefile.switch
-    #    sed -i 's/"imgui_internal.h"/"Lib\/ImGui\/imgui_internal.h"/g' libultraship/libultraship/Cvar.cpp
-    #    sed -i 's/"imgui.h"/"..\/imgui.h"/g' libultraship/libultraship/Lib/ImGui/backends/imgui_impl_opengl3.cpp
-    #    sed -i 's/"imgui.h"/"..\/imgui.h"/g' libultraship/libultraship/Lib/ImGui/backends/imgui_impl_opengl3.h
-    #    sed -i 's/"imgui.h"/"..\/imgui.h"/g' libultraship/libultraship/Lib/ImGui/backends/imgui_impl_sdl.cpp
-    #    sed -i 's/"imgui.h"/"..\/imgui.h"/g' libultraship/libultraship/Lib/ImGui/backends/imgui_impl_sdl.h
-    #    sed -i '/cmake --build ..\/StormLib\/build/a \\t$(MAKE) install -C ..\/StormLib\/build' soh/Makefile
-    #    sed -i '/\#include "libc\/stddef.h"/d' soh/include/ultra64.h
-    #    sed -i '196d' StormLib/src/StormPort.h
 
     - name: Build libultraship
       run: sudo docker run --rm -e DEVKITPRO=/opt/devkitpro -v $(pwd):/soh -w /soh quriouspixel/devkitpro /bin/bash -c "chmod +x appimage/docker/libultraship.sh && appimage/docker/libultraship.sh"
 
-    - name: Build SOH
+
+    - name: Build SOH (switch)
+      run: sudo docker run --rm -v $(pwd):/soh -w /soh quriouspixel/devkitpro /bin/bash -c "make -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="gcc" CXX="g++""
+      if: ${{ matrix.build == linux }}
+
+    - name: Build SOH (switch)
       run: sudo docker run --rm -v $(pwd):/soh -w /soh quriouspixel/devkitpro /bin/bash -c "chmod +x appimage/docker/stormlib.sh && appimage/docker/stormlib.sh"
+      if: ${{ matrix.build == switch }}
 
     - name: Prepare Artifact
       run: |
         mkdir -p Release/assets/game
-        cp soh/soh.nro Release
+        cp soh/${{ matrix.bin }} Release
         rsync -av --exclude='*.gitignore' OTRGui/assets Release/
         cp ZAPDTR/ZAPD.out Release/assets/extractor/
         cp -r OTRExporter/assets/ship_of_harkinian Release/assets/game/ship_of_harkinian
