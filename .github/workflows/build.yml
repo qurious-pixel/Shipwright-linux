@@ -70,11 +70,11 @@ jobs:
 
     - name: Build SOH (switch)
       run: sudo docker run --rm -v $(pwd):/soh -w /soh quriouspixel/devkitpro /bin/bash -c "make -C soh -j$(nproc) OPTFLAGS=-O2 DEBUG=0 CC="gcc" CXX="g++""
-      if: ${{ matrix.build == linux }}
+      if: ${{ matrix.build == 'linux' }}
 
     - name: Build SOH (switch)
       run: sudo docker run --rm -v $(pwd):/soh -w /soh quriouspixel/devkitpro /bin/bash -c "chmod +x appimage/docker/stormlib.sh && appimage/docker/stormlib.sh"
-      if: ${{ matrix.build == switch }}
+      if: ${{ matrix.build == 'switch' }}
 
     - name: Prepare Artifact
       run: |
