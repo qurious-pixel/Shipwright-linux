@@ -64,6 +64,7 @@ jobs:
       run: |
         echo "custom fixes"
         sed -i '/-Wno-missing-field-initializers/i -Wno-error=stringop-overflow \\' libultraship/Makefile
+        sed -i '/\#include "unk.h"/a \#include "libc\/stdbool.h' soh/include/ultra64.h
         sed -i '/\#include "libc\/stdarg.h"/i \#ifndef __linux__' soh/include/ultra64.h 
         sed -i '/\#include "libc\/math.h"/a \#endif' soh/include/ultra64.h
         
