@@ -21,8 +21,8 @@ jobs:
     - name: Checkout Upstream Repo
       uses: actions/checkout@v3
       with:
-        repository: HarbourMasters/Shipwright # dcvz/Shipwright # briaguya-ai/Shipwright #  
-        ref: develop-zhora # develop-rachael #
+        repository: qurious-pixel/Shipwright # HarbourMasters/Shipwright # dcvz/Shipwright #  
+        ref: mac-otr # develop-zhora # develop-rachael #
 
     - name: Checkout AppImage Repo
       uses: actions/checkout@v3
