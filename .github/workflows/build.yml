@@ -171,20 +171,20 @@ jobs:
         cpack -G External
         cd ..
         mkdir Release
-        #cp _packages/{*.appimage,*.zip,*.deb} Release
+        cp _packages/{*.appimage,*.zip,*.deb} Release
         ls -al .
         ls -al build-cmake
         
-    #- uses: actions/upload-artifact@v3
-    #  with:
-    #      name: SOH-Linux-cmake
-    #      path: Release
+    - uses: actions/upload-artifact@v3
+      with:
+          name: SOH-Linux-cmake
+          path: Release
 
     #- name: Check soh.elf
     #  run: |
     #    ls -al Release
 
-    #- name: Publish Release
-    #  run: |
-    #    go install github.com/tcnksm/ghr@latest
-    #    ghr -u qurious-pixel -r Shipwright-linux -recreate -n "Cmake build" -t "${{ secrets.GITHUB_TOKEN }}" cmake Release
+    - name: Publish Release
+      run: |
+        go install github.com/tcnksm/ghr@latest
+        ghr -u qurious-pixel -r Shipwright-linux -recreate -n "Cmake build" -t "${{ secrets.GITHUB_TOKEN }}" cmake Release
