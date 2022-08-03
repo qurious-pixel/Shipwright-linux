@@ -71,10 +71,10 @@ jobs:
         sudo ln -sf /usr/bin/gcc-10 /usr/bin/cc
         sudo ln -sf /usr/bin/g++-10 /usr/bin/g++
         sudo ln -sf /usr/bin/g++-10 /usr/bin/c++
-    - name: Clone External Libs
-      run: |
-        git clone https://github.com/Perlmint/glew-cmake.git external/glew
-        git clone https://github.com/ladislav-zezula/StormLib external/StormLib 
+    #- name: Clone External Libs
+    #  run: |
+    #    git clone https://github.com/Perlmint/glew-cmake.git external/glew
+    #    git clone https://github.com/ladislav-zezula/StormLib external/StormLib 
 
     - name: Install CMAKE Build
       run: |
@@ -171,18 +171,20 @@ jobs:
         cpack -G External
         cd ..
         mkdir Release
-        cp _packages/{*.appimage,*.zip,*.deb} Release
+        #cp _packages/{*.appimage,*.zip,*.deb} Release
+        ls -al .
+        ls -al build-cmake
         
-    - uses: actions/upload-artifact@v3
-      with:
-          name: SOH-Linux-cmake
-          path: Release
+    #- uses: actions/upload-artifact@v3
+    #  with:
+    #      name: SOH-Linux-cmake
+    #      path: Release
 
-    - name: Check soh.elf
-      run: |
-        ls -al Release
+    #- name: Check soh.elf
+    #  run: |
+    #    ls -al Release
 
-    - name: Publish Release
-      run: |
-        go install github.com/tcnksm/ghr@latest
-        ghr -u qurious-pixel -r Shipwright-linux -recreate -n "Cmake build" -t "${{ secrets.GITHUB_TOKEN }}" cmake Release
+    #- name: Publish Release
+    #  run: |
+    #    go install github.com/tcnksm/ghr@latest
+    #    ghr -u qurious-pixel -r Shipwright-linux -recreate -n "Cmake build" -t "${{ secrets.GITHUB_TOKEN }}" cmake Release
