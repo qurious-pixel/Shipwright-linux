@@ -100,7 +100,7 @@ jobs:
       run: |
         cd build-cmake
         cpack # -G Bundle
-        ls -al _Packages
+        ls -al _packages
 
     - name: Ccache stats
       run: ccache -s
