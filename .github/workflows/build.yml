@@ -143,10 +143,9 @@ jobs:
     - name: Build SOH
       run: |
         cmake -H. -Bbuild-cmake -GNinja \
-          -DSDL2_DIR=/usr/lib/cmake/SDL2/ 
-          #-DCMAKE_TOOLCHAIN_FILE=CMake/Linux32bit-toolchain.cmake \
-          #-DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
-          #-DCMAKE_FIND_LIBRARY_SUFFIXES=.a \
+          -DSDL2_DIR=/usr/lib/cmake/SDL2/ \
+          -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+          -DCMAKE_C_COMPILER_LAUNCHER=ccache
           #-G Ninja
         cmake --build build-cmake -- -j$(nproc)
         
@@ -171,9 +170,10 @@ jobs:
         cpack -G External
         cd ..
         mkdir Release
-        #cp _packages/{*.appimage,*.zip,*.deb} Release
-        ls -al _packages/
-        #ls -al build-cmake
+        cp _packages/{*.zip,*.deb} Release
+        ls -al build-cmake/_CPack_Packages/focal/External/Ship-3.0.0-focal/
+        cp $(find build-cmake/_CPack_Packages -iname *.appimage) Release
+        ls -al Release
         
     - uses: actions/upload-artifact@v3
       with:
@@ -187,4 +187,4 @@ jobs:
     - name: Publish Release
       run: |
         go install github.com/tcnksm/ghr@latest
-        ghr -u qurious-pixel -r Shipwright-linux -recreate -n "Cmake build" -t "${{ secrets.GITHUB_TOKEN }}" cmake Release
+        ghr -u qurious-pixel -r Shipwright-linux -recreate -n "Cmake build" -t "${{ secrets.GITHUB_TOKEN }}" cpack Release
