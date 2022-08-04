@@ -171,8 +171,7 @@ jobs:
         cd ..
         mkdir Release
         cp _packages/{*.zip,*.deb} Release
-        ls -al build-cmake/_CPack_Packages/focal/External/Ship-3.0.0-focal/
-        cp $(find build-cmake/_CPack_Packages -iname *.appimage) Release
+        cp build-cmake/*.appimage Release
         ls -al Release
         
     - uses: actions/upload-artifact@v3
