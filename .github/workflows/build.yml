@@ -99,7 +99,7 @@ jobs:
         
     - name: Build SOH (cmake)
       run: |
-        cpack
+        cpack -G Bundle
         ls -al _Packages
 
     - name: Ccache stats
