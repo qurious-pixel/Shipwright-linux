@@ -171,9 +171,9 @@ jobs:
         cpack -G External
         cd ..
         mkdir Release
-        cp _packages/{*.appimage,*.zip,*.deb} Release
-        ls -al .
-        ls -al build-cmake
+        #cp _packages/{*.appimage,*.zip,*.deb} Release
+        ls -al _packages/
+        #ls -al build-cmake
         
     - uses: actions/upload-artifact@v3
       with:
