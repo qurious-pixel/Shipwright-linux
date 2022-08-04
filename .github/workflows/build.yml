@@ -95,11 +95,11 @@ jobs:
         export MACOSX_DEPLOYMENT_TARGET=10.15
         cmake -H. -Bbuild-cmake -GNinja
         cmake --build build-cmake
-        cd build-cmake
         
     - name: Build SOH (cmake)
       run: |
-        cpack -G Bundle
+        cd build-cmake
+        cpack # -G Bundle
         ls -al _Packages
 
     - name: Ccache stats
