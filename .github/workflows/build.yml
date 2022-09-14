@@ -13,8 +13,8 @@ jobs:
       fail-fast: false
       matrix:
         compiler: [g++-11] #, clang++-14]
-        debug: 0 # [0, 1]
-        opt: O2 # [O0, O2]
+        debug: [0] # [0, 1]
+        opt: [O2] # [O0, O2]
         include:
            - compiler: g++-11
              cc: gcc-11
