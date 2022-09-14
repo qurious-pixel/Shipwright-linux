@@ -6,4 +6,4 @@ Terminal=false
 Icon=soh
 Type=Application
 Categories=Game;
-Name[en_US]=
+X-AppImage-Integrate=false
