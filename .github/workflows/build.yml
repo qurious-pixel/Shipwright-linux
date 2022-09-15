@@ -76,7 +76,7 @@ jobs:
             ccache \
             cmake \
             lld \
-            ninja \
+            ninja-build \
             libsdl2-dev \
             zlib1g-dev \
             libbz2-dev \
