@@ -13,8 +13,6 @@ jobs:
       fail-fast: false
       matrix:
         compiler: [g++-11] #, clang++-14]
-        debug: [0] # [0, 1]
-        opt: [O2] # [O0, O2]
         include:
            - compiler: g++-11
              cc: gcc-11
@@ -139,23 +137,6 @@ jobs:
     - name: Linux Fixes
       run: |
         echo "Custom fixes"
-        #sed -i '/-Wno-missing-field-initializers/i -Wno-missing-braces \\' libultraship/Makefile
-        ##sed -i '/-Wno-missing-field-initializers/i -Wno-error=stringop-overflow \\' libultraship/Makefile # -Wno-error=sign-compare -Wno-unused-variable
-        #sed -i 's/enum-conversion/enum-conversion -Wno-deprecated-copy/g' libultraship/Makefile
-        #sed -i 's/exit(0);/_Exit(0);/g' libultraship/libultraship/Lib/Fast3D/gfx_glx.cpp
-        #sed -i 's/exit(0);/_Exit(0);/g' libultraship/libultraship/Lib/Fast3D/gfx_sdl2.cpp
-        #sed -i '/\#include "libc\/stdarg.h"/i \#ifndef __linux__' soh/include/ultra64.h 
-        #sed -i '/\#include "libc\/math.h"/a \#endif' soh/include/ultra64.h
-        #sed -i '/\#define Z64_AUDIO_H/a \#include <stdbool.h>' soh/include/z64audio.h
-        #sed -i '/luslog.h"/a \#include <stdarg.h>' soh/include/functions.h
-        #sed -i '/gbi.h>/a \#include <string.h>' soh/soh/Enhancements/bootcommands.c
-        #sed -i 's/-lGLEW //g' ZAPDTR/Makefile
-        #sed -i '/GLEW \\/d' soh/Makefile
-        #sed -i 's/-fwrapv/-fwrapv -Wno-int-conversion -Wno-implicit-function-declaration -Wno-incompatible-pointer-types -Wno-pointer-to-int-cast/g' soh/Makefile
-        #sed -i '/-Wno-error=multichar/i -Wno-error=unused-but-set-variable -Wno-error=sign-compare\' OTRExporter/OTRExporter/Makefile
-        #cp appimage/Makefile libultraship/Makefile
-        #cp appimage/AudioExporter.cpp OTRExporter/OTRExporter/AudioExporter.cpp
-        #cat soh/include/ultra64.h
 
     - name: Build SOH
       run: |
@@ -166,21 +147,19 @@ jobs:
     - name: Ccache stats
       run: ccache -s
 
-    - name: Build CPACK packages
-      run: |
-        cd build-cmake
-        cpack -G DEB
-        cpack -G ZIP
-        cpack -G External
-        cd ..
-        mkdir Release
-        cp _packages/{*.zip,*.deb} Release
-        cp build-cmake/*.appimage Release
-        ls -al Release
-    - uses: actions/upload-artifact@v3
-      with:
-          name: SOH-Linux-${{ matrix.compiler }}
-          path: Release
+    #- name: Build CPACK packages
+    #  run: |
+    #    cd build-cmake
+    #    cpack -G External
+    #    cd ..
+    #    mkdir Release
+    #    cp _packages/{*.zip,*.deb} Release
+    #    cp build-cmake/*.appimage Release
+    #    ls -al Release
+    #- uses: actions/upload-artifact@v3
+    #  with:
+    #      name: SOH-Linux-${{ matrix.compiler }}
+    #      path: Release
 
     
     #- name: Build AppImage
