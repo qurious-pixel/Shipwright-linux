@@ -140,7 +140,7 @@ jobs:
 
     - name: Build SOH
       run: |
-        cmake -H. -Bbuild-cmake -GNinja -DSDL2_DIR=/usr/lib/cmake/SDL2/
+        cmake -H. -Bbuild-cmake -GNinja -DSDL2_DIR=/usr/lib/cmake/SDL2/ -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_C_COMPILER_LAUNCHER=ccache
         cmake --build build-cmake --target ExtractAssets
         cmake --build build-cmake
 
@@ -150,16 +150,17 @@ jobs:
     - name: Build CPACK packages
       run: |
         cd build-cmake
-        cpack -G External
-        cd ..
-        mkdir Release
-        cp _packages/{*.zip,*.deb} Release
-        cp build-cmake/*.appimage Release
-        ls -al Release
-    - uses: actions/upload-artifact@v3
-      with:
-          name: SOH-Linux-${{ matrix.compiler }}
-          path: Release
+        ls -al 
+        #cpack -G External
+        #cd ..
+        #mkdir Release
+        #cp _packages/{*.zip,*.deb} Release
+        #cp build-cmake/*.appimage Release
+        #ls -al Release
+    #- uses: actions/upload-artifact@v3
+    #  with:
+    #      name: SOH-Linux-${{ matrix.compiler }}
+    #      path: Release
 
     
     #- name: Build AppImage
