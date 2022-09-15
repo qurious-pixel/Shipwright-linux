@@ -27,8 +27,8 @@ jobs:
     - name: Checkout Upstream Repo
       uses: actions/checkout@v3
       with:
-        repository: HarbourMasters/Shipwright
-        ref: develop-zhora
+        repository: dlilja/Shipwright # HarbourMasters/Shipwright
+        ref: bugfix/version_file_creation # develop-zhora
 
     - name: Checkout AppImage Repo
       uses: actions/checkout@v3
@@ -156,10 +156,10 @@ jobs:
         #cp appimage/AudioExporter.cpp OTRExporter/OTRExporter/AudioExporter.cpp
         #cat soh/include/ultra64.h
 
-    - name: Build OTRGui
-      run: |
-        cmake -B OTRGui/build -S OTRGui -DOpenGL_GL_PREFERENCE=GLVND
-        cmake --build OTRGui/build
+    #- name: Build OTRGui
+    #  run: |
+    #    cmake -B OTRGui/build -S OTRGui -DOpenGL_GL_PREFERENCE=GLVND
+    #    cmake --build OTRGui/build
 
     - name: Build SOH
       run: |
