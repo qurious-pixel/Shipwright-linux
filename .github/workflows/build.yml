@@ -156,15 +156,15 @@ jobs:
         #cp appimage/AudioExporter.cpp OTRExporter/OTRExporter/AudioExporter.cpp
         #cat soh/include/ultra64.h
 
-    #- name: Build OTRGui
-    #  run: |
-    #    cmake -B OTRGui/build -S OTRGui -DOpenGL_GL_PREFERENCE=GLVND
-    #    cmake --build OTRGui/build
-
     - name: Build SOH
       run: |
-        make setup -C soh -j$(nproc) OPTFLAGS=-${{ matrix.opt }} DEBUG=${{ matrix.debug }} CC="ccache ${{ matrix.cc }}" CXX="ccache ${{ matrix.compiler }}"
-        make -C soh -j$(nproc) OPTFLAGS=-${{ matrix.opt }} DEBUG=${{ matrix.debug }} CC="ccache ${{ matrix.cc }}" CXX="ccache ${{ matrix.compiler }}"
+        cmake -H. -Bbuild-cmake -GNinja
+        cmake --build build-cmake
+
+    #- name: Build SOH
+    #  run: |
+    #    make setup -C soh -j$(nproc) OPTFLAGS=-${{ matrix.opt }} DEBUG=${{ matrix.debug }} CC="ccache ${{ matrix.cc }}" CXX="ccache ${{ matrix.compiler }}"
+    #    make -C soh -j$(nproc) OPTFLAGS=-${{ matrix.opt }} DEBUG=${{ matrix.debug }} CC="ccache ${{ matrix.cc }}" CXX="ccache ${{ matrix.compiler }}"
 
     - name: Ccache stats
       run: ccache -s
