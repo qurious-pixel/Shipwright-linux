@@ -21,7 +21,7 @@ jobs:
            #- compiler: clang++-14
            #  cc: clang-14
         #compiler: [gcc, clang]
-    name: Build Linux ${{ matrix.compiler }}-OPTFLAGS=-${{ matrix.opt }}-DEBUG=${{ matrix.debug }}
+    name: Build Linux ${{ matrix.compiler }}
     runs-on: ubuntu-20.04
     steps:
     - name: Checkout Upstream Repo
@@ -87,13 +87,13 @@ jobs:
         gcc --version
         g++ --version
 
-    - name: Install Clang (Experimental)
-      run: |
-        wget https://apt.llvm.org/llvm.sh
-        chmod +x llvm.sh
-        sudo ./llvm.sh 14
-        clang --version
-        clang++ --version
+    #- name: Install Clang (Experimental)
+    #  run: |
+    #    wget https://apt.llvm.org/llvm.sh
+    #    chmod +x llvm.sh
+    #    sudo ./llvm.sh 14
+    #    clang --version
+    #    clang++ --version
 
     - name: Build glew
       run: |
@@ -163,26 +163,23 @@ jobs:
         cmake --build build-cmake --target ExtractAssets
         cmake --build build-cmake
 
-    #- name: Build SOH
-    #  run: |
-    #    make setup -C soh -j$(nproc) OPTFLAGS=-${{ matrix.opt }} DEBUG=${{ matrix.debug }} CC="ccache ${{ matrix.cc }}" CXX="ccache ${{ matrix.compiler }}"
-    #    make -C soh -j$(nproc) OPTFLAGS=-${{ matrix.opt }} DEBUG=${{ matrix.debug }} CC="ccache ${{ matrix.cc }}" CXX="ccache ${{ matrix.compiler }}"
-
     - name: Ccache stats
       run: ccache -s
 
-    - name: Prepare Artifact
+    - name: Build CPACK packages
       run: |
+        cd build-cmake
+        cpack -G DEB
+        cpack -G ZIP
+        cpack -G External
+        cd ..
         mkdir Release
-        cp soh/soh.elf Release
-        cp OTRGui/build/OTRGui Release
-        rsync -av --exclude='*.gitignore' OTRGui/build/assets Release/
-        cp ZAPDTR/ZAPD.out Release/assets/extractor/
-        cp appimage/.github/workflows/scripts/OTR_Extractor.sh Release
-        cp -r appimage/.github/workflows/scripts/version Release/assets/
+        cp _packages/{*.zip,*.deb} Release
+        cp build-cmake/*.appimage Release
+        ls -al Release
     - uses: actions/upload-artifact@v3
       with:
-          name: SOH-Linux-${{ matrix.compiler }}-OPTFLAGS=-${{ matrix.opt }}-DEBUG=${{ matrix.debug }}
+          name: SOH-Linux-${{ matrix.compiler }}
           path: Release
 
     
