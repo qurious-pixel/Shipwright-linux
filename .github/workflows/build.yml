@@ -105,7 +105,7 @@ jobs:
 
     - name: Build SDL2
       run: |
-        SDL2VER=2.0.22
+        SDL2VER=2.24.0
         if [[ ! -e ~/.ccache ]]; then
           mkdir ~/.ccache
         fi  
@@ -159,7 +159,7 @@ jobs:
 
     - name: Build SOH
       run: |
-        cmake -H. -Bbuild-cmake -GNinja
+        cmake -H. -Bbuild-cmake -GNinja -DSDL2_DIR=/usr/lib/cmake/SDL2/
         cmake --build build-cmake --target ExtractAssets
         cmake --build build-cmake
 
