@@ -76,6 +76,7 @@ jobs:
             ccache \
             cmake \
             lld \
+            ninja \
             libsdl2-dev \
             zlib1g-dev \
             libbz2-dev \
@@ -159,6 +160,7 @@ jobs:
     - name: Build SOH
       run: |
         cmake -H. -Bbuild-cmake -GNinja
+        cmake --build build-cmake --target ExtractAssets
         cmake --build build-cmake
 
     #- name: Build SOH
