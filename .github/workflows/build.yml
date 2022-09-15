@@ -147,19 +147,19 @@ jobs:
     - name: Ccache stats
       run: ccache -s
 
-    #- name: Build CPACK packages
-    #  run: |
-    #    cd build-cmake
-    #    cpack -G External
-    #    cd ..
-    #    mkdir Release
-    #    cp _packages/{*.zip,*.deb} Release
-    #    cp build-cmake/*.appimage Release
-    #    ls -al Release
-    #- uses: actions/upload-artifact@v3
-    #  with:
-    #      name: SOH-Linux-${{ matrix.compiler }}
-    #      path: Release
+    - name: Build CPACK packages
+      run: |
+        cd build-cmake
+        cpack -G External
+        cd ..
+        mkdir Release
+        cp _packages/{*.zip,*.deb} Release
+        cp build-cmake/*.appimage Release
+        ls -al Release
+    - uses: actions/upload-artifact@v3
+      with:
+          name: SOH-Linux-${{ matrix.compiler }}
+          path: Release
 
     
     #- name: Build AppImage
