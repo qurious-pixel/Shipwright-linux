@@ -80,6 +80,7 @@ jobs:
             zlib1g-dev \
             libbz2-dev \
             libpng-dev \
+            libglew-dev \
             libgles2-mesa-dev
         sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 10
         sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-11 10
@@ -94,13 +95,13 @@ jobs:
         clang --version
         clang++ --version
 
-    - name: Build glew
-      run: |
-        git clone https://github.com/Perlmint/glew-cmake.git 
-        cmake glew-cmake 
-        make -j$(nproc) 
-        sudo make install ARCH64=true
-        cp /usr/local/lib/libGLEW.a libultraship
+    #- name: Build glew
+    #  run: |
+    #    git clone https://github.com/Perlmint/glew-cmake.git 
+    #    cmake glew-cmake 
+    #    make -j$(nproc) 
+    #    sudo make install ARCH64=true
+    #    cp /usr/local/lib/libGLEW.a libultraship
 
     - name: Build SDL2
       run: |
@@ -141,7 +142,9 @@ jobs:
 
     - name: Build SOH
       run: |
-        cmake -H. -Bbuild-cmake -GNinja -DSDL2_DIR=/usr/lib/cmake/SDL2/ -DCMAKE_CXX_COMPILER_LAUNCHER="ccache ${{ matrix.compiler }}" -DCMAKE_C_COMPILER_LAUNCHER="ccache ${{ matrix.cc }}"
+        export CC=${{ matrix.cc }}
+        export CXX=${{ matrix.compiler }}
+        cmake -H. -Bbuild-cmake -GNinja -DSDL2_DIR=/usr/lib/cmake/SDL2/ -DCMAKE_CXX_COMPILER_LAUNCHER="ccache" -DCMAKE_C_COMPILER_LAUNCHER="ccache" -DBUILD_CROWD_CONTROL=OFF
         cmake --build build-cmake --target ExtractAssets
         cmake --build build-cmake
 
