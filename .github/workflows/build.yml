@@ -138,19 +138,19 @@ jobs:
       run: |
         echo "Custom fixes"
 
-    - name: Build SOH
-      run: |
-        cmake -H. -Bbuild-cmake -GNinja -DSDL2_DIR=/usr/lib/cmake/SDL2/ -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_C_COMPILER_LAUNCHER=ccache
-        cmake --build build-cmake --target ExtractAssets
-        cmake --build build-cmake
+    #- name: Build SOH
+    #  run: |
+    #    cmake -H. -Bbuild-cmake -GNinja -DSDL2_DIR=/usr/lib/cmake/SDL2/ -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_C_COMPILER_LAUNCHER=ccache
+    #    cmake --build build-cmake --target ExtractAssets
+    #    cmake --build build-cmake
 
     - name: Ccache stats
       run: ccache -s
 
-    - name: Build CPACK packages
-      run: |
-        cd build-cmake
-        ls -al 
+    #- name: Build CPACK packages
+    #  run: |
+    #    cd build-cmake
+    #    ls -al 
         #cpack -G External
         #cd ..
         #mkdir Release
