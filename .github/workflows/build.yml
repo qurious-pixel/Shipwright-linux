@@ -25,8 +25,8 @@ jobs:
     - name: Checkout Upstream Repo
       uses: actions/checkout@v3
       with:
-        repository: HarbourMasters/Shipwright # dlilja/Shipwright # HarbourMasters/Shipwright
-        ref: develop-gibbs # develop-zhora
+        repository: qurious-pixel/Shipwright # HarbourMasters/Shipwright
+        ref: BSD # develop-gibbs
         submodules: recursive
 
     - name: Checkout AppImage Repo
